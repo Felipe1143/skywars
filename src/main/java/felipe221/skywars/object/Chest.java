@@ -38,12 +38,6 @@ public class Chest {
 	public Inventory createRandom(){
 		//random items of all
 		ArrayList<ItemStack> itemsFinal = new ArrayList<ItemStack>();
-
-		for (ItemStack item)
-
-		for (int i == 0; i<26; i++){
-			//i is slot
-
-		}
+		return null;
 	}
 }
