@@ -1,5 +1,6 @@
 package felipe221.skywars;
 
+import felipe221.skywars.controller.ChestController;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,7 +23,9 @@ public class Main extends JavaPlugin{
 		plugin = this;
 		
 		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
-		
+
+		Bukkit.getPluginManager().registerEvents(new ChestController(), this);
+
 		configManager = new ConfigController(this);
 		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml");
 		

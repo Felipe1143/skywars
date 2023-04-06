@@ -1,9 +1,6 @@
 package felipe221.skywars.object;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +13,7 @@ import felipe221.skywars.Main;
 import felipe221.skywars.Util;
 import felipe221.skywars.object.Chest.TypeChest;
 import felipe221.skywars.object.Mode.TypeMode;
+import org.bukkit.scoreboard.Team;
 
 public class Arena {
 	private static ArrayList<Arena> listArenas = new ArrayList<Arena>();
@@ -33,13 +31,11 @@ public class Arena {
 	private TypeChest chest;
 	private TypeMode mode;
 	private World world;
-	
-	@Override
-	public String toString() {
-		return "Arena [status=" + status + ", id=" + id + ", nombre=" + name + ", chest=" + chest + ", mode=" + mode
-				+ ", world=" + world + ", usersInArena=" + usersInArena + ", spawns=" + spawns + ", max=" + max
-				+ ", min=" + min + ", time=" + time + "]";
-	}
+
+	//if is team game
+	private Team[] teams;
+	private int numTeams;
+	private int teamSize;
 
 	private List<Player> usersInArena;
 	private HashMap<Location, Boolean> spawns;
@@ -47,6 +43,26 @@ public class Arena {
 	private int max;
 	private int min;
 	private int time;
+
+	@Override
+	public String toString() {
+		return "Arena{" +
+				"status=" + status +
+				", id=" + id +
+				", name='" + name + '\'' +
+				", chest=" + chest +
+				", mode=" + mode +
+				", world=" + world +
+				", teams=" + Arrays.toString(teams) +
+				", numTeams=" + numTeams +
+				", teamSize=" + teamSize +
+				", usersInArena=" + usersInArena +
+				", spawns=" + spawns +
+				", max=" + max +
+				", min=" + min +
+				", time=" + time +
+				'}';
+	}
 	
 	public Arena(int id) {
 		this.usersInArena = new ArrayList<Player>();
@@ -187,4 +203,29 @@ public class Arena {
 	public static void setListArenas(ArrayList<Arena> listArenas) {
 		Arena.listArenas = listArenas;
 	}
+
+	public Team[] getTeams() {
+		return teams;
+	}
+
+	public void setTeams(Team[] teams) {
+		this.teams = teams;
+	}
+
+	public int getNumberTeams() {
+		return numTeams;
+	}
+
+	public void setNumberTeams(int numTeams) {
+		this.numTeams = numTeams;
+	}
+
+	public int getTeamSize() {
+		return teamSize;
+	}
+
+	public void setTeamSize(int teamSize) {
+		this.teamSize = teamSize;
+	}
+
 }
