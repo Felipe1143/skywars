@@ -9,7 +9,7 @@ public class LevelController {
 		for (int i = 1; i < 100; i++) {
 			int upPerLevel = 125;
 			double product = upPerLevel * 1.000 / 1000;
-			double finalint = (((product*i)*1000)+1000) / 1.0;
+			double finalint = (((product * i) * 1000) + 1000);
 			int finalmax = (int) finalint;
 			
 			levels.put(i, finalmax);
