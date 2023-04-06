@@ -1,0 +1,6 @@
+name: SkyWars-Final
+version: '${project.version}'
+main: felipe221.untitled.Untitled
+api-version: 1.16
+authors: [Felipe221]
+description: Private SkyWars
