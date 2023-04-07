@@ -10,9 +10,8 @@ import org.bukkit.Location;
 
 import felipe221.skywars.Main;
 import felipe221.skywars.Util;
-import felipe221.skywars.object.Chest.TypeChest;
+import felipe221.skywars.object.Chests.TypeChest;
 import felipe221.skywars.object.Mode.TypeMode;
-import org.bukkit.scoreboard.Team;
 
 public class Arena {
 	private static ArrayList<Arena> listArenas = new ArrayList<Arena>();
@@ -32,13 +31,13 @@ public class Arena {
 	private World world;
 
 	//if is team game
-	private Team[] teams;
-	private int numTeams;
+	private ArrayList<Teams> teams;
 	private int teamSize;
 
 	private List<Player> usersInArena;
 	private HashMap<Location, Boolean> spawns;
-	
+	private List<Chests> chests;
+
 	private int max;
 	private int min;
 	private int time;
@@ -52,8 +51,7 @@ public class Arena {
 				", chest=" + chest +
 				", mode=" + mode +
 				", world=" + world +
-				", teams=" + Arrays.toString(teams) +
-				", numTeams=" + numTeams +
+				", teams=" + teams +
 				", teamSize=" + teamSize +
 				", usersInArena=" + usersInArena +
 				", spawns=" + spawns +
@@ -65,6 +63,7 @@ public class Arena {
 	
 	public Arena(int id) {
 		this.usersInArena = new ArrayList<Player>();
+		this.chests = new ArrayList<>();
 		this.chest = TypeChest.NORMAL;
 		this.status = Status.WAITING;
 		
@@ -85,11 +84,11 @@ public class Arena {
 		listArenas.add(this);
 	}
 
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 
@@ -137,6 +136,14 @@ public class Arena {
 		for (Player all : usersInArena) {
 			all.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
 		}
+	}
+
+	public List<Chests> getChests() {
+		return chests;
+	}
+
+	public void setChests(List<Chests> chests) {
+		this.chests = chests;
 	}
 	
 	public int getMax() {
@@ -203,20 +210,12 @@ public class Arena {
 		Arena.listArenas = listArenas;
 	}
 
-	public Team[] getTeams() {
+	public ArrayList<Teams> getTeams() {
 		return teams;
 	}
 
-	public void setTeams(Team[] teams) {
+	public void setTeams(ArrayList<Teams> teams) {
 		this.teams = teams;
-	}
-
-	public int getNumberTeams() {
-		return numTeams;
-	}
-
-	public void setNumberTeams(int numTeams) {
-		this.numTeams = numTeams;
 	}
 
 	public int getTeamSize() {

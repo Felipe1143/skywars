@@ -1,14 +1,12 @@
 package felipe221.skywars.controller;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import felipe221.skywars.load.ChestLoad;
-import felipe221.skywars.object.Chest;
+import felipe221.skywars.object.Chests;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -16,12 +14,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class ChestController implements Listener {
-    private static HashMap<Player, Chest.TypeChest> editing = new HashMap<Player, Chest.TypeChest>();
+    private static HashMap<Player, Chests.TypeChest> editing = new HashMap<Player, Chests.TypeChest>();
 
     //config set in inventory
     public static void set(Player player){
@@ -76,8 +72,8 @@ public class ChestController implements Listener {
                 return;
             }
 
-            player.openInventory(ChestLoad.fromConfig(player, Chest.TypeChest.BASICO));
-            addEdit(player, Chest.TypeChest.BASICO);
+            player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.BASICO));
+            addEdit(player, Chests.TypeChest.BASICO);
 
             return;
         }
@@ -89,8 +85,8 @@ public class ChestController implements Listener {
                 return;
             }
 
-            player.openInventory(ChestLoad.fromConfig(player, Chest.TypeChest.NORMAL));
-            addEdit(player, Chest.TypeChest.NORMAL);
+            player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.NORMAL));
+            addEdit(player, Chests.TypeChest.NORMAL);
 
             return;
         }
@@ -102,8 +98,8 @@ public class ChestController implements Listener {
                 return;
             }
 
-            player.openInventory(ChestLoad.fromConfig(player, Chest.TypeChest.OP));
-            addEdit(player, Chest.TypeChest.OP);
+            player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.OP));
+            addEdit(player, Chests.TypeChest.OP);
 
             return;
         }
@@ -150,7 +146,7 @@ public class ChestController implements Listener {
             edit = players;
         }
 
-        Chest.TypeChest chest = editing.get(edit);
+        Chests.TypeChest chest = editing.get(edit);
 
         assert edit != null;
         if (player.getUniqueId() == edit.getUniqueId()){
@@ -164,7 +160,7 @@ public class ChestController implements Listener {
         }
     }
 
-    public static void addEdit(Player player, Chest.TypeChest chest){
+    public static void addEdit(Player player, Chests.TypeChest chest){
         editing.put(player, chest);
     }
 
