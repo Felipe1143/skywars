@@ -1,5 +1,6 @@
 package felipe221.skywars.listener;
 
+import felipe221.skywars.controller.ChestController;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,15 +16,15 @@ public class JoinListener implements Listener{
 		Player player = e.getPlayer();
 		User user = User.getUser(player);
 		
-		int LEVEL = user.getLevel();
+		//int LEVEL = user.getLevel();
 		
 		player.getInventory().clear();
 		player.setHealth(20);
-		player.setLevel(LEVEL);
+		//player.setLevel(LEVEL);
 		
 		//SET IN TABLES
-		Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players`"
-				+ "(`username`,"
+		/*Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players`"
+		+ "(`username`,"
 				+ "`xp`,"
 				+ "`rankedElo`,"
 				+ "`win_effect`,"
@@ -38,5 +39,9 @@ public class JoinListener implements Listener{
 				+ "0"
 				+ "0"
 				+ "0);");
+		 */
+
+		ChestController.set(player);
+
 	}
 }

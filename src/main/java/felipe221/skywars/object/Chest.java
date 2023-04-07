@@ -33,11 +33,17 @@ public class Chest {
 
 	public void setRollback(boolean rollback) {
 		this.rollback = rollback;
+
+		//regenerate chest code
 	}
 
 	public Inventory createRandom(){
-		//random items of all
-		ArrayList<ItemStack> itemsFinal = new ArrayList<ItemStack>();
+		//check first open
+		//if chest break cancel event
+		if (isRollback() == false){
+			setRollback(true);
+		}
+
 		return null;
 	}
 }

@@ -1,6 +1,8 @@
 package felipe221.skywars;
 
 import felipe221.skywars.controller.ChestController;
+import felipe221.skywars.listener.LeaveListener;
+import felipe221.skywars.load.ChestLoad;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,9 +27,10 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
 
 		Bukkit.getPluginManager().registerEvents(new ChestController(), this);
+		Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
 
 		configManager = new ConfigController(this);
-		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml");
+		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml");
 		
 		/*String host = configManager.getConfig("config.yml").getString("MYSQL.host");		
 		Integer port = configManager.getConfig("config.yml").getInt("MYSQL.port");
@@ -40,6 +43,8 @@ public class Main extends JavaPlugin{
 		db.open();*/
 		
 		ArenaLoad.load();
+		ChestLoad.load();
+
 		LevelController.load();
 	}
 	

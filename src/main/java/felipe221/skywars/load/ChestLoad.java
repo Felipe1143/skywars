@@ -1,9 +1,7 @@
 package felipe221.skywars.load;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,17 +17,45 @@ import felipe221.skywars.object.Chest.TypeChest;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ChestLoad {
-	public static HashMap<TypeChest, ArrayList<ItemStack>> items = new HashMap<TypeChest, ArrayList<ItemStack>>();
+	//TYPE CHEST, PROBABILIDAD, ITEM
+	public static HashMap<TypeChest, HashMap<Integer, ItemStack>> items = new HashMap<TypeChest, HashMap<Integer, ItemStack>>();
 
 	public static void load() {
 		ConfigurationSection chest = Main.getConfigManager().getConfig("chest.yml").getConfigurationSection("Chest");
+		items.clear();
 
 		for (Map.Entry<String, Object> entry : chest.getValues(false).entrySet()) {
 			TypeChest type = TypeChest.valueOf(entry.getKey());
-			ArrayList<ItemStack> iList = new ArrayList<ItemStack>();
+			HashMap<Integer, ItemStack> iList = new HashMap<>();
 
-			for (ItemStack item : (ItemStack[]) Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase())) {
-				iList.add(item);
+			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".70").equals("-")){
+				for (Object setenta : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".70")) {
+					if (!(setenta instanceof ItemStack)) {
+						continue;
+					}
+
+					iList.put(70, (ItemStack) setenta);
+				}
+			}
+
+			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".20").equals("-")) {
+				for (Object veinte : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".20")) {
+					if (!(veinte instanceof ItemStack)) {
+						continue;
+					}
+
+					iList.put(20, (ItemStack) veinte);
+				}
+			}
+
+			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".70").equals("-")) {
+				for (Object diez : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".10")) {
+					if (!(diez instanceof ItemStack)) {
+						continue;
+					}
+
+					iList.put(10, (ItemStack) diez);
+				}
 			}
 
 			items.put(type, iList);
@@ -38,21 +64,54 @@ public class ChestLoad {
 
 	//put in chest all items
 	public static void sendToConfig(TypeChest type, Inventory items) {
-		ItemStack[] itemsStack;
-		for (ItemStack inItems : items.getContents()){
-			if (inItems.getType() == Material.GLASS_PANE){
-				items.remove(inItems);
-			}
+		ArrayList<ItemStack> itemList_70 = new ArrayList<>();
+		ArrayList<ItemStack> itemList_20 = new ArrayList<>();
+		ArrayList<ItemStack> itemList_10 = new ArrayList<>();
 
-			//set in 70%
-			items.all(inItems).entrySet().forEach(entry -> {
-				int slot = entry.getKey();
-				
-				if 
-			});
+		Map<Integer, ItemStack> Items = new HashMap<Integer, ItemStack>();
+
+		for(int x = 0;x < items.getSize(); x++ ){
+			Items.put(x, items.getItem(x));
 		}
 
-		Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase(), items.getContents());
+		for (Map.Entry<Integer, ItemStack> entry : Items.entrySet()) {
+			if (entry.getValue() == null){
+				continue;
+			}
+
+			if (entry.getValue() .getType() == Material.AIR){
+				continue;
+			}
+
+			if (entry.getValue() .getType().toString().toUpperCase().contains("GLASS_PANE")){
+				continue;
+			}
+
+			int slot = entry.getKey();
+
+			//set in 70%
+			if (slot >= 0 && slot <= 27) {
+				itemList_70.add(entry.getValue());
+			}
+
+			//set in 20%
+			if (slot > 27 && slot <= 45){
+				itemList_20.add(entry.getValue());
+			}
+
+			//set in 10%
+			if (slot > 45 && slot <= 54){
+				itemList_10.add(entry.getValue());
+			}
+		}
+
+		Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".70", itemList_70);
+		Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".20", itemList_20);
+		Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".10", itemList_10);
+
+		Main.getConfigManager().save("chest.yml");
+
+		System.out.println("[Debug - SkyWars] La configuración de los cofres fue actualizada correctamente");
 	}
 
 	public static Inventory fromConfig(Player player, TypeChest type) {
@@ -61,7 +120,7 @@ public class ChestLoad {
 		//0, 26 -- 70% probabilidad
 		//27, 45 -- 20% probabilidad
 		//45, 53 -- 10% probabilidad
-		ItemStack first = new ItemStack(Material.GLASS_PANE);
+		ItemStack first = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE);
 		ItemMeta first_meta = first.getItemMeta();
 		first.setDurability((short) 4); //amarillo
 		first_meta.setDisplayName(ChatColor.YELLOW + "70% de probabilidad");
@@ -70,7 +129,7 @@ public class ChestLoad {
 		b.setItem(9, first);
 		b.setItem(18, first);
 
-		ItemStack second = new ItemStack(Material.GLASS_PANE);
+		ItemStack second = new ItemStack(Material.ORANGE_STAINED_GLASS_PANE);
 		ItemMeta second_meta = second.getItemMeta();
 		second.setDurability((short) 1); //naranja
 		second_meta.setDisplayName(ChatColor.GOLD + "20% de probabilidad");
@@ -78,72 +137,86 @@ public class ChestLoad {
 		b.setItem(27, second);
 		b.setItem(36, second);
 
-		ItemStack third = new ItemStack(Material.GLASS_PANE);
+		ItemStack third = new ItemStack(Material.RED_STAINED_GLASS_PANE);
 		ItemMeta third_meta = third.getItemMeta();
-		third.setDurability((short) 14); //rojo
 		third_meta.setDisplayName(ChatColor.RED + "10% de probabilidad");
 		third.setItemMeta(third_meta);
 		b.setItem(45, third);
 
 		//set 70% items
 		int counter = 1;
-		for (ItemStack setenta : (ItemStack[]) Objects.requireNonNull(Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".70"))){
-			if (counter < 26) {
-				if ((counter) == 9){
-					counter = 10;
+		if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".70").equals("-")){
+			for (Object setenta : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".70")){
+				if (!(setenta instanceof ItemStack)){
+					continue;
 				}
 
-				if ((counter) == 18){
-					counter = 19;
+				if (counter < 27) {
+					if ((counter) == 9){
+						counter = 10;
+					}
+
+					if ((counter) == 18){
+						counter = 19;
+					}
+
+					b.setItem(counter, (ItemStack) setenta);
+				}else{
+					//out index
+					System.out.println("[Debug - SkyWars] Hay demasiados items en el 70% del cofre " + type.toString() + ", porfavor borra algunos en la configuración");
+
 				}
 
-				b.setItem(counter, setenta);
-			}else{
-				//out index
-				System.out.println("[Debug] Hay demasiados items en el 70% del cofre " + type.toString() + ", porfavor borra algunos en la configuración");
-				break;
+				counter++;
 			}
-
-			counter++;
 		}
 
 		//set 20% items
 		counter = 28;
-		for (ItemStack veinte : (ItemStack[]) Objects.requireNonNull(Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".20"))){
-			if (counter < 44) {
-				if ((counter) == 27){
-					counter = 28;
+		if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".20").equals("-")){
+			for (Object veinte : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".20")){
+				if (!(veinte instanceof ItemStack)){
+					continue;
 				}
 
-				if ((counter) == 36){
-					counter = 37;
+				if (counter < 45) {
+					if ((counter) == 36) {
+						counter = 37;
+					}
+
+					b.setItem(counter, (ItemStack) veinte);
+				} else {
+					//out index
+					System.out.println("[Debug - SkyWars] Hay demasiados items en el 20% del cofre " + type.toString() + ", porfavor borra algunos en la configuración");
 				}
 
-				b.setItem(counter, veinte);
-			}else{
-				//out index
-				System.out.println("[Debug] Hay demasiados items en el 20% del cofre " + type.toString() + ", porfavor borra algunos en la configuración");
-				break;
+				counter++;
 			}
-
-			counter++;
 		}
 
 		counter = 46;
-		for (ItemStack diez : (ItemStack[]) Objects.requireNonNull(Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".20"))){
-			if (counter < 53) {
-				b.setItem(counter, diez);
-			}else{
-				//out index
-				System.out.println("[Debug] Hay demasiados items en el 10% del cofre " + type.toString() + ", porfavor borra algunos en la configuración");
-				break;
-			}
 
-			counter++;
+		if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".10").equals("-")) {
+			for (Object diez : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".10")){
+				if (!(diez instanceof ItemStack)){
+					continue;
+				}
+
+				if (counter < 54) {
+					b.setItem(counter, (ItemStack) diez);
+				} else {
+					//out index
+					System.out.println("[Debug - SkyWars] Hay demasiados items en el 10% del cofre " + type.toString() + ", porfavor borra algunos en la configuración");
+				}
+
+				counter++;
+			}
 		}
 
-		b.setContents((ItemStack[]) Objects.requireNonNull(Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase())));
-
 		return b;
+	}
+
+	public static List<ItemStack> getRandomItems(TypeChest type){
+		return null;
 	}
 }

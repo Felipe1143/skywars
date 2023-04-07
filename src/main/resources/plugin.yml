@@ -1,6 +1,6 @@
-name: SkyWars-Final
-version: '${project.version}'
-main: felipe221.untitled.Untitled
+main: felipe221.skywars.Main
+name: SkyWars
+version: '1.0'
+description: Plugin privado - Felipe221
+author: Felipe221
 api-version: 1.16
-authors: [Felipe221]
-description: Private SkyWars

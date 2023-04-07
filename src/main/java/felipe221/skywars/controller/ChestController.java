@@ -1,5 +1,6 @@
 package felipe221.skywars.controller;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.object.Chest;
 import org.bukkit.ChatColor;
@@ -7,12 +8,15 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -23,22 +27,29 @@ public class ChestController implements Listener {
     public static void set(Player player){
         player.getInventory().clear();
 
+        ItemStack leave = new ItemStack(Material.BARRIER);
+        ItemMeta leave_meta = leave.getItemMeta();
+        leave_meta.setDisplayName(ChatColor.RED+ "Salir" + ChatColor.GRAY + " (Click derecho)");
+        leave.setItemMeta(leave_meta);
+
         ItemStack chest_basic = new ItemStack(Material.CHEST);
         ItemMeta chest_basic_meta = chest_basic.getItemMeta();
-        chest_basic_meta.setDisplayName(ChatColor.GREEN+ "Cofre básico " + ChatColor.GRAY + " (Click derecho)");
+        chest_basic_meta.setDisplayName(ChatColor.GREEN+ "Cofre básico" + ChatColor.GRAY + " (Click derecho)");
         chest_basic.setItemMeta(chest_basic_meta);
 
         ItemStack chest_normal = new ItemStack(Material.CHEST);
         ItemMeta chest_normal_meta = chest_normal.getItemMeta();
-        chest_normal_meta.setDisplayName(ChatColor.GOLD+ "Cofre normal " + ChatColor.GRAY + " (Click derecho)");
+        chest_normal_meta.setDisplayName(ChatColor.GOLD+ "Cofre normal" + ChatColor.GRAY + " (Click derecho)");
         chest_normal.setItemMeta(chest_normal_meta);
 
         ItemStack chest_op = new ItemStack(Material.CHEST);
         ItemMeta chest_op_meta = chest_op.getItemMeta();
-        chest_op_meta.setDisplayName(ChatColor.RED + "Cofre OP " + ChatColor.GRAY + " (Click derecho)");
+        chest_op_meta.setDisplayName(ChatColor.RED + "Cofre OP" + ChatColor.GRAY + " (Click derecho)");
         chest_op.setItemMeta(chest_op_meta);
         
         player.getInventory().addItem(chest_basic, chest_normal, chest_op);
+        player.getInventory().setItem(8, leave);
+
         player.updateInventory();
     }
 
@@ -46,7 +57,11 @@ public class ChestController implements Listener {
     public void onPlayerClickSlot(PlayerInteractEvent e){
         Player player = e.getPlayer();
 
-        if (Objects.requireNonNull(e.getItem()).getType() != Material.CHEST) {
+        if (e.getItem() == null){
+            return;
+        }
+
+        if (e.getItem().getType() != Material.CHEST) {
             return;
         }
 
@@ -54,28 +69,69 @@ public class ChestController implements Listener {
             return;
         }
 
-        if (!editing.isEmpty()){
-            player.sendMessage(ChatColor.RED + "Un usuario ya se encuentra editando los cofres ¡Espera que termine y podrás!");
+        if (e.getItem().getItemMeta().getDisplayName().contains("básico")){
+            if (!editing.isEmpty()){
+                player.sendMessage(ChatColor.RED + "Un usuario ya se encuentra editando los cofres ¡Espera que termine y podrás!");
+
+                return;
+            }
+
+            player.openInventory(ChestLoad.fromConfig(player, Chest.TypeChest.BASICO));
+            addEdit(player, Chest.TypeChest.BASICO);
 
             return;
         }
 
-        if (Objects.requireNonNull(e.getItem().getItemMeta()).getDisplayName().contains("básico")){
-            ChestLoad.fromConfig(player, Chest.TypeChest.BASICO);
+        if (e.getItem().getItemMeta().getDisplayName().contains("normal")){
+            if (!editing.isEmpty()){
+                player.sendMessage(ChatColor.RED + "Un usuario ya se encuentra editando los cofres ¡Espera que termine y podrás!");
+
+                return;
+            }
+
+            player.openInventory(ChestLoad.fromConfig(player, Chest.TypeChest.NORMAL));
+            addEdit(player, Chest.TypeChest.NORMAL);
 
             return;
         }
 
-        if (Objects.requireNonNull(e.getItem().getItemMeta()).getDisplayName().contains("normal")){
-            ChestLoad.fromConfig(player, Chest.TypeChest.NORMAL);
+        if (e.getItem().getItemMeta().getDisplayName().contains("OP")){
+            if (!editing.isEmpty()){
+                player.sendMessage(ChatColor.RED + "Un usuario ya se encuentra editando los cofres ¡Espera que termine y podrás!");
+
+                return;
+            }
+
+            player.openInventory(ChestLoad.fromConfig(player, Chest.TypeChest.OP));
+            addEdit(player, Chest.TypeChest.OP);
 
             return;
         }
+    }
 
-        if (Objects.requireNonNull(e.getItem().getItemMeta()).getDisplayName().contains("OP")){
-            ChestLoad.fromConfig(player, Chest.TypeChest.OP);
+    //prevent move panels
+    @EventHandler
+    public void onPlayerClickInventory(InventoryClickEvent e){
+        Player player = (Player) e.getWhoClicked();
 
+        if (player == null){
             return;
+        }
+
+        if (!isEditing(player)){
+            return;
+        }
+
+        if (e.getCurrentItem() == null){
+            return;
+        }
+
+        if (e.getCurrentItem().getType() == Material.AIR){
+            return;
+        }
+
+        if (e.getCurrentItem().getType().toString().toUpperCase().contains("GLASS_PANE")){
+            e.setCancelled(true);
         }
     }
 
@@ -99,8 +155,32 @@ public class ChestController implements Listener {
         assert edit != null;
         if (player.getUniqueId() == edit.getUniqueId()){
             ChestLoad.sendToConfig(chest, e.getInventory());
+            player.sendMessage(ChatColor.GREEN + "¡Configuración cargada correctamente!");
+
+            removeEdit(player);
+            ChestLoad.load();
         }else{
             player.sendMessage("ERROR AL CERRAR COFRE");
         }
+    }
+
+    public static void addEdit(Player player, Chest.TypeChest chest){
+        editing.put(player, chest);
+    }
+
+    public static void removeEdit(Player player){
+        editing.remove(player);
+    }
+
+    public static boolean isEditing(Player player){
+        if (editing.isEmpty()){
+            return false;
+        }
+
+        if (editing.containsKey(player)){
+            return true;
+        }
+
+        return false;
     }
 }
