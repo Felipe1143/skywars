@@ -30,7 +30,7 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
 
 		configManager = new ConfigController(this);
-		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml");
+		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml");
 		
 		/*String host = configManager.getConfig("config.yml").getString("MYSQL.host");		
 		Integer port = configManager.getConfig("config.yml").getInt("MYSQL.port");

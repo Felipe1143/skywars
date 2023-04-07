@@ -17,7 +17,8 @@ public class ArenaLoad {
 			 String id = entry.getKey();
 			 
 			 Arena arena = new Arena(Integer.parseInt(id));
-			 
+
+			 //debug
 			 System.out.println(arena.toString());
 		}
 	}

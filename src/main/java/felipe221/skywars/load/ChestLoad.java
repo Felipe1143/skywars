@@ -1,11 +1,12 @@
 package felipe221.skywars.load;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
+import felipe221.skywars.object.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Utility;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -13,52 +14,82 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import felipe221.skywars.Main;
-import felipe221.skywars.object.Chest.TypeChest;
+import felipe221.skywars.object.Chests.TypeChest;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ChestLoad {
 	//TYPE CHEST, PROBABILIDAD, ITEM
-	public static HashMap<TypeChest, HashMap<Integer, ItemStack>> items = new HashMap<TypeChest, HashMap<Integer, ItemStack>>();
+	public static HashMap<TypeChest, HashMap<Integer, ArrayList<ItemStack>>> items = new HashMap<TypeChest, HashMap<Integer, ArrayList<ItemStack>>>();
 
 	public static void load() {
 		ConfigurationSection chest = Main.getConfigManager().getConfig("chest.yml").getConfigurationSection("Chest");
 		items.clear();
 
+		//POR CADA TIPO DE COFRE
 		for (Map.Entry<String, Object> entry : chest.getValues(false).entrySet()) {
+			//TYPE OF CHEST
 			TypeChest type = TypeChest.valueOf(entry.getKey());
-			HashMap<Integer, ItemStack> iList = new HashMap<>();
-
+			
+			//SI HAY ITEMS EN 70%
 			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".70").equals("-")){
+				//CREA LISTAS
+				ArrayList<ItemStack> itemStacks = new ArrayList<>();
+				HashMap<Integer, ArrayList<ItemStack>> iList = new HashMap<>();
+				
+				//SUMA ITEMS AL ARRAYLIST
 				for (Object setenta : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".70")) {
 					if (!(setenta instanceof ItemStack)) {
 						continue;
 					}
 
-					iList.put(70, (ItemStack) setenta);
+					itemStacks.add((ItemStack) setenta);
 				}
+				
+				//PUT DENTRO DEL HASHMAP GLOBAL DEL 70%
+				iList.put(70, itemStacks);
+
+				items.put(type, iList);
 			}
 
-			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".20").equals("-")) {
+			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".20").equals("-")){
+				//CREA LISTAS
+				ArrayList<ItemStack> itemStacks = new ArrayList<>();
+				HashMap<Integer, ArrayList<ItemStack>> iList = new HashMap<>();
+
+				//SUMA ITEMS AL ARRAYLIST
 				for (Object veinte : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".20")) {
 					if (!(veinte instanceof ItemStack)) {
 						continue;
 					}
 
-					iList.put(20, (ItemStack) veinte);
+					itemStacks.add((ItemStack) veinte);
 				}
+
+				//PUT DENTRO DEL HASHMAP GLOBAL DEL 20%
+				iList.put(20, itemStacks);
+
+				items.put(type, iList);
 			}
 
-			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".70").equals("-")) {
+			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".10").equals("-")){
+				//CREA LISTAS
+				ArrayList<ItemStack> itemStacks = new ArrayList<>();
+				HashMap<Integer, ArrayList<ItemStack>> iList = new HashMap<>();
+
+				//SUMA ITEMS AL ARRAYLIST
 				for (Object diez : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".10")) {
 					if (!(diez instanceof ItemStack)) {
 						continue;
 					}
 
-					iList.put(10, (ItemStack) diez);
+					itemStacks.add((ItemStack) diez);
 				}
-			}
 
-			items.put(type, iList);
+				//PUT DENTRO DEL HASHMAP GLOBAL DEL 10%
+				iList.put(10, itemStacks);
+
+				items.put(type, iList);
+			}
 		}
 	}
 
@@ -216,7 +247,7 @@ public class ChestLoad {
 		return b;
 	}
 
-	public static List<ItemStack> getRandomItems(TypeChest type){
-		return null;
+	public static List<ItemStack> getRandomItems(TypeChest type, int porcent){
+		return items.get(type).get(porcent);
 	}
 }
