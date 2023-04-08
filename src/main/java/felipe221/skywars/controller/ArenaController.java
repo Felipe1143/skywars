@@ -1,12 +1,14 @@
 package felipe221.skywars.controller;
 
 import felipe221.skywars.load.ChestLoad;
+import felipe221.skywars.object.Vote;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
@@ -89,7 +91,15 @@ public class ArenaController implements Listener{
 				}
 
 				if (seconds == arena.getTime() / 2) {
-					//close votes
+					for (Vote votes : arena.getVotes()){
+						votes.closeVotes();
+					}
+
+					List<String> VOTES_CLOSE = Main.getConfigManager().getConfig("messages.yml").getStringList("VOTES_CLOSE");
+
+					for (String lines : VOTES_CLOSE) {
+						arena.sendMessage(lines);
+					}
 
 					String START_IN = Main.getConfigManager().getConfig("messages.yml").getString("START_IN");
 					arena.sendMessage(START_IN);
@@ -119,6 +129,8 @@ public class ArenaController implements Listener{
 					//10% items
 					List<ItemStack> items_10 = ChestLoad.getRandomItems(arena.getChest(), 10);
 
+                    ArrayList<ItemStack> whitelist = new ArrayList<>();
+
 					final Random random = new Random();
 					boolean[] chosen = new boolean[chest.getBlockInventory().getSize()];
 					int counter = 0;
@@ -132,13 +144,14 @@ public class ArenaController implements Listener{
 							slot = random.nextInt(chest.getBlockInventory().getSize());
 						} while(chosen[slot]);
 
-						int randomItem = random.nextInt(items_70.size());
+                        ItemStack addItem = items_70.get(random.nextInt(items_70.size()));
+                        while (whitelist.contains(addItem)){
+                            addItem = items_70.get(random.nextInt(items_70.size()));
+                        }
 
 						chosen[slot] = true;
-						chest.getBlockInventory().setItem(slot, items_70.get(randomItem));
-
-						//cancel repeat item
-						items_70.remove(items_70.get(randomItem));
+						chest.getBlockInventory().setItem(slot, addItem);
+                        whitelist.add(addItem);
 					}
 
 					//cantidad de items que habra en total del 20%
@@ -146,17 +159,18 @@ public class ArenaController implements Listener{
 						boolean check = false;
 						int slot;
 
-						do {
-							slot = random.nextInt(chest.getBlockInventory().getSize());
-						} while(chosen[slot]);
+                        do {
+                            slot = random.nextInt(chest.getBlockInventory().getSize());
+                        } while(chosen[slot]);
 
-						int randomItem = random.nextInt(items_20.size());
+                        ItemStack addItem = items_20.get(random.nextInt(items_20.size()));
+                        while (whitelist.contains(addItem)){
+                            addItem = items_20.get(random.nextInt(items_20.size()));
+                        }
 
-						chosen[slot] = true;
-						chest.getBlockInventory().setItem(slot, items_20.get(randomItem));
-
-						//cancel repeat item
-						items_20.remove(items_20.get(randomItem));
+                        chosen[slot] = true;
+                        chest.getBlockInventory().setItem(slot, addItem);
+                        whitelist.add(addItem);
 					}
 
 					//cantidad de items que habra en total del 10%
@@ -164,17 +178,18 @@ public class ArenaController implements Listener{
 						boolean check = false;
 						int slot;
 
-						do {
-							slot = random.nextInt(chest.getBlockInventory().getSize());
-						} while(chosen[slot]);
+                        do {
+                            slot = random.nextInt(chest.getBlockInventory().getSize());
+                        } while(chosen[slot]);
 
-						int randomItem = random.nextInt(items_10.size());
+                        ItemStack addItem = items_10.get(random.nextInt(items_10.size()));
+                        while (whitelist.contains(addItem)){
+                            addItem = items_10.get(random.nextInt(items_10.size()));
+                        }
 
-						chosen[slot] = true;
-						chest.getBlockInventory().setItem(slot, items_10.get(randomItem));
-
-						//cancel repeat item
-						items_10.remove(items_10.get(randomItem));
+                        chosen[slot] = true;
+                        chest.getBlockInventory().setItem(slot, addItem);
+                        whitelist.add(addItem);
 					}
 
 					chest.update();

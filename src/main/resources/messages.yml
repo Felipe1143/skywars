@@ -2,3 +2,5 @@ ARENA_MAX: ""
 SUCCESSFULL_JOIN: ""
 COUNT_JOIN: ""
 START_IN: ""
+VOTES_CLOSE:
+  - "La votación terminó"
