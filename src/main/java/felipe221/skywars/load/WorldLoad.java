@@ -1,7 +1,6 @@
 package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
-import felipe221.skywars.object.User;
 import felipe221.skywars.util.VoidGenerator;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
@@ -69,7 +68,7 @@ public class WorldLoad {
     }
 
     //Kicks players from a world
-    public static void kickPlayers(final World world) {
+    public static void kickPlayers(final World world, Location fallback) {
         if (world == null) {
             return;
         }
@@ -81,8 +80,7 @@ public class WorldLoad {
                 player.spigot().respawn();
             }
 
-            User user = User.getUser(player);
-            user.teleportSpawn();
+            player.teleport(fallback);
         }
     }
 
