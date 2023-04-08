@@ -1,5 +1,6 @@
 package felipe221.skywars.object;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 import org.bukkit.Bukkit;
@@ -26,9 +27,16 @@ public class Arena {
 	private Status status;
 	private int id;
 	private String name;
-	private TypeChest chest;
-	private TypeMode mode;
 	private World world;
+
+	//votes
+	private List<Vote> votes;
+	private TypeChest chest;
+	private Time.TypeTime time_game;
+	private Projectiles.TypeProjectiles projectiles;
+	private Hearts.TypeHearts hearts;
+
+	private TypeMode mode;
 
 	//if is team game
 	private ArrayList<Teams> teams;
@@ -42,31 +50,17 @@ public class Arena {
 	private int min;
 	private int time;
 
-	@Override
-	public String toString() {
-		return "Arena{" +
-				"status=" + status +
-				", id=" + id +
-				", name='" + name + '\'' +
-				", chest=" + chest +
-				", mode=" + mode +
-				", world=" + world +
-				", teams=" + teams +
-				", teamSize=" + teamSize +
-				", usersInArena=" + usersInArena +
-				", spawns=" + spawns +
-				", max=" + max +
-				", min=" + min +
-				", time=" + time +
-				'}';
-	}
-	
 	public Arena(int id) {
 		this.usersInArena = new ArrayList<Player>();
 		this.chests = new ArrayList<>();
+
+		//votes
 		this.chest = TypeChest.NORMAL;
+		this.hearts = Hearts.TypeHearts.C10;
+		this.projectiles = Projectiles.TypeProjectiles.NORMAL;
+		this.time_game = Time.TypeTime.DAY;
+
 		this.status = Status.WAITING;
-		
 		this.id = id;
 		this.name = Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Name");
 		this.world = Bukkit.getWorld(Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".World-Name"));
@@ -75,8 +69,15 @@ public class Arena {
 		this.time = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
 		
 		this.spawns = new HashMap<Location, Boolean>();
-		
-		for (String locations : Main.getConfigManager().getConfig("arenas.yml").getStringList("Arenas." + id + ".Spawns")) {
+
+        //vote create
+        this.votes.add(new Vote(Vote.TypeVote.CHESTS,  TypeChest.NORMAL, TypeChest.OP, TypeChest.BASICO));
+        this.votes.add(new Vote(Vote.TypeVote.LIFE, Hearts.TypeHearts.C10, Hearts.TypeHearts.C20, Hearts.TypeHearts.C30));
+        this.votes.add(new Vote(Vote.TypeVote.PROJECTILES, Projectiles.TypeProjectiles.NORMAL, Projectiles.TypeProjectiles.TP, Projectiles.TypeProjectiles.EXPLOSIVE));
+        this.votes.add(new Vote(Vote.TypeVote.TIME, Time.TypeTime.DAY, Time.TypeTime.NIGHT, Time.TypeTime.SUNSET));
+
+        //load spawns
+        for (String locations : Main.getConfigManager().getConfig("arenas.yml").getStringList("Arenas." + id + ".Spawns")) {
 			 Location finalLoc = Util.parseLocation(world, locations);
 			 this.addSpawn(finalLoc);
 		}
@@ -214,6 +215,14 @@ public class Arena {
 		return teams;
 	}
 
+	public List<Vote> getVotes() {
+		return votes;
+	}
+
+	public void setVotes(ArrayList<Vote> votes) {
+		this.votes = votes;
+	}
+
 	public void setTeams(ArrayList<Teams> teams) {
 		this.teams = teams;
 	}
@@ -226,4 +235,27 @@ public class Arena {
 		this.teamSize = teamSize;
 	}
 
+	public Time.TypeTime getTimeGame() {
+		return time_game;
+	}
+
+	public void setTimeGame(Time.TypeTime time_game) {
+		this.time_game = time_game;
+	}
+
+	public Projectiles.TypeProjectiles getProjectiles() {
+		return projectiles;
+	}
+
+	public void setProjectiles(Projectiles.TypeProjectiles projectiles) {
+		this.projectiles = projectiles;
+	}
+
+	public Hearts.TypeHearts getHearts() {
+		return hearts;
+	}
+
+	public void setHearts(Hearts.TypeHearts hearts) {
+		this.hearts = hearts;
+	}
 }
