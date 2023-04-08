@@ -1,29 +1,31 @@
 package felipe221.skywars.object;
 
-import java.lang.reflect.Type;
-import java.util.*;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.Location;
-
+import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.Main;
-import felipe221.skywars.Util;
+import felipe221.skywars.load.WorldLoad;
 import felipe221.skywars.object.Chests.TypeChest;
 import felipe221.skywars.object.Mode.TypeMode;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class Arena {
 	private static ArrayList<Arena> listArenas = new ArrayList<Arena>();
-	
+
 	public enum Status{
 		WAITING,
 		STARTING,
 		INGAME,
 		ENDING
 	}
-	
+
 	private Status status;
 	private int id;
 	private String name;
@@ -67,21 +69,24 @@ public class Arena {
 		this.max = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Max-Players");
 		this.min = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Min-Players");
 		this.time = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
-		
+
 		this.spawns = new HashMap<Location, Boolean>();
 
         //vote create
         this.votes.add(new Vote(Vote.TypeVote.CHESTS,  TypeChest.NORMAL, TypeChest.OP, TypeChest.BASICO));
-        this.votes.add(new Vote(Vote.TypeVote.LIFE, Hearts.TypeHearts.C10, Hearts.TypeHearts.C20, Hearts.TypeHearts.C30));
+        this.votes.add(new Vote(Vote.TypeVote.HEARTS, Hearts.TypeHearts.C10, Hearts.TypeHearts.C20, Hearts.TypeHearts.C30));
         this.votes.add(new Vote(Vote.TypeVote.PROJECTILES, Projectiles.TypeProjectiles.NORMAL, Projectiles.TypeProjectiles.TP, Projectiles.TypeProjectiles.EXPLOSIVE));
         this.votes.add(new Vote(Vote.TypeVote.TIME, Time.TypeTime.DAY, Time.TypeTime.NIGHT, Time.TypeTime.SUNSET));
 
         //load spawns
         for (String locations : Main.getConfigManager().getConfig("arenas.yml").getStringList("Arenas." + id + ".Spawns")) {
-			 Location finalLoc = Util.parseLocation(world, locations);
-			 this.addSpawn(finalLoc);
+			Location finalLoc = BukkitUtil.parseLocation(world, locations);
+			this.addSpawn(finalLoc);
 		}
-		
+
+		//load map
+		WorldLoad.create(world.getName());
+
 		listArenas.add(this);
 	}
 
@@ -124,19 +129,28 @@ public class Arena {
 	public void setPlayers(List<Player> usersInArena) {
 		this.usersInArena = usersInArena;
 	}
-	
+
 	public void addPlayer(Player player) {
 		this.usersInArena.add(player);
 	}
-	
+
 	public void removePlayer(Player player) {
 		this.usersInArena.add(player);
 	}
-	
+
 	public void sendMessage(String text) {
 		for (Player all : usersInArena) {
 			all.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
 		}
+	}
+
+	public void saveWorld(){
+		//first kick player editing
+		BukkitUtil.runSync(() -> {
+			BukkitUtil.runAsync(() -> {
+				WorldLoad.copyWorldMap(this.world);
+			});
+		});
 	}
 
 	public List<Chests> getChests() {
@@ -146,7 +160,7 @@ public class Arena {
 	public void setChests(List<Chests> chests) {
 		this.chests = chests;
 	}
-	
+
 	public int getMax() {
 		return max;
 	}
@@ -190,11 +204,11 @@ public class Arena {
 	public HashMap<Location, Boolean> getSpawns() {
 		return spawns;
 	}
-	
+
 	public void addSpawn(Location spawn) {
 		this.spawns.put(spawn, false);
 	}
-	
+
 	public Set<Location> getSpawnsLocations() {
 		return spawns.keySet();
 	}

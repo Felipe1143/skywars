@@ -7,10 +7,10 @@ import java.util.HashMap;
 
 public class Vote {
     public enum TypeVote{
-        LIFE, TIME, CHESTS, SCENARIOS, PROJECTILES, FINALS
+        HEARTS, TIME, CHESTS, SCENARIOS, PROJECTILES, FINALS
     }
 
-    private TypeVote type_vote;
+    private final TypeVote type_vote;
     private HashMap<Object, Integer> votes;
     private ArrayList<Player> vote_players;
     private Object winner;
@@ -34,11 +34,7 @@ public class Vote {
     }
 
     public int getVotes(Object type){
-        if (votes.containsKey(type)){
-            return votes.get(type);
-        }else{
-            return 0;
-        }
+        return votes.getOrDefault(type, 0);
     }
 
     public void addVote(Object type){
