@@ -1,13 +1,8 @@
 package felipe221.skywars.controller;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import felipe221.skywars.Main;
+
+import java.sql.*;
 
 public class DatabaseController {
 	protected boolean connected = false; 
@@ -29,20 +24,18 @@ public class DatabaseController {
 		this.plugin = plugin;
 	}
 	    
-	public Connection open() { 
+	public void open() {
 		try { 
 			Class.forName(driver); 
 	            
 			this.c = DriverManager.getConnection(connectionString);
-			return c; 
-		} catch (SQLException e) { 
+		} catch (SQLException e) {
 			System.out.println("ERROR EN LA CONEXION A LA BASE DE DATOS: " + e.getMessage()); 
 		} catch (ClassNotFoundException e) { 
 			System.out.println(driver + " no encontrado!"); 
 		} catch (Exception e) { 
 			System.out.println(e.getMessage()); 
-		} 
-		return this.c; 
+		}
 	}
 
 	public Connection getConnection() {

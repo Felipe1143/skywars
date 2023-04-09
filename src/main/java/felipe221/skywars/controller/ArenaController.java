@@ -62,9 +62,12 @@ public class ArenaController implements Listener{
 
 		//set cage in arena
 		Location spawn_location = arena.getRandomSpawn();
-		Cage cage = user.getCage();
-		cage.setLocation(spawn_location);
-		cage.create();
+
+		if (spawn_location != null) {
+			Cage cage = user.getCage();
+			cage.setLocation(spawn_location);
+			cage.create();
+		}
 
 		checkStart();
 	}

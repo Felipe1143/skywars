@@ -32,10 +32,10 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new ProjectileController(), this);
 
 		configManager = new ConfigController(this);
-		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml", "items.yml");
+		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml", "items.yml", "kits.yml");
 		
 		String host = configManager.getConfig("config.yml").getString("MYSQL.host");
-		Integer port = configManager.getConfig("config.yml").getInt("MYSQL.port");
+		int port = configManager.getConfig("config.yml").getInt("MYSQL.port");
 		String name = configManager.getConfig("config.yml").getString("MYSQL.name");	
 		String user = configManager.getConfig("config.yml").getString("MYSQL.user");	
 		String pass = configManager.getConfig("config.yml").getString("MYSQL.password");

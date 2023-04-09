@@ -1,0 +1,10 @@
+Kits:
+  Basico:
+    Name: 'Basico'
+    Item-Menu: 'WOOD_SWORD'
+    Lore:
+      - "Kit común"
+    Price: 3000
+    Permission: "skywars.kit.basico"
+    Items:
+    Armor:
