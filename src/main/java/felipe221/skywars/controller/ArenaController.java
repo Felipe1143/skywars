@@ -1,5 +1,6 @@
 package felipe221.skywars.controller;
 
+import felipe221.skywars.object.Cage;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.Main;
 import felipe221.skywars.load.ChestLoad;
@@ -58,6 +59,12 @@ public class ArenaController implements Listener{
 
 		String COUNT_JOIN = Main.getConfigManager().getConfig("messages.yml").getString("COUNT_JOIN");
 		arena.sendMessage(COUNT_JOIN);
+
+		//set cage in arena
+		Location spawn_location = arena.getRandomSpawn();
+		Cage cage = user.getCage();
+		cage.setLocation(spawn_location);
+		cage.create();
 
 		checkStart();
 	}

@@ -41,6 +41,10 @@ public class Cage {
         block.setType(material);
     }
 
+    public void setLocation(Location location){
+        this.location = location;
+    }
+
     public void create(){
         //comun
         if (this.type == TypeCage.COMUN) {

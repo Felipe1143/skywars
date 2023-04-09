@@ -10,6 +10,7 @@ import felipe221.skywars.controller.DatabaseController;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class User {
@@ -43,6 +44,8 @@ public class User {
 		this.arena = null;
 		this.alive = false;
 		this.player = player;
+		//set with mysql
+		this.cage = new Cage(Material.GLASS, Cage.TypeCage.COMUN, null);
 	}
 	
 	public static User getUser(Player player) {

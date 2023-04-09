@@ -11,10 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Arena {
 	private static ArrayList<Arena> listArenas = new ArrayList<Arena>();
@@ -153,6 +150,23 @@ public class Arena {
 				WorldLoad.copyWorldMap(this.world);
 			});
 		});
+	}
+
+	public Location getRandomSpawn(){
+		for (Location location : getSpawns().keySet()){
+			boolean inUse = spawns.get(location);
+
+			if (inUse){
+				continue;
+			}
+
+			//set used
+			spawns.put(location, true);
+			return location;
+		}
+
+		//no more locations
+		return null;
 	}
 
 	public List<Chests> getChests() {
