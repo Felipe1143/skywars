@@ -40,14 +40,12 @@ public class ArenaController implements Listener{
 	}
 
 	public void join(){
-		if (!player.hasPermission("skywars.size")) {
-			if (arena.getPlayers().size() >= arena.getMax()) {
-				String ARENA_MAX = Main.getConfigManager().getConfig("messages.yml").getString("ARENA_MAX");
+		if (arena.getPlayers().size() >= arena.getMax()) {
+			String ARENA_MAX = Main.getConfigManager().getConfig("messages.yml").getString("ARENA_MAX");
 
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', ARENA_MAX));
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', ARENA_MAX));
 
-				return;
-			}
+			return;
 		}
 
 		arena.addPlayer(player);
@@ -118,7 +116,7 @@ public class ArenaController implements Listener{
 
 	public void start(){
 		for (Player players : arena.getPlayers()){
-			User user = new User(players);
+			User user = User.getUser(players);
 
 			user.setAlive(true);
 		}
@@ -128,7 +126,7 @@ public class ArenaController implements Listener{
 	public void resetMap(){
 		BukkitUtil.runSync(() -> {
 			//to spawn fix
-			WorldLoad.kickPlayers(arena.getWorld(), new Location(arena.getWorld(), 0, 0, 0));
+			WorldLoad.kickPlayers(arena.getWorld());
 
 			BukkitUtil.runAsync(() -> {
 				WorldLoad.unload(arena.getWorld());
