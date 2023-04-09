@@ -1,7 +1,15 @@
 package felipe221.skywars.object;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
+import felipe221.skywars.Main;
+import felipe221.skywars.controller.DatabaseController;
+import felipe221.skywars.util.BukkitUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class User {
@@ -9,12 +17,11 @@ public class User {
 	
 	@Override
 	public String toString() {
-		return "User [level=" + level + ", xp=" + xp + ", rankedElo=" + rankedElo + ", wins=" + wins + ", kills="
+		return "User [xp=" + xp + ", rankedElo=" + rankedElo + ", wins=" + wins + ", kills="
 				+ kills + ", losses=" + losses + ", games=" + games + ", win_effect=" + win_effect + ", kit=" + kit
 				+ ", cage=" + cage + ", ballons=" + ballons + ", alive=" + alive + ", arena=" + arena + "]";
 	}
 	
-	private int level;
 	private int xp;
 	private int rankedElo;
 	
@@ -23,45 +30,78 @@ public class User {
 	private int losses;
 	private int games;
 	
-	private Effect win_effect;
+	private Effect.TypeEffect win_effect;
 	private Kit kit;
 	private Cage cage;
 	private Ballon ballons;
 	
 	private boolean alive;
 	private Arena arena;
+	private Player player;
 	
 	public User(Player player) {
 		this.arena = null;
 		this.alive = false;
+		this.player = player;
 	}
 	
 	public static User getUser(Player player) {
 		if (cache.containsKey(player)) {
 			return cache.get(player);
 		}else {
-			//GET FROM SQL
-			
-			return cache.put(player, new User(player));
+			return new User(player);
 		}
 	}
-	
-	//CREATE AND GET, SEND STATS MYSQL
+
+	public void load(){
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players` WHERE username = '" + player.getUniqueId() + "';").getResultSet();
+		try {
+			if (st.next()) {
+				this.xp = st.getInt("xp");
+				this.rankedElo = st.getInt("rankedElo");
+				//this.win_effect = Effect.TypeEffect.valueOf(st.getString("win_effect"));
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		cache.put(player, this);
+	}
+
+	public boolean exist(){
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players` WHERE username = '" + player.getUniqueId() + "';").getResultSet();
+		try {
+			if (st.next()) {
+				System.out.println("[Debug - SkyWars] El jugador " + player.getName() + " ya existe en la base de datos");
+
+				return true;
+			}
+		}catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		System.out.println("[Debug - SkyWars] El jugador " + player.getName() + " no existe en la base de datos");
+		return false;
+	}
 	
 	public int getLevel() {
-		return level;
+		if (getXP() >= 0){
+			return 1;
+		}
+
+		return 0;
 	}
+
 	
-	public void setLevel(int level) {
-		this.level = level;
-	}
-	
-	public int getXp() {
+	public int getXP() {
 		return xp;
 	}
 	
-	public void setXp(int xp) {
+	public void setXP(int xp) {
 		this.xp = xp;
+	}
+
+	public void addXP(int xp){
+		this.xp+=xp;
 	}
 	
 	public int getRankedElo() {
@@ -104,11 +144,11 @@ public class User {
 		this.games = games;
 	}
 	
-	public Effect getWin_effect() {
+	public Effect.TypeEffect getWin_effect() {
 		return win_effect;
 	}
 	
-	public void setWin_effect(Effect win_effect) {
+	public void setWin_effect(Effect.TypeEffect win_effect) {
 		this.win_effect = win_effect;
 	}
 	
@@ -150,5 +190,15 @@ public class User {
 
 	public void setArena(Arena arena) {
 		this.arena = arena;
+	}
+
+	public void teleportSpawn(){
+		String WORLD_NAME = Main.getConfigManager().getConfig("config.yml").getString("Main-Spawn.World");
+		if (!WORLD_NAME.equals("-")){
+			Location SPAWN = BukkitUtil.parseLocation(Bukkit.getWorld(WORLD_NAME), Main.getConfigManager().getConfig("config.yml").getString("Main-Spawn.Location"));
+			player.teleport(SPAWN);
+		}else{
+			System.out.println("[Debug - SkyWars] No se encontró una localización de spawn seteada");
+		}
 	}
 }

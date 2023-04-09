@@ -1,6 +1,10 @@
 MYSQL:
-	host:
-	port: 
-	name:
-	user:
-	pass:
+	host: 'localhost'
+	port: 3306
+	user: 'root'
+	password: 'carbia1143'
+	name: "minecraft"
+
+Main-Spawn:
+	World: '-'
+	Location: '0, 0, 0'
