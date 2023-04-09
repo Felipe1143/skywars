@@ -1,24 +1,24 @@
 package felipe221.skywars.controller;
 
+import felipe221.skywars.util.BukkitUtil;
+import felipe221.skywars.Main;
 import felipe221.skywars.load.ChestLoad;
+import felipe221.skywars.load.WorldLoad;
+import felipe221.skywars.object.Arena;
+import felipe221.skywars.object.Arena.Status;
+import felipe221.skywars.object.User;
 import felipe221.skywars.object.Vote;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import felipe221.skywars.Main;
-import felipe221.skywars.object.Arena;
-import felipe221.skywars.object.Arena.Status;
-import felipe221.skywars.object.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +40,12 @@ public class ArenaController implements Listener{
 	}
 
 	public void join(){
-		if (!player.hasPermission("skywars.size")) {
-			if (arena.getPlayers().size() >= arena.getMax()) {
-				String ARENA_MAX = Main.getConfigManager().getConfig("messages.yml").getString("ARENA_MAX");
+		if (arena.getPlayers().size() >= arena.getMax()) {
+			String ARENA_MAX = Main.getConfigManager().getConfig("messages.yml").getString("ARENA_MAX");
 
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', ARENA_MAX));
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', ARENA_MAX));
 
-				return;
-			}
+			return;
 		}
 
 		arena.addPlayer(player);
@@ -90,10 +88,15 @@ public class ArenaController implements Listener{
 					cancel();
 				}
 
-				if (seconds == arena.getTime() / 2) {
+				if (seconds == (arena.getTime() / 2)) {
+					//close all votes
 					for (Vote votes : arena.getVotes()){
 						votes.closeVotes();
 					}
+
+					//load votes
+					VoteController voteController = new VoteController(arena);
+					voteController.load();
 
 					List<String> VOTES_CLOSE = Main.getConfigManager().getConfig("messages.yml").getStringList("VOTES_CLOSE");
 
@@ -109,6 +112,33 @@ public class ArenaController implements Listener{
 			}
 
 		}, 0L, 20);
+	}
+
+	public void start(){
+		for (Player players : arena.getPlayers()){
+			User user = User.getUser(players);
+
+			user.setAlive(true);
+		}
+	}
+
+	//regenerate map
+	public void resetMap(){
+		BukkitUtil.runSync(() -> {
+			//to spawn fix
+			WorldLoad.kickPlayers(arena.getWorld());
+
+			BukkitUtil.runAsync(() -> {
+				WorldLoad.unload(arena.getWorld());
+				WorldLoad.delete(arena.getWorld());
+				WorldLoad.copyMapWorld(arena.getName());
+
+				//if exists, load
+				BukkitUtil.runSync(() -> {
+					arena.setWorld(WorldLoad.create(arena.getName()));
+				});
+			});
+		});
 	}
 
 	public void fillChests(){

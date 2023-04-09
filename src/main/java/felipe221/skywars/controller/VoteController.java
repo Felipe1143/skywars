@@ -1,6 +1,7 @@
 package felipe221.skywars.controller;
 
 import felipe221.skywars.object.Arena;
+import felipe221.skywars.object.Hearts;
 import felipe221.skywars.object.Time;
 import felipe221.skywars.object.Vote;
 import org.bukkit.entity.Player;
@@ -22,16 +23,30 @@ public class VoteController implements Listener {
                 continue;
             }
 
-            if (vote.getTypeVote() == Vote.TypeVote.LIFE){
-                setTime(vote.getWinner());
-                arena.setTimeGame((Time.TypeTime) vote.getWinner());
+            if (vote.getTypeVote() == Vote.TypeVote.HEARTS){
+                setHearts(vote.getWinner());
+                arena.setHearts((Hearts.TypeHearts) vote.getWinner());
+
+                continue;
             }
         }
     }
 
     public void setHearts(Object winner){
-        for (Player players : arena.getPlayers()){
-
+        if (winner.equals(Hearts.TypeHearts.C10)){
+            return;
+        }
+        if (winner.equals(Hearts.TypeHearts.C20)) {
+            for (Player players : arena.getPlayers()) {
+                players.setMaxHealth(40);
+                players.setHealth(40);
+            }
+        }
+        if (winner.equals(Hearts.TypeHearts.C30)) {
+            for (Player players : arena.getPlayers()) {
+                players.setMaxHealth(60);
+                players.setHealth(60);
+            }
         }
     }
 

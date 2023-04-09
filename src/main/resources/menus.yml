@@ -7,11 +7,11 @@ Menus:
       Slot: 11
       ID: 'CHEST'
       Lore:
-        - "&5¿Lo tuyo es ganar sin hacer equipo?"
-        - "&5"
-        - "&5Enfrentate a otros jugadores en busca de la victoria"
-        - "&5y pon en combate todas tus habilidades"
-        - "&5¡No olvides cuidarte de las catastrofes!"
+        - "&7¿Lo tuyo es ganar sin hacer equipo?"
+        - "&7"
+        - "&7Enfrentate a otros jugadores en busca de la victoria"
+        - "&7y pon en combate todas tus habilidades"
+        - "&7¡No olvides cuidarte de las catastrofes!"
         - ""
         - "&c&lHACER EQUIPO AQUÍ ES SANCIONABLE"
     TEAM:
@@ -19,20 +19,20 @@ Menus:
       Slot: 13
       ID: 'DIAMOND'
       Lore:
-        - "&5¡Comparte tu isla con otros jugadores!"
-        - "&5"
-        - "&5Busca las mejores estrategias y formas"
-        - "&5de aprovechar la jugabilidad en equipo"
-        - "&5¡Lleva a tus compañeros a la cima!"
+        - "&7¡Comparte tu isla con otros jugadores!"
+        - "&7"
+        - "&7Busca las mejores estrategias y formas"
+        - "&7de aprovechar la jugabilidad en equipo"
+        - "&7¡Lleva a tus compañeros a la cima!"
     ROOMS:
       Name: "&5ROOMS PRIVADAS"
       Slot: 15
       ID: 'ARROW'
       Lore:
-        - "&5¡Juega partida con tus amigos!"
-        - "&5"
-        - "&5En este tipo de partidas las estadisticas"
-        - "&5no cuentan, ni tampoco ganaras puntos o experiecencia"
-        - "&5¡Pero podrás invitar solo a la gente que tu quieras!"
-        - "&5"
-        - "&5Arenas disponibles: %rooms_available%"
+        - "&7¡Juega partida con tus amigos!"
+        - "&7"
+        - "&7En este tipo de partidas las estadisticas"
+        - "&7no cuentan, ni tampoco ganaras puntos o experiecencia"
+        - "&7¡Pero podrás invitar solo a la gente que tu quieras!"
+        - "&7"
+        - "&7Arenas disponibles: %rooms_available%"

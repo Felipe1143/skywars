@@ -1,13 +1,116 @@
 Chest:
   BASICO:
-    70: "-"
-    10: "-"
-    20: "-"
+    '70':
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: ENCHANTED_GOLDEN_APPLE
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: GOLDEN_APPLE
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: COOKED_PORKCHOP
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: PORKCHOP
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: BREAD
+    '10':
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: CHEST
+        meta:
+          ==: ItemMeta
+          meta-type: TILE_ENTITY
+          display-name: §cCofre OP§7 (Click derecho)
+          blockMaterial: CHEST
+    '20':
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: CHEST
+        meta:
+          ==: ItemMeta
+          meta-type: TILE_ENTITY
+          display-name: §aCofre básico§7 (Click derecho)
+          blockMaterial: CHEST
   NORMAL:
-    70: "-"
-    10: "-"
-    20: "-"
+    '70':
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: TROPICAL_FISH
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: COOKED_COD
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: COOKED_SALMON
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: DRIED_KELP
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: MELON_SLICE
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: COOKIE
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: CAKE
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: PUMPKIN_PIE
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: CHICKEN
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: SPIDER_EYE
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: RABBIT_STEW
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: POLISHED_DIORITE
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: OAK_LOG
+        amount: 64
+    '10':
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: DIAMOND_CHESTPLATE
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: DIAMOND_BOOTS
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: DIAMOND_HELMET
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: DIAMOND_LEGGINGS
+    '20':
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: DIAMOND_SWORD
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: ARROW
+        amount: 64
+      - ==: org.bukkit.inventory.ItemStack
+        v: 2578
+        type: BOW
   OP:
-    70: "-"
-    10: "-"
-    20: "-"
+    '70': []
+    '10': []
+    '20': []

@@ -1,14 +1,13 @@
 package felipe221.skywars;
 
-import felipe221.skywars.controller.ChestController;
+import felipe221.skywars.controller.*;
+import felipe221.skywars.listener.BreakListener;
+import felipe221.skywars.listener.ClickListener;
 import felipe221.skywars.listener.LeaveListener;
 import felipe221.skywars.load.ChestLoad;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import felipe221.skywars.controller.ConfigController;
-import felipe221.skywars.controller.DatabaseController;
-import felipe221.skywars.controller.LevelController;
 import felipe221.skywars.listener.JoinListener;
 import felipe221.skywars.load.ArenaLoad;
 
@@ -25,22 +24,30 @@ public class Main extends JavaPlugin{
 		plugin = this;
 		
 		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+		Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
+		Bukkit.getPluginManager().registerEvents(new BreakListener(), this);
+		Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
 
 		Bukkit.getPluginManager().registerEvents(new ChestController(), this);
-		Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
+		Bukkit.getPluginManager().registerEvents(new ProjectileController(), this);
 
 		configManager = new ConfigController(this);
-		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml");
+		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml", "items.yml");
 		
-		/*String host = configManager.getConfig("config.yml").getString("MYSQL.host");		
+		String host = configManager.getConfig("config.yml").getString("MYSQL.host");
 		Integer port = configManager.getConfig("config.yml").getInt("MYSQL.port");
 		String name = configManager.getConfig("config.yml").getString("MYSQL.name");	
 		String user = configManager.getConfig("config.yml").getString("MYSQL.user");	
-		String pass = configManager.getConfig("config.yml").getString("MYSQL.pass");	
-		
+		String pass = configManager.getConfig("config.yml").getString("MYSQL.password");
+
 		db = new DatabaseController(host, port, name, user, pass, this);
-		
-		db.open();*/
+		try {
+			db.open();
+
+			System.out.println("[SkyWars] ¡Base de datos conectada correctamente!");
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 		
 		ArenaLoad.load();
 		ChestLoad.load();
@@ -49,7 +56,7 @@ public class Main extends JavaPlugin{
 	}
 	
 	public void onDisable() {
-		
+		db.close();
 	}
 	
 	public static ConfigController getConfigManager() {
