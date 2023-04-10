@@ -151,12 +151,11 @@ public class ChestController implements Listener {
         assert edit != null;
         if (player.getUniqueId() == edit.getUniqueId()){
             ChestLoad.sendToConfig(chest, e.getInventory());
-            player.sendMessage(ChatColor.GREEN + "¡Configuración cargada correctamente!");
 
             removeEdit(player);
             ChestLoad.load();
-        }else{
-            player.sendMessage("ERROR AL CERRAR COFRE");
+
+            player.sendMessage(ChatColor.GREEN + "¡Configuración cargada correctamente!");
         }
     }
 

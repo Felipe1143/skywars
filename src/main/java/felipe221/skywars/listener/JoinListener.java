@@ -56,7 +56,7 @@ public class JoinListener implements Listener{
 		giveItems(player);
 	}
 
-	public void giveItems(Player player){
+	public static void giveItems(Player player){
 		//SELECTOR ITEM
 		ItemStack selector = new ItemStack(Material.getMaterial(Main.getConfigManager().getConfig("items.yml").getString("Items.Game-Selector.ID")));
 		ItemMeta selector_meta = selector.getItemMeta();

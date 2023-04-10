@@ -1,5 +1,6 @@
 package felipe221.skywars.controller;
 
+import felipe221.skywars.listener.JoinListener;
 import felipe221.skywars.object.Cage;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.Main;
@@ -72,13 +73,29 @@ public class ArenaController implements Listener{
 		checkStart();
 	}
 
-	public void checkStart() {
-		if (arena.getStatus() != Status.WAITING) {
-			return;
+	public void leave(boolean quitServer){
+		arena.removePlayer(player);
+
+		if (arena.getStatus() == Status.WAITING || arena.getStatus() == Status.STARTING){
+			user.getCage().remove();
 		}
 
-		if (arena.getPlayers().size() == arena.getMin()) {
-			startCount();
+		if (quitServer){
+
+		}else{
+			user.setArena(null);
+
+			user.teleportSpawn();
+			player.setLevel(user.getLevel());
+		}
+
+	}
+
+	public void checkStart() {
+		if (arena.getStatus() == Status.WAITING) {
+			if (arena.getPlayers().size() == arena.getMin()) {
+				startCount();
+			}
 		}
 	}
 
@@ -91,9 +108,17 @@ public class ArenaController implements Listener{
 
 			@Override
 			public void run() {
+				if (arena.getPlayers().size() < arena.getMin()) {
+					String PLAYER_OUT_MIN = Main.getConfigManager().getConfig("messages.yml").getString("PLAYER_OUT_MIN");
+					arena.sendMessage(PLAYER_OUT_MIN);
+
+					arena.setStatus(Status.WAITING);
+
+					cancel();
+				}
+
 				if (seconds == 0) {
-					//start arena
-					//drop all players
+					start();
 					fillChests();
 					cancel();
 				}
@@ -125,9 +150,12 @@ public class ArenaController implements Listener{
 	}
 
 	public void start(){
+		arena.setStatus(Status.INGAME);
+
 		for (Player players : arena.getPlayers()){
 			User user = User.getUser(players);
 
+			user.getCage().remove();
 			user.setAlive(true);
 		}
 	}

@@ -1,10 +1,13 @@
 package felipe221.skywars;
 
+import felipe221.skywars.command.SkyWarsCommand;
 import felipe221.skywars.controller.*;
+import felipe221.skywars.gui.MenuGUI;
 import felipe221.skywars.listener.BreakListener;
 import felipe221.skywars.listener.ClickListener;
 import felipe221.skywars.listener.LeaveListener;
 import felipe221.skywars.load.ChestLoad;
+import felipe221.skywars.load.KitLoad;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,7 +32,12 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
 
 		Bukkit.getPluginManager().registerEvents(new ChestController(), this);
+		Bukkit.getPluginManager().registerEvents(new KitController(), this);
 		Bukkit.getPluginManager().registerEvents(new ProjectileController(), this);
+
+		Bukkit.getPluginManager().registerEvents(new MenuGUI(), this);
+
+		this.getCommand("sw").setExecutor(new SkyWarsCommand());
 
 		configManager = new ConfigController(this);
 		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml", "items.yml", "kits.yml");
@@ -51,6 +59,7 @@ public class Main extends JavaPlugin{
 		
 		ArenaLoad.load();
 		ChestLoad.load();
+		KitLoad.load();
 
 		LevelController.load();
 	}

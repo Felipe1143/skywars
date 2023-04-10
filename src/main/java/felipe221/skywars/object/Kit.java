@@ -2,23 +2,28 @@ package felipe221.skywars.object;
 
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Kit {
+	private String config_name;
 	private String name;
 	private List<ItemStack> items;
 	private List<ItemStack> armor;
 	private int price;
-	private String description;
+	private ItemStack item_menu;
+	private ArrayList<String> lore;
 	private String permission;
 
-	public Kit(String name, List<ItemStack> items, List<ItemStack> armor, int price, String description, String permission) {
+	public Kit(String config_name, String name, List<ItemStack> items, List<ItemStack> armor, int price, ArrayList<String> lore, String permission, ItemStack item_menu) {
+		this.config_name = config_name;
 		this.name = name;
 		this.items = items;
 		this.armor = armor;
 		this.price = price;
-		this.description = description;
+		this.lore = lore;
 		this.permission = permission;
+		this.item_menu = item_menu;
 
 		//conflict with armor
 		for (ItemStack armor_items : armor){
@@ -36,6 +41,14 @@ public class Kit {
 				}
 			}
 		}
+	}
+
+	public String getConfigName() {
+		return config_name;
+	}
+
+	public void setConfigName(String config_name) {
+		this.config_name = config_name;
 	}
 
 	public List<ItemStack> getItems() {
@@ -69,20 +82,28 @@ public class Kit {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	
-	public String getDescription() {
-		return description;
+
+	public ArrayList<String> getLore() {
+		return lore;
 	}
-	
-	public void setDescription(String description) {
-		this.description = description;
+
+	public void setLore(ArrayList<String> lore) {
+		this.lore = lore;
 	}
-	
+
 	public String getPermission() {
 		return permission;
 	}
 	
 	public void setPermission(String permission) {
 		this.permission = permission;
+	}
+
+	public ItemStack getItemMenu() {
+		return item_menu;
+	}
+
+	public void setItemMenu(ItemStack item_menu) {
+		this.item_menu = item_menu;
 	}
 }

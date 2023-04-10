@@ -1,5 +1,6 @@
 Items:
   Game-Selector:
+    Enable: true
     Name: "&cPartidas"
     Slot: 1
     ID: 'CHEST'

@@ -6,5 +6,14 @@ Kits:
       - "Kit común"
     Price: 3000
     Permission: "skywars.kit.basico"
-    Items:
-    Armor:
+    Items: "-"
+    Armor: "-"
+  Cheto:
+    Name: 'Cheto'
+    Item-Menu: 'DIAMOND_SWORD'
+    Lore:
+      - "Kit cheto"
+    Price: 3000
+    Permission: "skywars.kit.cheto"
+    Items: "-"
+    Armor: "-"
