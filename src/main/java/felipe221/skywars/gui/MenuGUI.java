@@ -1,6 +1,9 @@
 package felipe221.skywars.gui;
 
+import felipe221.skywars.controller.ConfigMenuController;
+import felipe221.skywars.controller.KitController;
 import felipe221.skywars.load.KitLoad;
+import felipe221.skywars.menus.ConfigMenu;
 import felipe221.skywars.object.Kit;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
@@ -189,8 +192,16 @@ public class MenuGUI implements InventoryHolder, Listener {
                 if (menu.configKit){
                     //create kit
                     if (button.getType() == Material.PAPER && BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals("Crear kit")){
+                        KitController.setTypeCreating((Player) event.getWhoClicked(), "CREATE");
+                        event.getWhoClicked().sendMessage(org.bukkit.ChatColor.GREEN + "Escribe en el chat el nombre del kit: ");
+                        event.getWhoClicked().closeInventory();
 
                         return;
+                    }
+
+                        if (button.getType() == Material.SLIME_BALL && BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals("Volver al menú principal")) {
+                        event.getWhoClicked().closeInventory();
+                        ConfigMenu.openConfigMenu((Player) event.getWhoClicked());
                     }
 
                     Kit openKit = null;
@@ -231,8 +242,10 @@ public class MenuGUI implements InventoryHolder, Listener {
         //add item config kit
         if (configKit){
             ItemStack createKit = ItemBuilder.start(Material.PAPER).name("&aCrear kit").build();
+            ItemStack backPage = ItemBuilder.start(Material.SLIME_BALL).name("&aVolver al menú principal").build();
 
             inventory.setItem(getBackButtonSlot() + 5, createKit);
+            inventory.setItem(getBackButtonSlot() - 3, backPage);
         }
 
         // Add the main inventory items

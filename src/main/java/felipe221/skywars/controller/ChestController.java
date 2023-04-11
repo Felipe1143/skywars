@@ -1,7 +1,9 @@
 package felipe221.skywars.controller;
 
 import felipe221.skywars.load.ChestLoad;
+import felipe221.skywars.menus.ConfigMenu;
 import felipe221.skywars.object.Chests;
+import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -47,6 +49,8 @@ public class ChestController implements Listener {
         player.getInventory().setItem(8, leave);
 
         player.updateInventory();
+
+        player.sendMessage(ChatColor.GREEN + "¡Abre el cofre que deseas configurar y pon los items dentro!");
     }
 
     @EventHandler
@@ -55,6 +59,14 @@ public class ChestController implements Listener {
 
         if (e.getItem() == null){
             return;
+        }
+
+        if (e.getItem().getType() == Material.BARRIER){
+            if (BukkitUtil.stripcolor(e.getItem().getItemMeta().getDisplayName()).equals("Salir (Click derecho)")) {
+                player.sendMessage(ChatColor.GREEN + "¡Configuración terminada exitosamente!");
+                player.getInventory().clear();
+                ConfigMenu.openConfigMenu(player);
+            }
         }
 
         if (e.getItem().getType() != Material.CHEST) {

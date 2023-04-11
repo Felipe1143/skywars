@@ -5,10 +5,7 @@ import felipe221.skywars.Main;
 import felipe221.skywars.load.WorldLoad;
 import felipe221.skywars.object.Chests.TypeChest;
 import felipe221.skywars.object.Mode.TypeMode;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -44,6 +41,7 @@ public class Arena {
 	private int teamSize;
 
 	private List<Player> usersInArena;
+	private List<Player> spectators;
 	private HashMap<Location, Boolean> spawns;
 	private List<Chests> chests;
 
@@ -52,6 +50,7 @@ public class Arena {
 	private int time;
 
 	public Arena(int id) {
+		this.spectators = new ArrayList<>();
 		this.usersInArena = new ArrayList<Player>();
 		this.chests = new ArrayList<>();
 		this.votes = new ArrayList<>();
@@ -69,6 +68,7 @@ public class Arena {
 		this.max = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Max-Players");
 		this.min = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Min-Players");
 		this.time = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
+		this.mode = TypeMode.valueOf(Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Mode"));
 
 		this.spawns = new HashMap<Location, Boolean>();
 
@@ -84,10 +84,23 @@ public class Arena {
 			this.addSpawn(finalLoc);
 		}
 
+		//team game
+		if (Main.getConfigManager().getConfig("arenas.yml").contains("Arenas." + id + ".Team-Size")){
+			this.teamSize = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Team-Size");
+		}else{
+			this.teamSize = 0;
+		}
+		//TODO load team list
+
 		//load map
 		this.world = WorldLoad.create(this.world_name);
+		this.world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
 
 		listArenas.add(this);
+	}
+
+	public boolean isSoloGame(){
+		return this.teamSize == 0;
 	}
 
 	public int getID() {
@@ -136,6 +149,16 @@ public class Arena {
 
 	public void removePlayer(Player player) {
 		this.usersInArena.add(player);
+	}
+
+	public List<Player> getSpectators() {
+		return spectators;
+	}
+
+	public void addSpectators(Player player) {
+		this.spectators.add(player);
+
+		player.setGameMode(GameMode.SPECTATOR);
 	}
 
 	public void sendMessage(String text) {

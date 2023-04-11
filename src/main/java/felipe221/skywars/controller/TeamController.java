@@ -38,8 +38,6 @@ public class TeamController implements Listener {
                 if (e.getCurrentItem().equals(teams.getItemStack())) {
                     team_selected = teams;
                     break;
-                    //if player in team?
-                    //if max size?
                 }
             }
 

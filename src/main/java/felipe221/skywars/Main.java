@@ -32,6 +32,7 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
 
 		Bukkit.getPluginManager().registerEvents(new TeamController(), this);
+		Bukkit.getPluginManager().registerEvents(new ConfigMenuController(), this);
 		Bukkit.getPluginManager().registerEvents(new ChestController(), this);
 		Bukkit.getPluginManager().registerEvents(new KitController(), this);
 		Bukkit.getPluginManager().registerEvents(new ProjectileController(), this);
@@ -39,7 +40,6 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new MenuGUI(), this);
 
 		this.getCommand("sw").setExecutor(new SkyWarsCommand());
-
 
 		configManager = new ConfigController(this);
 		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml", "items.yml", "kits.yml");

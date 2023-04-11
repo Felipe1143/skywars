@@ -43,6 +43,10 @@ public class Kit {
 		}
 	}
 
+	public boolean isFree(){
+		return getPrice() == 0;
+	}
+
 	public String getConfigName() {
 		return config_name;
 	}

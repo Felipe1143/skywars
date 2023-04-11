@@ -1,7 +1,7 @@
 Kits:
   Basico:
     Name: 'Basico'
-    Item-Menu: 'WOOD_SWORD'
+    Item-Menu: 'WOODEN_SWORD'
     Lore:
       - "Kit común"
     Price: 3000

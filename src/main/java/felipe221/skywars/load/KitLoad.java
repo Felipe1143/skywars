@@ -105,7 +105,9 @@ public class KitLoad {
         ItemStack name = ItemBuilder.start(Material.NAME_TAG).name("&aCambiar nombre").lore("&7" +
                 "¡Debes eliminar el kit y crearlo otra vez!").build();
         ItemStack item_menu = ItemBuilder.start(kit.getItemMenu().getType()).name("&aItem del menú").lore("&7¡Reemplaza este objeto con el item que quieres", "&7que aparezca en el menú!").build();
+        ItemStack backMenu = ItemBuilder.start(Material.SLIME_BALL).name("&aVolver al menú de kits").build();
 
+        inventory.setItem(29, backMenu);
         inventory.setItem(30, item_menu);
         inventory.setItem(31, name);
         inventory.setItem(32, lore);
@@ -287,12 +289,18 @@ public class KitLoad {
             int slot = entry.getKey();
 
             if (slot == 30){
+                if (entry.getValue() == null) {
+                    Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Item-Menu", Material.WOODEN_AXE);
+
+                    continue;
+                }
+
                 ItemStack item_menu = entry.getValue();
 
                 if (item_menu.getType() == Material.AIR){
                     Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Item-Menu", Material.WOODEN_AXE);
                 }else{
-                    Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Item-Menu", item_menu);
+                    Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Item-Menu", item_menu.getType().name().toUpperCase());
                 }
             }
 
@@ -308,19 +316,24 @@ public class KitLoad {
                 continue;
             }
 
-            if ((slot > 1 && slot <=8) || (slot > 10 && slot <=17) || (slot > 19 && slot <=26) || (slot > 28 && slot <= 35)){
+            if ((slot > 1 && slot <=8) || (slot > 10 && slot <=17) || (slot > 19 && slot <=26)){
                 items.add(entry.getValue());
             }
         }
 
         Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Items", items);
         Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Armor", armor);
+        Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Price", kit.getPrice());
+        Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Lore", kit.getLore());
+        Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Permission", kit.getPermission());
+        Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Name", kit.getName());
 
         Main.getConfigManager().save("kits.yml");
 
         System.out.println("[Debug - SkyWars] La configuración del kit " + kit.getName() + " fue actualizada correctamente");
 
         KitController.removeEditing(player);
+        KitController.removeCreating(player);
         KitLoad.load();
 
         player.sendMessage(ChatColor.GREEN + "¡Configuración cargada correctamente!");

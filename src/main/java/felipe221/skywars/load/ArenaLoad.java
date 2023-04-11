@@ -1,7 +1,10 @@
 package felipe221.skywars.load;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Map;
 
+import felipe221.skywars.object.Mode;
 import org.bukkit.configuration.ConfigurationSection;
 
 import felipe221.skywars.Main;
@@ -24,5 +27,17 @@ public class ArenaLoad {
 					 arena.getWorld().getName() + "]" +
 					 " (" + arena.getMax() + "/" + arena.getMin() + ")");
 		}
+	}
+
+	public static ArrayList<Arena> getArenasPerMode(Mode.TypeMode mode){
+		ArrayList<Arena> arenas = new ArrayList<>();
+
+		for (Arena arena : Arena.getListArenas()){
+			if (arena.getMode() == mode){
+				arenas.add(arena);
+			}
+		}
+
+		return arenas;
 	}
 }

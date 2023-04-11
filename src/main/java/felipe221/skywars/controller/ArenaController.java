@@ -4,11 +4,8 @@ package felipe221.skywars.controller;
 import felipe221.skywars.Main;
 import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.load.WorldLoad;
-import felipe221.skywars.object.Arena;
+import felipe221.skywars.object.*;
 import felipe221.skywars.object.Arena.Status;
-import felipe221.skywars.object.Cage;
-import felipe221.skywars.object.User;
-import felipe221.skywars.object.Vote;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,15 +77,10 @@ public class ArenaController{
 			user.getCage().remove();
 		}
 
-		if (quitServer){
+		user.setArena(null);
 
-		}else{
-			user.setArena(null);
-
-			user.teleportSpawn();
-			player.setLevel(user.getLevel());
-		}
-
+		user.teleportSpawn();
+		player.setLevel(user.getLevel());
 	}
 
 	public void checkStart() {
@@ -96,6 +89,50 @@ public class ArenaController{
 				startCount();
 			}
 		}
+	}
+
+	public Player checkWinSolo(){
+		int alivePlayers = 0;
+		Player playerWinner = null;
+
+		if (arena.isSoloGame()) {
+			for (Player playerInGame : arena.getPlayers()) {
+				if (User.getUser(playerInGame).isAlive()) {
+					alivePlayers++;
+					playerWinner = playerInGame;
+				}
+			}
+
+			if (alivePlayers == 1) {
+				return playerWinner;
+			}else{
+				return null;
+			}
+		}
+
+		return null;
+	}
+	public Teams checkWinTeam(){
+		int aliveTeams = 0;
+		Teams teamWinner = null;
+
+		//solo game
+		if (!arena.isSoloGame()) {
+			for (Teams teamsInGame : arena.getTeams()){
+				if (teamsInGame.isAlive()){
+					aliveTeams++;
+					teamWinner = teamsInGame;
+				}
+			}
+
+			if (aliveTeams == 1){
+				return teamWinner;
+			}else{
+				return null;
+			}
+		}
+
+		return null;
 	}
 
 	@SuppressWarnings("deprecation")
