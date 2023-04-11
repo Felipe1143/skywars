@@ -1,43 +1,80 @@
 package felipe221.skywars.object;
 
+import org.bukkit.inventory.ItemStack;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.entity.Item;
-
 public class Kit {
-	ArrayList<Kit> allKits = new ArrayList<>();
-
-	public Kit(String nombre, List<Item> items, int price, String description, String permission) {
-		this.nombre = nombre;
-		this.items = items;
-		this.price = price;
-		this.description = description;
-		this.permission = permission;
-	}
-
-	private String nombre;
-	private List<Item> items;
+	private String config_name;
+	private String name;
+	private List<ItemStack> items;
+	private List<ItemStack> armor;
 	private int price;
-	private String description;
+	private ItemStack item_menu;
+	private ArrayList<String> lore;
 	private String permission;
-		
-	public String getNombre() {
-		return nombre;
+
+	public Kit(String config_name, String name, List<ItemStack> items, List<ItemStack> armor, int price, ArrayList<String> lore, String permission, ItemStack item_menu) {
+		this.config_name = config_name;
+		this.name = name;
+		this.items = items;
+		this.armor = armor;
+		this.price = price;
+		this.lore = lore;
+		this.permission = permission;
+		this.item_menu = item_menu;
+
+		//conflict with armor
+		for (ItemStack armor_items : armor){
+			if (armor_items != null){
+				final String typeNameString = armor_items.getType().name();
+				if (typeNameString.endsWith("_HELMET")
+						|| typeNameString.endsWith("_CHESTPLATE")
+						|| typeNameString.endsWith("_LEGGINGS")
+						|| typeNameString.endsWith("_BOOTS")) {
+					continue;
+				}else{
+					//remove conflict item in armor
+					System.out.println("[Error - SKyWars] Porfavor, elimina el item " + armor_items.getType().toString()+" en la sección de armadura del kit " + name);
+					armor.remove(armor_items);
+				}
+			}
+		}
 	}
-	
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+
+	public String getConfigName() {
+		return config_name;
 	}
-	
-	public List<Item> getItems() {
+
+	public void setConfigName(String config_name) {
+		this.config_name = config_name;
+	}
+
+	public List<ItemStack> getItems() {
 		return items;
 	}
-	
-	public void setItems(List<Item> items) {
+
+	public void setItems(List<ItemStack> items) {
 		this.items = items;
 	}
+
+	public List<ItemStack> getArmor() {
+		return armor;
+	}
+
+	public void setArmor(List<ItemStack> armor) {
+		this.armor = armor;
+	}
+
+	public String getName() {
+		return name;
+	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public int getPrice() {
 		return price;
 	}
@@ -45,20 +82,28 @@ public class Kit {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	
-	public String getDescription() {
-		return description;
+
+	public ArrayList<String> getLore() {
+		return lore;
 	}
-	
-	public void setDescription(String description) {
-		this.description = description;
+
+	public void setLore(ArrayList<String> lore) {
+		this.lore = lore;
 	}
-	
+
 	public String getPermission() {
 		return permission;
 	}
 	
 	public void setPermission(String permission) {
 		this.permission = permission;
+	}
+
+	public ItemStack getItemMenu() {
+		return item_menu;
+	}
+
+	public void setItemMenu(ItemStack item_menu) {
+		this.item_menu = item_menu;
 	}
 }

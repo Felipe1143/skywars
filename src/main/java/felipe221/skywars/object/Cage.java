@@ -41,6 +41,10 @@ public class Cage {
         block.setType(material);
     }
 
+    public void setLocation(Location location){
+        this.location = location;
+    }
+
     public void create(){
         //comun
         if (this.type == TypeCage.COMUN) {
@@ -65,6 +69,38 @@ public class Cage {
                     this.location.add(0.0D, 0.0D, -2.0D);
                     block = this.location.getBlock();
                     setTypeBlock(block, this.material_cage);
+                    this.location.add(0.0D, 0.0D, 1.0D);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
+
+    public void remove(){
+        //comun
+        if (this.type == TypeCage.COMUN) {
+            try {
+                for (int y = 0; y < 4; y++) {
+                    if (y > 0) {
+                        this.location.add(0.0D, 1.0D, 0.0D);
+                    }
+                    Block block = this.location.getBlock();
+                    if (y == 0 || y == 3) {
+                        setTypeBlock(block, Material.AIR);
+                    }
+                    this.location.add(1.0D, 0.0D, 0.0D);
+                    block = this.location.getBlock();
+                    setTypeBlock(block, Material.AIR);
+                    this.location.add(-2.0D, 0.0D, 0.0D);
+                    block = this.location.getBlock();
+                    setTypeBlock(block, Material.AIR);
+                    this.location.add(1.0D, 0.0D, 1.0D);
+                    block = this.location.getBlock();
+                    setTypeBlock(block, Material.AIR);
+                    this.location.add(0.0D, 0.0D, -2.0D);
+                    block = this.location.getBlock();
+                    setTypeBlock(block, Material.AIR);
                     this.location.add(0.0D, 0.0D, 1.0D);
                 }
             } catch (Exception exception) {

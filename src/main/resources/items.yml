@@ -1,0 +1,10 @@
+Items:
+  Game-Selector:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"

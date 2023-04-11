@@ -8,6 +8,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
+
 
 public class BukkitUtil {
     public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
@@ -31,6 +33,16 @@ public class BukkitUtil {
         return item;
     }
 
+    private static final Pattern STRIP_COLOR_PATTERN_TWO = Pattern.compile("(?i)" + String.valueOf('§') + "[0-9A-FK-OR]");
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + String.valueOf('&') + "[0-9A-FK-OR]");
+
+    public static String stripcolor(String input) {
+        String newInput = "";
+        newInput = STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
+        newInput = STRIP_COLOR_PATTERN_TWO.matcher(newInput).replaceAll("");
+
+        return newInput;
+    }
     public static ItemStack createItem(final Material material, final String displayName, final int amount) {
         return createItem(material, displayName, 1, (short) 0);
     }

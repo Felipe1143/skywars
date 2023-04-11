@@ -1,13 +1,8 @@
 package felipe221.skywars.controller;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import felipe221.skywars.Main;
+
+import java.sql.*;
 
 public class DatabaseController {
 	protected boolean connected = false; 
@@ -19,35 +14,34 @@ public class DatabaseController {
 	  
 	public DatabaseController(String hostname, int port, String database, String username, String password, Main plugin) { 
 		driver="com.mysql.jdbc.Driver";
-		
+
 		connectionString="jdbc:mysql://" + hostname + ":" + port + "/" + database+ "?user=" + username + "&password=" + password;
 		this.plugin = plugin;
-	} 
-	    
+	}
+
+
 	public DatabaseController(Main plugin) { 
 		this.plugin = plugin;
 	}
 	    
-	public Connection open() { 
+	public void open() {
 		try { 
 			Class.forName(driver); 
 	            
-			this.c = DriverManager.getConnection(connectionString); 
-			return c; 
-		} catch (SQLException e) { 
+			this.c = DriverManager.getConnection(connectionString);
+		} catch (SQLException e) {
 			System.out.println("ERROR EN LA CONEXION A LA BASE DE DATOS: " + e.getMessage()); 
 		} catch (ClassNotFoundException e) { 
 			System.out.println(driver + " no encontrado!"); 
 		} catch (Exception e) { 
 			System.out.println(e.getMessage()); 
-		} 
-		return this.c; 
-	} 
-	   
-	public Connection getConn() { 
-		return this.c; 
-	} 
-	
+		}
+	}
+
+	public Connection getConnection() {
+		return this.c;
+	}
+
 	public void close() {
 		try {
 			if(c!=null) c.close();

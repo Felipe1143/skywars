@@ -1,5 +1,8 @@
 package felipe221.skywars.controller;
 
+
+import felipe221.skywars.listener.JoinListener;
+import felipe221.skywars.object.Cage;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.Main;
 import felipe221.skywars.load.ChestLoad;
@@ -40,14 +43,12 @@ public class ArenaController implements Listener{
 	}
 
 	public void join(){
-		if (!player.hasPermission("skywars.size")) {
-			if (arena.getPlayers().size() >= arena.getMax()) {
-				String ARENA_MAX = Main.getConfigManager().getConfig("messages.yml").getString("ARENA_MAX");
+		if (arena.getPlayers().size() >= arena.getMax()) {
+			String ARENA_MAX = Main.getConfigManager().getConfig("messages.yml").getString("ARENA_MAX");
 
-				player.sendMessage(ChatColor.translateAlternateColorCodes('&', ARENA_MAX));
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', ARENA_MAX));
 
-				return;
-			}
+			return;
 		}
 
 		arena.addPlayer(player);
@@ -61,16 +62,41 @@ public class ArenaController implements Listener{
 		String COUNT_JOIN = Main.getConfigManager().getConfig("messages.yml").getString("COUNT_JOIN");
 		arena.sendMessage(COUNT_JOIN);
 
+		//set cage in arena
+		Location spawn_location = arena.getRandomSpawn();
+
+		if (spawn_location != null) {
+			Cage cage = user.getCage();
+			cage.setLocation(spawn_location);
+			cage.create();
+		}
+
 		checkStart();
 	}
 
-	public void checkStart() {
-		if (arena.getStatus() != Status.WAITING) {
-			return;
+	public void leave(boolean quitServer){
+		arena.removePlayer(player);
+
+		if (arena.getStatus() == Status.WAITING || arena.getStatus() == Status.STARTING){
+			user.getCage().remove();
 		}
 
-		if (arena.getPlayers().size() == arena.getMin()) {
-			startCount();
+		if (quitServer){
+
+		}else{
+			user.setArena(null);
+
+			user.teleportSpawn();
+			player.setLevel(user.getLevel());
+		}
+
+	}
+
+	public void checkStart() {
+		if (arena.getStatus() == Status.WAITING) {
+			if (arena.getPlayers().size() == arena.getMin()) {
+				startCount();
+			}
 		}
 	}
 
@@ -83,9 +109,17 @@ public class ArenaController implements Listener{
 
 			@Override
 			public void run() {
+				if (arena.getPlayers().size() < arena.getMin()) {
+					String PLAYER_OUT_MIN = Main.getConfigManager().getConfig("messages.yml").getString("PLAYER_OUT_MIN");
+					arena.sendMessage(PLAYER_OUT_MIN);
+
+					arena.setStatus(Status.WAITING);
+
+					cancel();
+				}
+
 				if (seconds == 0) {
-					//start arena
-					//drop all players
+					start();
 					fillChests();
 					cancel();
 				}
@@ -117,9 +151,12 @@ public class ArenaController implements Listener{
 	}
 
 	public void start(){
-		for (Player players : arena.getPlayers()){
-			User user = new User(players);
+		arena.setStatus(Status.INGAME);
 
+		for (Player players : arena.getPlayers()){
+			User user = User.getUser(players);
+
+			user.getCage().remove();
 			user.setAlive(true);
 		}
 	}
@@ -128,7 +165,7 @@ public class ArenaController implements Listener{
 	public void resetMap(){
 		BukkitUtil.runSync(() -> {
 			//to spawn fix
-			WorldLoad.kickPlayers(arena.getWorld(), new Location(arena.getWorld(), 0, 0, 0));
+			WorldLoad.kickPlayers(arena.getWorld());
 
 			BukkitUtil.runAsync(() -> {
 				WorldLoad.unload(arena.getWorld());

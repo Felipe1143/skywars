@@ -13,8 +13,6 @@ public class LevelController {
 			int finalmax = (int) finalint;
 			
 			levels.put(i, finalmax);
-			
-			System.out.println("LEVEL: " + i + " || XP: " + finalmax);
 		}
 	}
 	

@@ -10,11 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Arena {
 	private static ArrayList<Arena> listArenas = new ArrayList<Arena>();
@@ -29,6 +25,7 @@ public class Arena {
 	private Status status;
 	private int id;
 	private String name;
+	private String world_name;
 	private World world;
 
 	//votes
@@ -55,6 +52,7 @@ public class Arena {
 	public Arena(int id) {
 		this.usersInArena = new ArrayList<Player>();
 		this.chests = new ArrayList<>();
+		this.votes = new ArrayList<>();
 
 		//votes
 		this.chest = TypeChest.NORMAL;
@@ -65,7 +63,7 @@ public class Arena {
 		this.status = Status.WAITING;
 		this.id = id;
 		this.name = Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Name");
-		this.world = Bukkit.getWorld(Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".World-Name"));
+		this.world_name = Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".World-Name");
 		this.max = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Max-Players");
 		this.min = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Min-Players");
 		this.time = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
@@ -85,7 +83,7 @@ public class Arena {
 		}
 
 		//load map
-		WorldLoad.create(world.getName());
+		this.world = WorldLoad.create(this.world_name);
 
 		listArenas.add(this);
 	}
@@ -151,6 +149,23 @@ public class Arena {
 				WorldLoad.copyWorldMap(this.world);
 			});
 		});
+	}
+
+	public Location getRandomSpawn(){
+		for (Location location : getSpawns().keySet()){
+			boolean inUse = spawns.get(location);
+
+			if (inUse){
+				continue;
+			}
+
+			//set used
+			spawns.put(location, true);
+			return location;
+		}
+
+		//no more locations
+		return null;
 	}
 
 	public List<Chests> getChests() {
