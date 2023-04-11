@@ -27,7 +27,8 @@ public class VoteController implements Listener {
                 setHearts(vote.getWinner());
                 arena.setHearts((Hearts.TypeHearts) vote.getWinner());
 
-                continue;
+              continue;
+
             }
         }
     }

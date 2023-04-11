@@ -11,6 +11,7 @@ public class BreakListener implements Listener {
     @EventHandler
     public void onPlayerBreak(BlockBreakEvent e){
         Player player = e.getPlayer();
+
         User user = User.getUser(player);
 
         if (user.getArena() != null){

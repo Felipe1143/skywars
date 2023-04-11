@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+
 public class BukkitUtil {
     public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         player.sendTitle(title, subtitle);
@@ -42,7 +43,6 @@ public class BukkitUtil {
 
         return newInput;
     }
-
     public static ItemStack createItem(final Material material, final String displayName, final int amount) {
         return createItem(material, displayName, 1, (short) 0);
     }

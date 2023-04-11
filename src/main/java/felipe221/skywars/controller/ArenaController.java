@@ -1,5 +1,6 @@
 package felipe221.skywars.controller;
 
+
 import felipe221.skywars.listener.JoinListener;
 import felipe221.skywars.object.Cage;
 import felipe221.skywars.util.BukkitUtil;

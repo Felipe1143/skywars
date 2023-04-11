@@ -80,9 +80,9 @@ public class WorldLoad {
             if (player.isDead()) {
                 player.spigot().respawn();
             }
-
             User user = User.getUser(player);
             user.teleportSpawn();
+
         }
     }
 
