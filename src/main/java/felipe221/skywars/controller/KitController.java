@@ -3,10 +3,10 @@ package felipe221.skywars.controller;
 import felipe221.skywars.Main;
 import felipe221.skywars.load.KitLoad;
 import felipe221.skywars.object.Kit;
+import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,7 +25,8 @@ public class KitController implements Listener {
     private Kit kit;
     private Player player;
     private static HashMap<Player, Kit> editing = new HashMap<>();
-    private static ArrayList<Player> creating = new ArrayList<>();
+    //CREATE, PRICE, LORE, NAME, PERMISSION, ITEM_MENU
+    private static HashMap<Player, Object> creating = new HashMap<>();
 
     public KitController(){
         //listener
@@ -56,7 +57,8 @@ public class KitController implements Listener {
 
         Kit kit = editing.get(player);
 
-        if (edit.getUniqueId() == player.getUniqueId()){
+        //prevent send to config on editing price, name...
+        if (edit.getUniqueId() == player.getUniqueId() && !creating.containsKey(player)){
            KitLoad.sendToConfig(player, inv, kit);
         }
     }
@@ -82,19 +84,39 @@ public class KitController implements Listener {
             return;
         }
 
+        if (e.getSlot() == 31 || e.getSlot() == 32){
+            e.setCancelled(true);
+        }
+
+        Inventory inv = e.getInventory();
+        Player edit = null;
+
+        for (Player players : editing.keySet()) {
+            edit = players;
+        }
+
+        Kit kit = editing.get(player);
+
         if (e.getCurrentItem().getType() == Material.BARRIER){
             e.setCancelled(true);
 
-            Inventory inv = e.getInventory();
-            Player edit = null;
-
-            for (Player players : editing.keySet()) {
-                edit = players;
-            }
-
-            Kit kit = editing.get(player);
-
             KitLoad.remove(player, kit);
+        }
+
+        if (e.getCurrentItem().getType() == Material.DIAMOND && BukkitUtil.stripcolor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Cambiar precio")){
+            e.setCancelled(true);
+
+            setTypeCreating(player, "PRICE");
+            edit.sendMessage(ChatColor.GREEN + "Escribe en el chat el costo del kit: ");
+            player.closeInventory();
+        }
+
+        if (e.getCurrentItem().getType() == Material.NAME_TAG && BukkitUtil.stripcolor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Cambiar precio")){
+            e.setCancelled(true);
+
+            setTypeCreating(player, "PERMISSION");
+            edit.sendMessage(ChatColor.GREEN + "Escribe en el chat el permiso del kit: ");
+            player.closeInventory();
         }
 
         if (e.getCurrentItem().getType().toString().toUpperCase().contains("GLASS_PANE")){
@@ -109,14 +131,19 @@ public class KitController implements Listener {
         Player player = e.getPlayer();
         String msg = e.getMessage();
 
-        if (creating.contains(player)){
+        if (!creating.containsKey(player)){
+            return;
+        }
+
+        if (getTypeCreating(player).equals("CREATE")){
             //if check is exist
-            Inventory inventory = Bukkit.createInventory(null, 9*5);
+            Inventory inventory = Bukkit.createInventory(player, 9*5);
 
             Kit newKit =  new Kit(msg, msg, new ArrayList<>(), new ArrayList<>(), 0, new ArrayList<>(), "skywars.kit." + msg, new ItemStack(Material.WOODEN_AXE));
             KitLoad.sendToConfig(player, inventory, newKit);
 
             editing.put(player, newKit);
+            creating.remove(player);
 
             player.sendMessage(ChatColor.GREEN + "¡Kit " + msg + " creado correctamente!" );
             player.sendMessage(ChatColor.GREEN + "Abriendo configuración...");
@@ -128,9 +155,61 @@ public class KitController implements Listener {
                 }
             }.runTaskLater(Main.getInstance(), 2);
 
-            //open in menu
-            //set lore, price, permission in menu
+            return;
         }
+
+        if (getTypeCreating(player).equals("PERMISSION")) {
+            kit.setPermission(msg);
+            creating.remove(player);
+
+            if (editing.containsKey(player)) {
+                Kit kit = editing.get(player);
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        KitLoad.fromConfig(player, kit);
+                    }
+                }.runTaskLater(Main.getInstance(), 2);
+            }
+
+            player.sendMessage(ChatColor.GREEN + "¡Configuración cambiada correctamente!");
+        }
+        if (getTypeCreating(player).equals("PRICE")){
+            if (isNumeric(msg)){
+                int price = Integer.parseInt(msg);
+
+                kit.setPrice(price);
+                creating.remove(player);
+
+                if (editing.containsKey(player)) {
+                    Kit kit = editing.get(player);
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            KitLoad.fromConfig(player, kit);
+                        }
+                    }.runTaskLater(Main.getInstance(), 2);
+                }
+
+                player.sendMessage(ChatColor.GREEN + "¡Configuración cambiada correctamente!");
+            }else{
+                player.sendMessage(ChatColor.RED + "¡Porfavor, escribe un precio en números!");
+            }
+        }
+    }
+
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
     public Kit getKit() {
@@ -154,11 +233,7 @@ public class KitController implements Listener {
     }
 
     public static boolean isEditing(Player player){
-        if (editing.containsKey(player)){
-            return true;
-        }
-
-        return false;
+        return editing.containsKey(player);
     }
 
     public static void removeEditing(Player player){
@@ -167,17 +242,27 @@ public class KitController implements Listener {
         }
     }
 
+    public static void removeCreating(Player player){
+        if (creating.containsKey(player)){
+            creating.remove(player);
+        }
+    }
+
     public static void addEditing(Player player, Kit kit) {
         editing.put(player, kit);
     }
 
 
-    public static ArrayList<Player> getCreating() {
-        return creating;
+    public static Object getTypeCreating(Player player) {
+        return creating.get(player);
     }
 
-    public static void addCreating(Player player) {
-        creating.add(player);
+    public static boolean isCreating(Player player) {
+        return creating.containsKey(player);
+    }
+
+    public static void setTypeCreating(Player player, Object type) {
+        creating.put(player, type);
     }
 
 }

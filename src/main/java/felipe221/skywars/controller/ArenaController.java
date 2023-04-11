@@ -1,16 +1,15 @@
 package felipe221.skywars.controller;
 
 
-import felipe221.skywars.listener.JoinListener;
-import felipe221.skywars.object.Cage;
-import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.Main;
 import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.load.WorldLoad;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.Arena.Status;
+import felipe221.skywars.object.Cage;
 import felipe221.skywars.object.User;
 import felipe221.skywars.object.Vote;
+import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -18,7 +17,6 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ArenaController implements Listener{
+public class ArenaController{
 	private Arena arena;
 	private Player player;
 	private User user;

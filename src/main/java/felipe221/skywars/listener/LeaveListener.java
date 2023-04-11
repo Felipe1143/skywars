@@ -19,8 +19,9 @@ public class LeaveListener implements Listener {
         }
 
         //prevent exit on editing kits
-        if (KitController.isEditing(player)){
+        if (KitController.isEditing(player) || KitController.isCreating(player)){
             KitController.removeEditing(player);
+            KitController.removeCreating(player);
         }
     }
 }

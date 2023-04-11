@@ -10,6 +10,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+
 import java.util.*;
 
 public class Arena {
@@ -166,6 +168,21 @@ public class Arena {
 
 		//no more locations
 		return null;
+	}
+
+	public Inventory getTeamsInventory(){
+		if (getTeams().isEmpty()){
+			return null;
+		}
+
+		Inventory inventory = Bukkit.createInventory(null, 9*3, "Equipos:");
+
+		int slot = 0;
+		for (Teams teams : getTeams()){
+			inventory.setItem(slot, teams.getItemStack());
+			slot++;
+		}
+		return inventory;
 	}
 
 	public List<Chests> getChests() {

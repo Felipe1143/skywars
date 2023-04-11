@@ -29,9 +29,9 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
 		Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
 		Bukkit.getPluginManager().registerEvents(new BreakListener(), this);
-
 		Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
 
+		Bukkit.getPluginManager().registerEvents(new TeamController(), this);
 		Bukkit.getPluginManager().registerEvents(new ChestController(), this);
 		Bukkit.getPluginManager().registerEvents(new KitController(), this);
 		Bukkit.getPluginManager().registerEvents(new ProjectileController(), this);

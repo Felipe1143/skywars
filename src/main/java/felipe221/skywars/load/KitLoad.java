@@ -4,7 +4,6 @@ import felipe221.skywars.Main;
 import felipe221.skywars.controller.KitController;
 import felipe221.skywars.gui.MenuGUI;
 import felipe221.skywars.object.Kit;
-import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -99,6 +98,19 @@ public class KitLoad {
         inventory.setItem(28, separate);
 
         ItemStack delete = ItemBuilder.start(Material.BARRIER).name("&c&lELIMINAR KIT").build();
+        ItemStack price = ItemBuilder.start(Material.DIAMOND).name("&aCambiar precio").lore("&7Precio actual: &a"+ kit.getPrice()).build();
+        ItemStack permission = ItemBuilder.start(Material.ACACIA_SIGN).name("&aCambiar permiso").lore("&7Permiso actual: &a" + kit.getPermission()).build();
+        ItemStack lore = ItemBuilder.start(Material.PAPER).name("&aCambiar descripción").lore("&7" +
+                "¡Debes cambiarlos desde el kits.yml!").build();
+        ItemStack name = ItemBuilder.start(Material.NAME_TAG).name("&aCambiar nombre").lore("&7" +
+                "¡Debes eliminar el kit y crearlo otra vez!").build();
+        ItemStack item_menu = ItemBuilder.start(kit.getItemMenu().getType()).name("&aItem del menú").lore("&7¡Reemplaza este objeto con el item que quieres", "&7que aparezca en el menú!").build();
+
+        inventory.setItem(30, item_menu);
+        inventory.setItem(31, name);
+        inventory.setItem(32, lore);
+        inventory.setItem(33, permission);
+        inventory.setItem(34, price);
         inventory.setItem(35, delete);
 
         if (!kit.getArmor().isEmpty()) {
@@ -272,6 +284,18 @@ public class KitLoad {
         }
 
         for (Map.Entry<Integer, ItemStack> entry : Items.entrySet()) {
+            int slot = entry.getKey();
+
+            if (slot == 30){
+                ItemStack item_menu = entry.getValue();
+
+                if (item_menu.getType() == Material.AIR){
+                    Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Item-Menu", Material.WOODEN_AXE);
+                }else{
+                    Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Item-Menu", item_menu);
+                }
+            }
+
             if (entry.getValue() == null) {
                 continue;
             }
@@ -283,8 +307,6 @@ public class KitLoad {
             if (entry.getValue().getType().toString().toUpperCase().contains("GLASS_PANE")) {
                 continue;
             }
-
-            int slot = entry.getKey();
 
             if ((slot > 1 && slot <=8) || (slot > 10 && slot <=17) || (slot > 19 && slot <=26) || (slot > 28 && slot <= 35)){
                 items.add(entry.getValue());
