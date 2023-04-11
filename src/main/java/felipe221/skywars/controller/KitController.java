@@ -1,5 +1,6 @@
 package felipe221.skywars.controller;
 
+import felipe221.skywars.Main;
 import felipe221.skywars.load.KitLoad;
 import felipe221.skywars.object.Kit;
 import org.bukkit.Bukkit;
@@ -8,22 +9,23 @@ import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class KitController implements Listener {
-    //paginated menu
-    //create item
-    //delete item
     private Kit kit;
     private Player player;
     private static HashMap<Player, Kit> editing = new HashMap<>();
+    private static ArrayList<Player> creating = new ArrayList<>();
 
     public KitController(){
         //listener
@@ -101,6 +103,36 @@ public class KitController implements Listener {
 
     }
 
+    //kit create on chat
+    @EventHandler (priority = EventPriority.LOWEST)
+    public void onPlayerChat(PlayerChatEvent e){
+        Player player = e.getPlayer();
+        String msg = e.getMessage();
+
+        if (creating.contains(player)){
+            //if check is exist
+            Inventory inventory = Bukkit.createInventory(null, 9*5);
+
+            Kit newKit =  new Kit(msg, msg, new ArrayList<>(), new ArrayList<>(), 0, new ArrayList<>(), "skywars.kit." + msg, new ItemStack(Material.WOODEN_AXE));
+            KitLoad.sendToConfig(player, inventory, newKit);
+
+            editing.put(player, newKit);
+
+            player.sendMessage(ChatColor.GREEN + "¡Kit " + msg + " creado correctamente!" );
+            player.sendMessage(ChatColor.GREEN + "Abriendo configuración...");
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    KitLoad.fromConfig(player, newKit);
+                }
+            }.runTaskLater(Main.getInstance(), 2);
+
+            //open in menu
+            //set lore, price, permission in menu
+        }
+    }
+
     public Kit getKit() {
         return kit;
     }
@@ -138,4 +170,14 @@ public class KitController implements Listener {
     public static void addEditing(Player player, Kit kit) {
         editing.put(player, kit);
     }
+
+
+    public static ArrayList<Player> getCreating() {
+        return creating;
+    }
+
+    public static void addCreating(Player player) {
+        creating.add(player);
+    }
+
 }

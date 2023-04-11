@@ -182,18 +182,22 @@ public class MenuGUI implements InventoryHolder, Listener {
                     menu.refreshInventory(event.getWhoClicked());
                 }
 
+                if (button.getType() == Material.NAME_TAG){
+                    return;
+                }
+
                 if (menu.configKit){
-                    if (button.getType() == Material.NAME_TAG){
+                    //create kit
+                    if (button.getType() == Material.PAPER && BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals("Crear kit")){
+
                         return;
                     }
 
                     Kit openKit = null;
 
                     for (Kit kit : KitLoad.getKits()){
-                        System.out.println(BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()));
                         if (BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals(kit.getName())){
                             openKit = kit;
-                            System.out.println("RECONOCE KIT");
 
                             break;
                         }
@@ -223,6 +227,13 @@ public class MenuGUI implements InventoryHolder, Listener {
         inventory.setItem(getBackButtonSlot(), backButton);
         inventory.setItem(getBackButtonSlot() + 1, pageIndicator);
         inventory.setItem(getBackButtonSlot() + 2, nextButton);
+
+        //add item config kit
+        if (configKit){
+            ItemStack createKit = ItemBuilder.start(Material.PAPER).name("&aCrear kit").build();
+
+            inventory.setItem(getBackButtonSlot() + 5, createKit);
+        }
 
         // Add the main inventory items
         int counter = 0;
