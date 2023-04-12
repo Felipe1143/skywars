@@ -90,7 +90,7 @@ public class Arena {
 		}else{
 			this.teamSize = 0;
 		}
-		//TODO load team list
+		//TODO team list create
 
 		//load map
 		this.world = WorldLoad.create(this.world_name);
@@ -99,8 +99,14 @@ public class Arena {
 		listArenas.add(this);
 	}
 
+
+
 	public boolean isSoloGame(){
-		return this.teamSize == 0;
+		if (mode == TypeMode.SOLO || mode == TypeMode.RANKED_SOLO || mode == TypeMode.ROOMS){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	public int getID() {

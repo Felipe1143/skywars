@@ -1,9 +1,12 @@
 package felipe221.skywars.gui;
 
+import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.controller.ConfigMenuController;
 import felipe221.skywars.controller.KitController;
+import felipe221.skywars.load.ArenaLoad;
 import felipe221.skywars.load.KitLoad;
 import felipe221.skywars.menus.ConfigMenu;
+import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.Kit;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
@@ -30,6 +33,7 @@ public class MenuGUI implements InventoryHolder, Listener {
     private String name;
 
     private boolean configKit;
+    private boolean configMaps;
 
     public MenuGUI(){
         //to listener
@@ -45,10 +49,15 @@ public class MenuGUI implements InventoryHolder, Listener {
         }
         this.name = ChatColor.translateAlternateColorCodes('&', name);
         this.configKit = false;
+        this.configMaps = false;
     }
 
     public void initConfigKit(){
         this.configKit = true;
+    }
+
+    public void initConfigMaps(){
+        this.configMaps = true;
     }
 
     public void setDisplayName(String name){
@@ -199,7 +208,7 @@ public class MenuGUI implements InventoryHolder, Listener {
                         return;
                     }
 
-                        if (button.getType() == Material.SLIME_BALL && BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals("Volver al menú principal")) {
+                    if (button.getType() == Material.SLIME_BALL && BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals("Volver al menú principal")) {
                         event.getWhoClicked().closeInventory();
                         ConfigMenu.openConfigMenu((Player) event.getWhoClicked());
                     }
@@ -217,6 +226,37 @@ public class MenuGUI implements InventoryHolder, Listener {
                     if (openKit != null){
                         event.getWhoClicked().closeInventory();
                         KitLoad.fromConfig((Player) event.getWhoClicked(), openKit);
+                    }
+                }
+
+                if (menu.configMaps){
+                    //create MAP
+                    if (button.getType() == Material.PAPER && BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals("Crear mapa")){
+                        ArenaLoad.setTypeCreating((Player) event.getWhoClicked(), "CREATE");
+                        event.getWhoClicked().sendMessage(org.bukkit.ChatColor.GREEN + "Escribe en el chat el nombre del mapa: ");
+                        event.getWhoClicked().closeInventory();
+
+                        return;
+                    }
+
+                    if (button.getType() == Material.SLIME_BALL && BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals("Volver al menú principal")) {
+                        event.getWhoClicked().closeInventory();
+                        ConfigMenu.openConfigMenu((Player) event.getWhoClicked());
+                    }
+
+                    Arena openArena = null;
+
+                    for (Arena arenas : Arena.getListArenas()){
+                        if (BukkitUtil.stripcolor(button.getItemMeta().getDisplayName()).equals(arenas.getName())){
+                            openArena = arenas;
+
+                            break;
+                        }
+                    }
+
+                    if (openArena != null){
+                        event.getWhoClicked().closeInventory();
+                        ArenaLoad.fromConfig((Player) event.getWhoClicked(), openArena);
                     }
                 }
             }
@@ -242,6 +282,14 @@ public class MenuGUI implements InventoryHolder, Listener {
         //add item config kit
         if (configKit){
             ItemStack createKit = ItemBuilder.start(Material.PAPER).name("&aCrear kit").build();
+            ItemStack backPage = ItemBuilder.start(Material.SLIME_BALL).name("&aVolver al menú principal").build();
+
+            inventory.setItem(getBackButtonSlot() + 5, createKit);
+            inventory.setItem(getBackButtonSlot() - 3, backPage);
+        }
+
+        if (configMaps){
+            ItemStack createKit = ItemBuilder.start(Material.PAPER).name("&aCrear mapa").build();
             ItemStack backPage = ItemBuilder.start(Material.SLIME_BALL).name("&aVolver al menú principal").build();
 
             inventory.setItem(getBackButtonSlot() + 5, createKit);

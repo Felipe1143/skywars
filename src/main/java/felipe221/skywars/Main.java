@@ -8,6 +8,7 @@ import felipe221.skywars.listener.ClickListener;
 import felipe221.skywars.listener.LeaveListener;
 import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.load.KitLoad;
+import felipe221.skywars.load.MessagesLoad;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +39,8 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new ProjectileController(), this);
 
 		Bukkit.getPluginManager().registerEvents(new MenuGUI(), this);
+		Bukkit.getPluginManager().registerEvents(new ArenaLoad(), this);
+
 
 		this.getCommand("sw").setExecutor(new SkyWarsCommand());
 
@@ -62,6 +65,7 @@ public class Main extends JavaPlugin{
 		ArenaLoad.load();
 		ChestLoad.load();
 		KitLoad.load();
+		MessagesLoad.load();
 
 		LevelController.load();
 	}

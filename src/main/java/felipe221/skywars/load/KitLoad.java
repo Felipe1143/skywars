@@ -172,7 +172,7 @@ public class KitLoad {
     }
 
     public static void fromConfigList(Player player){
-        MenuGUI inventory = new MenuGUI("Kits para editar: ", 2);
+        MenuGUI inventory = new MenuGUI("Kits para editar: ", 4);
         inventory.initConfigKit();
 
         //add kit list

@@ -1,7 +1,10 @@
-ARENA_MAX: ""
-SUCCESSFULL_JOIN: ""
-COUNT_JOIN: ""
-START_IN: ""
-PLAYER_OUT_MIN: ""
-VOTES_CLOSE:
+Messages:
+  ARENA_MAX: "[]"
+  SUCCESSFULL_JOIN: "S"
+  COUNT_JOIN: "C"
+  START_IN: "S"
+  PLAYER_OUT_MIN: "P"
+
+Messages-List:
+  VOTES_CLOSE:
   - "La votación terminó"

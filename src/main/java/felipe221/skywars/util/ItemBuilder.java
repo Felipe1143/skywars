@@ -68,6 +68,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder material(Material material){
+        stack.setType(material);
+        return this;
+    }
+
     /**
      * Sets the lore of the item. (Shorthand - unlimited argument version)
      *

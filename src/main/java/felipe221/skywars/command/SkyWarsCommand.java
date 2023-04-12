@@ -1,6 +1,7 @@
 package felipe221.skywars.command;
 
 import felipe221.skywars.load.KitLoad;
+import felipe221.skywars.load.MessagesLoad;
 import felipe221.skywars.menus.ConfigMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -18,8 +19,8 @@ public class SkyWarsCommand implements CommandExecutor {
                 if (args.length == 0){
                     ConfigMenu.openConfigMenu(player);
                 }else{
-                    if (args[0].contains("kit")){
-                        KitLoad.fromConfigList(player);
+                    if (args[0].contains("test")){
+                       player.sendMessage(MessagesLoad.MessagesLine.ARENA_MAX.getMessage());
                     }
                 }
             }else{

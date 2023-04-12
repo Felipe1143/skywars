@@ -1,8 +1,11 @@
 package felipe221.skywars.controller;
 
+import felipe221.skywars.load.ArenaLoad;
 import felipe221.skywars.load.KitLoad;
+import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.User;
 import felipe221.skywars.util.BukkitUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,12 +27,25 @@ public class ConfigMenuController implements Listener {
 
         if (BukkitUtil.stripcolor(e.getView().getTitle()).equals("Configuración:")){
             if (e.getCurrentItem().getType() == Material.GRASS_BLOCK){
-                //arena list config
-                //TODO
+                if (ArenaLoad.getEditing().isEmpty()) {
+                    ArenaLoad.fromConfigList(player);
+                }else{
+                    e.setCancelled(true);
+
+                    player.sendMessage(ChatColor.RED + "Ya hay un usuario editantando las arenas, ¡espera que termine!");
+                }
+
+                return;
             }
 
             if (e.getCurrentItem().getType() == Material.BOW){
-                KitLoad.fromConfigList(player);
+                if (KitController.getEditing().isEmpty()) {
+                    KitLoad.fromConfigList(player);
+                }else{
+                    e.setCancelled(true);
+
+                    player.sendMessage(ChatColor.RED + "Ya hay un usuario editantando los kits, ¡espera que termine!");
+                }
 
                 return;
             }

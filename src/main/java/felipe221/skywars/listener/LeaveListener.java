@@ -2,6 +2,7 @@ package felipe221.skywars.listener;
 
 import felipe221.skywars.controller.ChestController;
 import felipe221.skywars.controller.KitController;
+import felipe221.skywars.load.ArenaLoad;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,6 +23,12 @@ public class LeaveListener implements Listener {
         if (KitController.isEditing(player) || KitController.isCreating(player)){
             KitController.removeEditing(player);
             KitController.removeCreating(player);
+        }
+
+        //prevent exit on editing maps
+        if (ArenaLoad.isEditing(player) || ArenaLoad.isCreating(player)){
+            ArenaLoad.removeEditing(player);
+            ArenaLoad.removeCreating(player);
         }
     }
 }

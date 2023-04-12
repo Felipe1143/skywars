@@ -4,16 +4,10 @@ import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.Teams;
 import felipe221.skywars.object.User;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.scoreboard.Team;
 
 public class DeathListener implements Listener {
     @EventHandler
