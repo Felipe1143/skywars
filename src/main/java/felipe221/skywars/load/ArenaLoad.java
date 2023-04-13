@@ -1,25 +1,16 @@
 package felipe221.skywars.load;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import felipe221.skywars.controller.ArenaController;
-import felipe221.skywars.controller.KitController;
+import felipe221.skywars.Main;
 import felipe221.skywars.gui.MenuGUI;
-import felipe221.skywars.object.Kit;
+import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.Mode;
 import felipe221.skywars.object.Teams;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-
-import felipe221.skywars.Main;
-import felipe221.skywars.object.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,8 +19,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ArenaLoad implements Listener {
 	private static HashMap<Player, Arena> editing = new HashMap<>();
@@ -259,17 +254,77 @@ public class ArenaLoad implements Listener {
 			return;
 		}
 
-		if (getTypeCreating(player).equals("MIN")){
+		if (getTypeCreating(player).equals("NAME")){
 			Arena arena = editing.get(player);
 
-			if (!isNumeric(msg)){
-				player.sendMessage(ChatColor.RED + "¡Porfavor coloque un valor númerico!");
-				player.sendMessage(ChatColor.RED + "Vuelva a escribir la cantidad minima en el chat");
+			if (isNumeric(msg)){
+				player.sendMessage(ChatColor.RED + "El nombre del mapa no puede ser un número");
+				player.sendMessage(ChatColor.RED + "Vuelva a escribir el nombre de la arena en el chat");
+			}else{
+				if (isNameTaken(msg)){
+					player.sendMessage(ChatColor.RED + "¡El nombre " + ChatColor.UNDERLINE + msg + ChatColor.RED + " ya está en uso!");
+					player.sendMessage(ChatColor.RED + "Porfavor, vuelva a escribir el nombre de la arena");
+				}else{
+					creating.remove(player);
+					arena.setName(arena.getName());
+
+					player.sendMessage(ChatColor.GREEN + "¡Nombre cambiado correctamente!" );
+
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							fromConfig(player, arena);
+						}
+					}.runTaskLater(Main.getInstance(), 2);
+
+				}
+			}
+			return;
+		}
+
+		if (getTypeCreating(player).equals("NAME")){
+			Arena arena = editing.get(player);
+
+			if (isNumeric(msg)){
+				player.sendMessage(ChatColor.RED + "El nombre del mapa no puede ser un número");
+				player.sendMessage(ChatColor.RED + "Vuelva a escribir el nombre de la arena en el chat");
+			}else{
+				if (isNameTaken(msg)){
+					player.sendMessage(ChatColor.RED + "¡El nombre " + ChatColor.UNDERLINE + msg + ChatColor.RED + " ya está en uso!");
+					player.sendMessage(ChatColor.RED + "Porfavor, vuelva a escribir el nombre de la arena");
+				}else{
+					creating.remove(player);
+					arena.setName(arena.getName());
+
+					player.sendMessage(ChatColor.GREEN + "¡Nombre cambiado correctamente!" );
+
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							fromConfig(player, arena);
+						}
+					}.runTaskLater(Main.getInstance(), 2);
+
+				}
+			}
+			return;
+		}
+
+		if (getTypeCreating(player).equals("WORLD")){
+			Arena arena = editing.get(player);
+
+			if (isNumeric(msg)){
+				player.sendMessage(ChatColor.RED + "El nombre del mundo no puede ser un número");
+				player.sendMessage(ChatColor.RED + "Vuelva a escribir el nombre del mundo en el chat");
 			}else{
 				creating.remove(player);
-				arena.setMin(Integer.parseInt(msg));
+				
+				if (Bukkit.getWorld(msg) == null){
 
-				player.sendMessage(ChatColor.GREEN + "¡Jugadores minimos cambiados correctamente!" );
+				}
+				arena.setWorld();
+
+				player.sendMessage(ChatColor.GREEN + "¡Mundo cambiado correctamente!" );
 
 				new BukkitRunnable() {
 					@Override
@@ -371,6 +426,14 @@ public class ArenaLoad implements Listener {
 				return;
 			}
 
+			if (e.getCurrentItem().getType() == Material.GRASS_BLOCK){
+				creating.put(player, "WORLD");
+				player.closeInventory();
+				player.sendMessage(ChatColor.GREEN + "Ingresa el nombre del mundo para la arena: ");
+
+				return;
+			}
+
 			if (e.getCurrentItem().getType() == Material.BARRIER){
 				if ((Arena.getListArenas().size() - 1) == 0){
 					player.sendMessage(ChatColor.RED + "¡No puedes eliminar la última arena!");
@@ -465,7 +528,20 @@ public class ArenaLoad implements Listener {
 		boolean taken = false;
 
 		for (Arena arenas : Arena.getListArenas()){
-			if (arenas.getName().toLowerCase().equals(arenaName.toLowerCase())){
+			if (arenas.getName().equalsIgnoreCase(arenaName)){
+				taken = true;
+				break;
+			}
+		}
+
+		return taken;
+	}
+
+	public boolean isWorldTaken(World world){
+		boolean taken = false;
+
+		for (Arena arenas : Arena.getListArenas()){
+			if (arenas.getWorld().getName().equalsIgnoreCase(world.getName())){
 				taken = true;
 				break;
 			}
