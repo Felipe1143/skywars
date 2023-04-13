@@ -18,7 +18,8 @@ public class Arena {
 		WAITING,
 		STARTING,
 		INGAME,
-		ENDING
+		ENDING,
+		RESTARTING,
 	}
 
 	private Status status;
@@ -33,6 +34,7 @@ public class Arena {
 	private Time.TypeTime time_game;
 	private Projectiles.TypeProjectiles projectiles;
 	private Hearts.TypeHearts hearts;
+	private Scenario.TypeScenario scenario;
 
 	private TypeMode mode;
 
@@ -42,7 +44,9 @@ public class Arena {
 
 	private List<Player> usersInArena;
 	private List<Player> spectators;
-	private HashMap<Location, Boolean> spawns;
+	private HashMap<Integer, Location> spawns;
+	private HashMap<Location, Boolean> spawnsUse;
+	private Location center;
 	private List<Chests> chests;
 
 	private int max;
@@ -60,29 +64,26 @@ public class Arena {
 		this.hearts = Hearts.TypeHearts.C10;
 		this.projectiles = Projectiles.TypeProjectiles.NORMAL;
 		this.time_game = Time.TypeTime.DAY;
+		this.scenario = Scenario.TypeScenario.valueOf(Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Scenario"));
 
 		this.status = Status.WAITING;
 		this.id = id;
-		this.name = Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Name");
 		this.world_name = Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".World-Name");
+		this.name = Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Name");
 		this.max = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Max-Players");
 		this.min = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Min-Players");
 		this.time = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
 		this.mode = TypeMode.valueOf(Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Mode"));
 
-		this.spawns = new HashMap<Location, Boolean>();
+		this.spawns = new HashMap<Integer, Location>();
+		this.spawnsUse = new HashMap<Location, Boolean>();
 
         //vote create
-        this.votes.add(new Vote(Vote.TypeVote.CHESTS,  TypeChest.NORMAL, TypeChest.OP, TypeChest.BASICO));
+		this.votes.add(new Vote(Vote.TypeVote.SCENARIOS, Scenario.TypeScenario.LUCKY, Scenario.TypeScenario.SPEED, Scenario.TypeScenario.ANTIKB, Scenario.TypeScenario.SCAFFOLD, Scenario.TypeScenario.TORMENTA));
+		this.votes.add(new Vote(Vote.TypeVote.CHESTS,  TypeChest.NORMAL, TypeChest.OP, TypeChest.BASICO));
         this.votes.add(new Vote(Vote.TypeVote.HEARTS, Hearts.TypeHearts.C10, Hearts.TypeHearts.C20, Hearts.TypeHearts.C30));
         this.votes.add(new Vote(Vote.TypeVote.PROJECTILES, Projectiles.TypeProjectiles.NORMAL, Projectiles.TypeProjectiles.TP, Projectiles.TypeProjectiles.EXPLOSIVE));
         this.votes.add(new Vote(Vote.TypeVote.TIME, Time.TypeTime.DAY, Time.TypeTime.NIGHT, Time.TypeTime.SUNSET));
-
-        //load spawns
-        for (String locations : Main.getConfigManager().getConfig("arenas.yml").getStringList("Arenas." + id + ".Spawns")) {
-			Location finalLoc = BukkitUtil.parseLocation(world, locations);
-			this.addSpawn(finalLoc);
-		}
 
 		//team game
 		if (Main.getConfigManager().getConfig("arenas.yml").contains("Arenas." + id + ".Team-Size")){
@@ -90,11 +91,32 @@ public class Arena {
 		}else{
 			this.teamSize = 0;
 		}
+
+		for (Object a : spawns.keySet()) {
+			System.out.println(a);
+		}
 		//TODO team list create
 
 		//load map
+
 		this.world = WorldLoad.create(this.world_name);
-		this.world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+		this.center = BukkitUtil.parseLocation(this.world, Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Center"));
+
+		//load spawns
+		int counter = 0;
+		for (String locations : Main.getConfigManager().getConfig("arenas.yml").getStringList("Arenas." + id + ".Spawns")) {
+			Location finalLoc = BukkitUtil.parseLocation(this.world, locations);
+			this.spawns.put(counter, finalLoc);
+			this.spawnsUse.put(finalLoc, false);
+			counter++;
+		}
+
+		if (this.spawns.size() < (this.max / (teamSize == 0 ? 1 : teamSize))){
+			for (int i=this.spawns.size(); i< (this.max / (teamSize == 0 ? 1 : teamSize));i++){
+				this.spawns.put(i, new Location(this.world,i,i,i));
+				this.spawnsUse.put(new Location(this.world,i,i,i), false);
+			}
+		}
 
 		listArenas.add(this);
 	}
@@ -129,8 +151,24 @@ public class Arena {
 		return chest;
 	}
 
+	public Location getCenter() {
+		return center;
+	}
+
+	public void setCenter(Location center) {
+		this.center = center;
+	}
+
 	public void setChest(TypeChest chest) {
 		this.chest = chest;
+	}
+
+	public Scenario.TypeScenario getScenario() {
+		return scenario;
+	}
+
+	public void setScenario(Scenario.TypeScenario scenario) {
+		this.scenario = scenario;
 	}
 
 	public TypeMode getMode() {
@@ -183,15 +221,15 @@ public class Arena {
 	}
 
 	public Location getRandomSpawn(){
-		for (Location location : getSpawns().keySet()){
-			boolean inUse = spawns.get(location);
+		for (Location location : getSpawnsLocations()){
+			boolean inUse = spawnsUse.get(location);
 
 			if (inUse){
 				continue;
 			}
 
 			//set used
-			spawns.put(location, true);
+			spawnsUse.put(location, true);
 			return location;
 		}
 
@@ -262,20 +300,22 @@ public class Arena {
 		this.world = world;
 	}
 
-	public HashMap<Location, Boolean> getSpawns() {
+	public HashMap<Integer, Location> getSpawns() {
 		return spawns;
 	}
 
-	public void addSpawn(Location spawn) {
-		this.spawns.put(spawn, false);
+	public void addSpawn(int number, Location spawn) {
+		this.spawns.replace(number, this.spawns.get(number), spawn);
 	}
 
 	public Set<Location> getSpawnsLocations() {
-		return spawns.keySet();
-	}
+		Set<Location> list = new HashSet<>();
 
-	public void setSpawns(HashMap<Location, Boolean> spawns) {
-		this.spawns = spawns;
+		for (Map.Entry<Integer, Location> entry : spawns.entrySet()) {
+			list.add(entry.getValue());
+		}
+
+		return list;
 	}
 
 	public static ArrayList<Arena> getListArenas() {

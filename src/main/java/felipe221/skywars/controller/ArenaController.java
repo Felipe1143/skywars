@@ -67,6 +67,8 @@ public class ArenaController{
 			cage.create();
 		}
 
+		//todo give items
+
 		checkStart();
 	}
 
@@ -205,11 +207,12 @@ public class ArenaController{
 			BukkitUtil.runAsync(() -> {
 				WorldLoad.unload(arena.getWorld());
 				WorldLoad.delete(arena.getWorld());
-				WorldLoad.copyMapWorld(arena.getName());
+				WorldLoad.copyMapWorld(arena.getWorld().getName());
 
 				//if exists, load
 				BukkitUtil.runSync(() -> {
-					arena.setWorld(WorldLoad.create(arena.getName()));
+					WorldLoad.create(arena.getWorld().getName());
+					arena.setWorld(Bukkit.getWorld(arena.getWorld().getName()));
 				});
 			});
 		});

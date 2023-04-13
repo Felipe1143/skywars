@@ -34,6 +34,9 @@ public class MenuGUI implements InventoryHolder, Listener {
 
     private boolean configKit;
     private boolean configMaps;
+    private boolean mapList;
+    private boolean kitList;
+    private boolean beauty;
 
     public MenuGUI(){
         //to listener
@@ -50,6 +53,9 @@ public class MenuGUI implements InventoryHolder, Listener {
         this.name = ChatColor.translateAlternateColorCodes('&', name);
         this.configKit = false;
         this.configMaps = false;
+        this.mapList = false;
+        this.kitList = false;
+        this.beauty = false;
     }
 
     public void initConfigKit(){
@@ -58,6 +64,18 @@ public class MenuGUI implements InventoryHolder, Listener {
 
     public void initConfigMaps(){
         this.configMaps = true;
+    }
+
+    public void initMapList(){
+        this.mapList = true;
+    }
+
+    public void initKitList(){
+        this.kitList = true;
+    }
+
+    public void initBeauty(){
+        this.beauty = true;
     }
 
     public void setDisplayName(String name){
@@ -123,18 +141,33 @@ public class MenuGUI implements InventoryHolder, Listener {
     }
 
     public int getFinalPage(){
-        // Get the highest slot number.
-        int slot = 0;
-        for(int nextSlot : items.keySet()){
-            if(nextSlot > slot){
-                slot = nextSlot;
+        if (beauty){
+            int slot = 10;
+            for (int nextSlot : items.keySet()) {
+                if (nextSlot > slot) {
+                    slot = nextSlot;
+                }
             }
+
+            // Add one to make the math easier.
+            double highestSlot = slot + 1;
+
+            return (int) Math.ceil(highestSlot / (double) (36)) - 1;
+        }else {
+            // Get the highest slot number.
+            int slot = 0;
+            for (int nextSlot : items.keySet()) {
+                if (nextSlot > slot) {
+                    slot = nextSlot;
+                }
+            }
+
+            // Add one to make the math easier.
+            double highestSlot = slot + 1;
+
+            return (int) Math.ceil(highestSlot / (double) (rows * 9)) - 1;
         }
 
-        // Add one to make the math easier.
-        double highestSlot = slot + 1;
-
-        return (int) Math.ceil(highestSlot / (double) (rows*9)) - 1;
     }
 
     public int getBackButtonSlot(){
@@ -256,7 +289,7 @@ public class MenuGUI implements InventoryHolder, Listener {
 
                     if (openArena != null){
                         event.getWhoClicked().closeInventory();
-                        ArenaLoad.fromConfig((Player) event.getWhoClicked(), openArena);
+                        ArenaLoad.getArenaFromConfig((Player) event.getWhoClicked(), openArena);
                     }
                 }
             }
@@ -298,16 +331,45 @@ public class MenuGUI implements InventoryHolder, Listener {
 
         // Add the main inventory items
         int counter = 0;
-        for(int key = (currentPage * (rows*9)); key <= Collections.max(items.keySet()); key++){
-            if(counter >= (rows*9)) {
-                break;
-            }
+        for(int key = (currentPage * ((rows-1)*9)); key <= Collections.max(items.keySet()); key++){
+            if (beauty) {
+                if (counter == 0){
+                    counter = 10;
+                }
 
-            if(items.containsKey(key)) {
-                inventory.setItem(counter, items.get(key));
-            }
+                if (counter == 17){
+                    counter = 19;
+                }
 
-            counter++;
+                if (counter == 26){
+                    counter = 28;
+                }
+
+                if (counter == 35){
+                    //out index
+                    counter = 1000;
+                }
+
+                if (counter >= (rows-1) * 9) {
+                    break;
+                }
+
+                if (items.containsKey(key)) {
+                    inventory.setItem(counter, items.get(key));
+                }
+
+                counter++;
+            }else {
+                if (counter >= (rows * 9)) {
+                    break;
+                }
+
+                if (items.containsKey(key)) {
+                    inventory.setItem(counter, items.get(key));
+                }
+
+                counter++;
+            }
         }
 
         return inventory;

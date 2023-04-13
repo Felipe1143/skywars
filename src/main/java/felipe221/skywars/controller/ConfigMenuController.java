@@ -28,7 +28,7 @@ public class ConfigMenuController implements Listener {
         if (BukkitUtil.stripcolor(e.getView().getTitle()).equals("Configuración:")){
             if (e.getCurrentItem().getType() == Material.GRASS_BLOCK){
                 if (ArenaLoad.getEditing().isEmpty()) {
-                    ArenaLoad.fromConfigList(player);
+                    ArenaLoad.getMapsFromConfig(player);
                 }else{
                     e.setCancelled(true);
 

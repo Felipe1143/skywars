@@ -61,12 +61,10 @@ public class DeathListener implements Listener {
         }
 
         //TODO mensaje de muerte
-        //if death cause is other teleport to random player alive
-        Player playerRandom = (Player) arena.getPlayers().toArray()[0];
         if (player.getBedSpawnLocation() == null) {
-            player.teleport(playerRandom.getLocation());
+            player.teleport(arena.getCenter());
         }
 
-        player.teleport(playerRandom.getLocation());
+        player.teleport(arena.getCenter());
     }
 }

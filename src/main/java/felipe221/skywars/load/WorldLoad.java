@@ -2,6 +2,7 @@ package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
 import felipe221.skywars.object.User;
+import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.VoidGenerator;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
@@ -47,25 +48,27 @@ public class WorldLoad {
 
     //Create void world
     public static World create(final String worldName) {
-        World world = new WorldCreator(worldName).generateStructures(false).generator(new VoidGenerator()).createWorld();
-        WorldBorder worldBorder = world.getWorldBorder();
+      //  BukkitUtil.runSync(() -> BukkitUtil.runAsync(() -> {
+            World world = new WorldCreator(worldName).generateStructures(false).generator(new VoidGenerator()).createWorld();
+            WorldBorder worldBorder = world.getWorldBorder();
 
-        worldBorder.setCenter(0.0D, 0.0D);
-        worldBorder.setSize(300.0D);
-        worldBorder.setDamageAmount(2.0D);
-        worldBorder.setDamageBuffer(0.0D);
-        world.setThundering(false);
-        world.setStorm(false);
-        world.setTime(6000L);
-        world.setGameRuleValue("doMobSpawning", "false");
-        world.setGameRuleValue("mobGriefing", "false");
-        world.setGameRuleValue("doFireTick", "false");
-        world.setGameRuleValue("showDeathMessages", "false");
-        world.setGameRuleValue("doDaylightCycle", "false");
-        world.setGameRuleValue("sendCommandFeedback", "false");
-        world.setSpawnLocation(0, 63, 0);
+            worldBorder.setCenter(0.0D, 0.0D);
+            worldBorder.setSize(300.0D);
+            worldBorder.setDamageAmount(2.0D);
+            worldBorder.setDamageBuffer(0.0D);
+            world.setThundering(false);
+            world.setStorm(false);
+            world.setTime(6000L);
+            world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+            world.setGameRule(GameRule.MOB_GRIEFING, false );
+            world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false );
+            world.setGameRule(GameRule.DO_FIRE_TICK, false );
 
-        return world;
+            world.setSpawnLocation(0, 63, 0);
+
+            return world;
+     //   }));
     }
 
     //Kicks players from a world

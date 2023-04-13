@@ -49,6 +49,7 @@ public class ChestController implements Listener {
         player.getInventory().setItem(8, leave);
 
         player.updateInventory();
+        editing.put(player, null);
 
         player.sendMessage(ChatColor.GREEN + "¡Abre el cofre que deseas configurar y pon los items dentro!");
     }
@@ -58,6 +59,10 @@ public class ChestController implements Listener {
         Player player = e.getPlayer();
 
         if (e.getItem() == null){
+            return;
+        }
+
+        if (!isEditing(player)) {
             return;
         }
 
