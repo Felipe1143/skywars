@@ -4,10 +4,7 @@ import felipe221.skywars.Main;
 import felipe221.skywars.controller.ChestController;
 import felipe221.skywars.gui.MenuGUI;
 import felipe221.skywars.menus.ConfigMenu;
-import felipe221.skywars.object.Arena;
-import felipe221.skywars.object.Mode;
-import felipe221.skywars.object.Scenario;
-import felipe221.skywars.object.Teams;
+import felipe221.skywars.object.*;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.*;
@@ -112,6 +109,25 @@ public class ArenaLoad implements Listener {
 
 
 		player.openInventory(inventory);
+	}
+
+	public static void getAllArenaListMenu(Player player){
+		MenuGUI inventory = new MenuGUI("Arenas: ", 5);
+		inventory.initBeauty();
+		inventory.initMapList();
+
+		for (Arena arena : Arena.getListArenas()){
+			ItemBuilder arenaItem = ItemBuilder.start(arena.getStatus().getMaterial());
+
+			inventory.addItem(arenaItem.name(arena.getStatus().getColor() + "&n" + arena.getName())
+					.lore("&7",
+							"&7Jugadores: &a" + arena.getPlayers().size() + "/" + arena.getMax(),
+							"&7Modo: &e" + arena.getMode().getName(),
+							"&7Escenario: &b" + arena.getScenario().name())
+					.build());
+		}
+
+		player.openInventory(inventory.getInventory());
 	}
 
 	public static void getArenaFromConfig(Player player, Arena arena) {

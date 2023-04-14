@@ -1,10 +1,11 @@
 package felipe221.skywars.object;
 
+import java.lang.reflect.Type;
 import java.util.Random;
 
 public class Scenario {
     public enum TypeScenario{
-        NORMAL, ANTIKB, LUCKY, SPEED, SCAFFOLD, TORMENTA
+        NORMAL, ANTIKB, LUCKY, SPEED, SCAFFOLD, TORMENTA;
     }
 
     public static TypeScenario getRandomScenario(){

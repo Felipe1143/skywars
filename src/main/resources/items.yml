@@ -1,5 +1,95 @@
 Items:
-  Game-Selector:
+  GAME_SELECTOR:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  COSMETICOS:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  EXIT_GAME:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  AUTO_JOIN:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  KITS:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  LOBBYS:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  MODALIDADES:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  PLAY_AGAIN:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  SHOW_PLAYERS:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  VOTES:
+    Enable: true
+    Name: "&cPartidas"
+    Slot: 1
+    ID: 'CHEST'
+    #Command-Execute: "/lobby"
+    Command-Execute: "-"
+    Lore:
+      - "&7Selecciona tu partida"
+  SPECTATOR_TP:
     Enable: true
     Name: "&cPartidas"
     Slot: 1

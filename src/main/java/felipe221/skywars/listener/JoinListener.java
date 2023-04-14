@@ -2,6 +2,7 @@ package felipe221.skywars.listener;
 
 import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.controller.ChestController;
+import felipe221.skywars.load.ItemsLoad;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
@@ -57,17 +58,9 @@ public class JoinListener implements Listener{
 	}
 
 	public static void giveItems(Player player){
-		//SELECTOR ITEM
-		ItemStack selector = new ItemStack(Material.getMaterial(Main.getConfigManager().getConfig("items.yml").getString("Items.Game-Selector.ID")));
-		ItemMeta selector_meta = selector.getItemMeta();
-		selector_meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Main.getConfigManager().getConfig("items.yml").getString("Items.Game-Selector.Name")));
-
-		List<String> selector_lore = new ArrayList<>(Main.getConfigManager().getConfig("items.yml").getStringList("Items.Game-Selector.Lore"));
-		selector_lore = selector_lore.stream().map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList());
-
-		selector_meta.setLore(selector_lore);
-		selector.setItemMeta(selector_meta);
-		player.getInventory().setItem(Main.getConfigManager().getConfig("items.yml").getInt("Items.Game-Selector.Slot") - 1, selector);
+		if (ItemsLoad.Items.GAME_SELECTOR.isEnable()) {
+			player.getInventory().setItem(ItemsLoad.Items.GAME_SELECTOR.getSlot(), ItemsLoad.Items.GAME_SELECTOR.getItemStack());
+		}
 		player.updateInventory();
 	}
 }

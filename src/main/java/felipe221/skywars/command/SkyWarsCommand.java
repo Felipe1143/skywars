@@ -57,7 +57,6 @@ public class SkyWarsCommand implements CommandExecutor {
             }
         }
 
-        //todref
         return true;
     }
 }

@@ -1,6 +1,6 @@
 Menus:
-  Arena-Selector:
-    Title: "&5Arenas: "
+  ARENA_SELECTOR:
+    Title: "Arenas:"
     Rows: 3
     SOLO:
       Name: "&cSolitario"

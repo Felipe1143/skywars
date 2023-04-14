@@ -15,11 +15,33 @@ public class Arena {
 	private static ArrayList<Arena> listArenas = new ArrayList<Arena>();
 
 	public enum Status{
-		WAITING,
-		STARTING,
-		INGAME,
-		ENDING,
-		RESTARTING,
+		WAITING("Esperando", Material.GREEN_STAINED_GLASS, ChatColor.GREEN),
+		STARTING("Comenzando", Material.YELLOW_STAINED_GLASS, ChatColor.YELLOW),
+		INGAME("En juego", Material.RED_STAINED_GLASS, ChatColor.RED),
+		ENDING("Terminando", Material.PURPLE_STAINED_GLASS, ChatColor.DARK_PURPLE),
+		RESTARTING("Reiniciando", Material.BLACK_STAINED_GLASS, ChatColor.BLACK);
+
+		private final Material material;
+		private final ChatColor color;
+		private final String name;
+
+		Status(String name, Material material, ChatColor color){
+			this.material = material;
+			this.color = color;
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public ChatColor getColor() {
+			return color;
+		}
+
+		public Material getMaterial() {
+			return material;
+		}
 	}
 
 	private Status status;

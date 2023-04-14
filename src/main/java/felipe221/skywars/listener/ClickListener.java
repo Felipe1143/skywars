@@ -1,6 +1,7 @@
 package felipe221.skywars.listener;
 
 import felipe221.skywars.Main;
+import felipe221.skywars.load.ItemsLoad;
 import felipe221.skywars.menus.ArenaMenu;
 import felipe221.skywars.object.User;
 import felipe221.skywars.util.BukkitUtil;
@@ -32,8 +33,7 @@ public class ClickListener implements Listener{
         //player in lobby
         if (user.getArena() == null) {
             //selector game
-            String SELECTOR_NAME = Main.getConfigManager().getConfig("items.yml").getString("Items.Game-Selector.Name");
-            if (ITEM_NAME.equals(BukkitUtil.stripcolor(SELECTOR_NAME))) {
+            if (ITEM_NAME.equals(BukkitUtil.stripcolor(ItemsLoad.Items.GAME_SELECTOR.getName()))) {
                 ArenaMenu.openSelect(player);
             }
         }

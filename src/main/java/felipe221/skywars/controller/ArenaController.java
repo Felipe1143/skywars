@@ -2,6 +2,8 @@ package felipe221.skywars.controller;
 
 
 import felipe221.skywars.Main;
+import felipe221.skywars.events.PlayerJoinEvent;
+import felipe221.skywars.events.PlayerLeaveEvent;
 import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.load.WorldLoad;
 import felipe221.skywars.object.*;
@@ -47,6 +49,9 @@ public class ArenaController{
 			return;
 		}
 
+		PlayerJoinEvent event = new PlayerJoinEvent(arena,player);
+		Bukkit.getServer().getPluginManager().callEvent(event);
+
 		arena.addPlayer(player);
 		user.setArena(arena);
 
@@ -74,6 +79,9 @@ public class ArenaController{
 
 	public void leave(boolean quitServer){
 		arena.removePlayer(player);
+
+		PlayerLeaveEvent event = new PlayerLeaveEvent(arena,player);
+		Bukkit.getServer().getPluginManager().callEvent(event);
 
 		if (arena.getStatus() == Status.WAITING || arena.getStatus() == Status.STARTING){
 			user.getCage().remove();
@@ -142,7 +150,7 @@ public class ArenaController{
 		arena.setStatus(Status.STARTING);
 
 		Bukkit.getScheduler().runTaskTimerAsynchronously(Main.getInstance(), new BukkitRunnable() {
-			int seconds = arena.getTime();
+			int seconds = -arena.getTime();
 
 			@Override
 			public void run() {
@@ -158,7 +166,6 @@ public class ArenaController{
 				if (seconds == 0) {
 					start();
 					fillChests();
-					cancel();
 				}
 
 				if (seconds == (arena.getTime() / 2)) {
@@ -181,7 +188,7 @@ public class ArenaController{
 					arena.sendMessage(START_IN);
 				}
 
-				seconds--;
+				seconds++;
 			}
 
 		}, 0L, 20);
