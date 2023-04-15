@@ -21,8 +21,6 @@ public class ConfigMenu {
                         "&7",
                         "&7Arenas SOLO: &b" + ArenaLoad.getArenasPerMode(Mode.TypeMode.SOLO).size(),
                         "&7Arenas TEAM: &c" + ArenaLoad.getArenasPerMode(Mode.TypeMode.TEAM).size(),
-                        "&7Arenas RANKED SOLO: &6" + ArenaLoad.getArenasPerMode(Mode.TypeMode.RANKED_SOLO).size(),
-                        "&7Arenas RANKED TEAM: &e" + ArenaLoad.getArenasPerMode(Mode.TypeMode.RANKED_TEAM).size(),
                         "&7Arenas ROOMS: &c" + ArenaLoad.getArenasPerMode(Mode.TypeMode.ROOMS).size()).build();
 
         ItemStack kits = ItemBuilder.start(Material.BOW).name("&eKits")

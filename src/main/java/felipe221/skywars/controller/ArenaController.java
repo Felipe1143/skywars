@@ -250,7 +250,7 @@ public class ArenaController{
 					int counter = 0;
 
 					//cantidad de items que habra en total del 70%
-					for(int i = 0; i < 10; i++) {
+					for(int i = 0; i < 7; i++) {
 						boolean check = false;
 						int slot;
 

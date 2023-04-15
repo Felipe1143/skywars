@@ -5,7 +5,26 @@ import java.util.Random;
 
 public class Scenario {
     public enum TypeScenario{
-        NORMAL, ANTIKB, LUCKY, SPEED, SCAFFOLD, TORMENTA;
+        NORMAL("Normal"),
+        ANTIKB("Anti KB"),
+        LUCKY("Lucky"),
+        SPEED("Speed"),
+        SCAFFOLD("Scaffold"),
+        TORMENTA("Tormenta");
+
+        private String name;
+
+        TypeScenario(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     public static TypeScenario getRandomScenario(){
@@ -13,9 +32,5 @@ public class Scenario {
 
         int scenario = rand.nextInt(TypeScenario.values().length);
         return TypeScenario.values()[scenario];
-    }
-
-    public static void start(TypeScenario scenario){
-
     }
 }

@@ -15,6 +15,7 @@ public class Arena {
 	private static ArrayList<Arena> listArenas = new ArrayList<Arena>();
 
 	public enum Status{
+		NONE("Ninguno", Material.GLASS, ChatColor.WHITE),
 		WAITING("Esperando", Material.GREEN_STAINED_GLASS, ChatColor.GREEN),
 		STARTING("Comenzando", Material.YELLOW_STAINED_GLASS, ChatColor.YELLOW),
 		INGAME("En juego", Material.RED_STAINED_GLASS, ChatColor.RED),
@@ -146,7 +147,7 @@ public class Arena {
 
 
 	public boolean isSoloGame(){
-		if (mode == TypeMode.SOLO || mode == TypeMode.RANKED_SOLO || mode == TypeMode.ROOMS){
+		if (mode == TypeMode.SOLO || mode == TypeMode.TEAM| mode == TypeMode.ROOMS){
 			return true;
 		}else{
 			return false;

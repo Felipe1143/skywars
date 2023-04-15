@@ -62,6 +62,8 @@ public class Main extends JavaPlugin{
 		KitLoad.load();
 		MessagesLoad.load();
 		ItemsLoad.load();
+		MenuLoad.load();
+		ScoreboardLoad.load();
 
 		LevelController.load();
 	}

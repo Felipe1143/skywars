@@ -1,8 +1,10 @@
 package felipe221.skywars.listener;
 
+import felipe221.skywars.FastBoard;
 import felipe221.skywars.controller.ChestController;
 import felipe221.skywars.controller.KitController;
 import felipe221.skywars.load.ArenaLoad;
+import felipe221.skywars.object.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +15,14 @@ public class LeaveListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e){
         Player player = e.getPlayer();
+
+        FastBoard board = User.getUser(player).getBoard();
+
+        User.getUser(player).remove();
+
+        if (board != null) {
+            board.delete();
+        }
 
         //prevent exit on editing chest
         if (ChestController.isEditing(player)){

@@ -31,22 +31,7 @@ public class JoinListener implements Listener{
 		User user = User.getUser(player);
 
 		if (!user.exist()) {
-			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players`"
-					+ "(`username`,"
-					+ "`xp`,"
-					+ "`rankedElo`,"
-					+ "`win_effect`,"
-					+ "`kit`,"
-					+ "`cage`,"
-					+ "`ballon`)"
-					+ "VALUES"
-					+ "('" + player.getUniqueId() + "',"
-					+ "0,"
-					+ "0,"
-					+ "0,"
-					+ "0,"
-					+ "0,"
-					+ "0);");
+			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats` SET `uuid`='"+player.getUniqueId()+"';");
 		}
 
 		user.load();

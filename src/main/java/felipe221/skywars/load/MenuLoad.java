@@ -1,10 +1,14 @@
 package felipe221.skywars.load;
 
+import felipe221.skywars.Main;
+import felipe221.skywars.util.ItemBuilder;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MenuLoad {
@@ -22,7 +26,7 @@ public class MenuLoad {
         }
 
         public String getTitle() {
-            return title;
+            return ChatColor.translateAlternateColorCodes('&',title);
         }
 
         public void setTitle(String title) {
@@ -47,6 +51,27 @@ public class MenuLoad {
 
         public void setItems(HashMap<Integer, ItemStack> items) {
             this.items = items;
+        }
+    }
+
+    public static void load(){
+        for (Menus menu : Menus.values()){
+            menu.setTitle(Main.getConfigManager().getConfig("menus.yml").getString("Menus." + menu.name() + ".Title"));
+            menu.setRows(Main.getConfigManager().getConfig("menus.yml").getInt("Menus." + menu.name() + ".Rows"));
+
+            ConfigurationSection itemsConfig = Main.getConfigManager().getConfig("menus.yml").getConfigurationSection("Menus." + menu.name() + ".Items");
+            HashMap<Integer, ItemStack> itemsList = new HashMap<>();
+
+            for (Map.Entry<String, Object> entry : itemsConfig.getValues(false).entrySet()) {
+                int slot = Main.getConfigManager().getConfig("menus.yml").getInt("Menus." + menu.name() + ".Items." + entry.getKey() + ".Slot");
+                Material material = Material.valueOf(Main.getConfigManager().getConfig("menus.yml").getString("Menus." + menu.name() + ".Items." + entry.getKey() + ".ID"));
+                String name = Main.getConfigManager().getConfig("menus.yml").getString("Menus." + menu.name() + ".Items." + entry.getKey() + ".Name");
+                List<String> lore = Main.getConfigManager().getConfig("menus.yml").getStringList("Menus." + menu.name() + ".Items." + entry.getKey() + ".Lore");
+
+                itemsList.put(slot, ItemBuilder.start(material).name(name).lore(lore).build());
+            }
+
+            menu.setItems(itemsList);
         }
     }
 }

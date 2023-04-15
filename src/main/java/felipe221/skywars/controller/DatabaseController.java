@@ -1,21 +1,25 @@
 package felipe221.skywars.controller;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import felipe221.skywars.Main;
 
 import java.sql.*;
 
 public class DatabaseController {
-	protected boolean connected = false; 
+	protected boolean connected = false;
+
+	private HikariDataSource hikariDataSource;
 	    
 	private String driver;
 	private String connectionString;
 	private Main plugin;
-	public Connection c = null; 
+	public Connection c = null;
 	  
 	public DatabaseController(String hostname, int port, String database, String username, String password, Main plugin) { 
 		driver="com.mysql.jdbc.Driver";
 
-		connectionString="jdbc:mysql://" + hostname + ":" + port + "/" + database+ "?user=" + username + "&password=" + password;
+		connectionString="jdbc:mysql://" + hostname + ":" + port + "/" + database+ "?user=" + username + "&password=" + password + "&useSSL=false";
 		this.plugin = plugin;
 	}
 
@@ -24,18 +28,25 @@ public class DatabaseController {
 		this.plugin = plugin;
 	}
 	    
-	public void open() {
-		try { 
-			Class.forName(driver); 
-	            
-			this.c = DriverManager.getConnection(connectionString);
-		} catch (SQLException e) {
-			System.out.println("ERROR EN LA CONEXION A LA BASE DE DATOS: " + e.getMessage()); 
-		} catch (ClassNotFoundException e) { 
-			System.out.println(driver + " no encontrado!"); 
-		} catch (Exception e) { 
-			System.out.println(e.getMessage()); 
+	public Exception open() {
+		try {
+			HikariConfig hikariConfig = new HikariConfig();
+			hikariConfig.setJdbcUrl(connectionString);
+			hikariConfig.setMinimumIdle(5);
+			hikariConfig.setMaximumPoolSize(50);
+			hikariConfig.setConnectionTimeout(30000);
+			hikariConfig.setLeakDetectionThreshold(60 * 1000);
+			hikariConfig.setIdleTimeout(600000);
+			hikariConfig.setMaxLifetime(1800000);
+
+			hikariDataSource = new HikariDataSource(hikariConfig);
+			c = hikariDataSource.getConnection();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return e;
 		}
+
+		return null;
 	}
 
 	public Connection getConnection() {

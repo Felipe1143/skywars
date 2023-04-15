@@ -85,6 +85,16 @@ public class KitLoad {
         player.sendMessage(ChatColor.GREEN + "¡Kit eliminado correctamente!");
     }
 
+    public static Kit getKitPerName(String name){
+        for (Kit kit : getKits()){
+            if (kit.getName().equalsIgnoreCase(name)){
+                return kit;
+            }
+        }
+
+        return null;
+    }
+
     public static void fromConfig(Player player, Kit kit){
         Inventory inventory = Bukkit.createInventory(player, 9*4, kit.getName());
 

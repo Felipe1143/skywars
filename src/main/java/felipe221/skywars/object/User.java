@@ -1,12 +1,12 @@
 package felipe221.skywars.object;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import felipe221.skywars.FastBoard;
 import felipe221.skywars.Main;
-import felipe221.skywars.controller.DatabaseController;
+import felipe221.skywars.load.KitLoad;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,13 +16,6 @@ import org.bukkit.entity.Player;
 public class User {
 	private static HashMap<Player, User> cache = new HashMap<Player, User>();
 	
-	@Override
-	public String toString() {
-		return "User [xp=" + xp + ", rankedElo=" + rankedElo + ", wins=" + wins + ", kills="
-				+ kills + ", losses=" + losses + ", games=" + games + ", win_effect=" + win_effect + ", kit=" + kit
-				+ ", cage=" + cage + ", ballons=" + ballons + ", alive=" + alive + ", arena=" + arena + "]";
-	}
-	
 	private int xp;
 	private int rankedElo;
 	
@@ -30,8 +23,12 @@ public class User {
 	private int kills;
 	private int losses;
 	private int games;
-	
-	private Effect.TypeEffect win_effect;
+
+	private String deathMessage;
+	private Effect.KillEffect killEffect;
+	private Effect.WinEffect winEffect;
+	private Projectiles.Trails trail;
+
 	private Kit kit;
 	private Cage cage;
 	private Ballon ballons;
@@ -39,11 +36,13 @@ public class User {
 	private boolean alive;
 	private Arena arena;
 	private Player player;
+	private FastBoard board;
 	
 	public User(Player player) {
 		this.arena = null;
 		this.alive = false;
 		this.player = player;
+		this.board = new FastBoard(player);
 		//set with mysql
 		this.cage = new Cage(Material.GLASS, Cage.TypeCage.COMUN, null);
 	}
@@ -57,24 +56,31 @@ public class User {
 	}
 
 	public void load(){
-		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players` WHERE username = '" + player.getUniqueId() + "';").getResultSet();
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
 		try {
 			if (st.next()) {
 				this.xp = st.getInt("xp");
 				this.rankedElo = st.getInt("rankedElo");
-				//this.win_effect = Effect.TypeEffect.valueOf(st.getString("win_effect"));
+				this.wins = st.getInt("wins");
+				this.losses = st.getInt("losses");
+				this.games = st.getInt("games");
+				this.kills = st.getInt("kills");
+				this.kit = KitLoad.getKitPerName(st.getString("kit"));
+				st.close();
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+
 		cache.put(player, this);
 	}
 
 	public boolean exist(){
-		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players` WHERE username = '" + player.getUniqueId() + "';").getResultSet();
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
 		try {
 			if (st.next()) {
 				System.out.println("[Debug - SkyWars] El jugador " + player.getName() + " ya existe en la base de datos");
+				st.close();
 
 				return true;
 			}
@@ -146,15 +152,39 @@ public class User {
 	public void setGames(int games) {
 		this.games = games;
 	}
-	
-	public Effect.TypeEffect getWin_effect() {
-		return win_effect;
+
+	public String getDeathMessage() {
+		return deathMessage;
 	}
-	
-	public void setWin_effect(Effect.TypeEffect win_effect) {
-		this.win_effect = win_effect;
+
+	public void setDeathMessage(String deathMessage) {
+		this.deathMessage = deathMessage;
 	}
-	
+
+	public Effect.KillEffect getKillEffect() {
+		return killEffect;
+	}
+
+	public void setKillEffect(Effect.KillEffect killEffect) {
+		this.killEffect = killEffect;
+	}
+
+	public Effect.WinEffect getWinEffect() {
+		return winEffect;
+	}
+
+	public void setWinEffect(Effect.WinEffect winEffect) {
+		this.winEffect = winEffect;
+	}
+
+	public Projectiles.Trails getTrail() {
+		return trail;
+	}
+
+	public void setTrail(Projectiles.Trails trail) {
+		this.trail = trail;
+	}
+
 	public Kit getKit() {
 		return kit;
 	}
@@ -193,6 +223,18 @@ public class User {
 
 	public void setArena(Arena arena) {
 		this.arena = arena;
+	}
+
+	public void remove(){
+		cache.remove(player);
+	}
+
+	public FastBoard getBoard() {
+		return board;
+	}
+
+	public void setBoard(FastBoard board) {
+		this.board = board;
 	}
 
 	public void teleportSpawn(){

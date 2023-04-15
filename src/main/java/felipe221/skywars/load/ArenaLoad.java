@@ -57,16 +57,12 @@ public class ArenaLoad implements Listener {
 		for (Arena arena : Arena.getListArenas()) {
 			ItemBuilder build = ItemBuilder.start(Material.GRASS);
 
-			if (arena.getMode() == Mode.TypeMode.RANKED_SOLO){
-				build.material(Material.DIAMOND);
-			}else if (arena.getMode() == Mode.TypeMode.SOLO){
+			if (arena.getMode() == Mode.TypeMode.SOLO){
 				build.material(Material.IRON_CHESTPLATE);
 			}else if (arena.getMode() == Mode.TypeMode.ROOMS){
 				build.material(Material.DRAGON_EGG);
 			}else if (arena.getMode() == Mode.TypeMode.TEAM){
 				build.material(Material.WHITE_WOOL);
-			}else if (arena.getMode() == Mode.TypeMode.RANKED_TEAM){
-				build.material(Material.BLAZE_POWDER);
 			}
 
 			build.lore("&7",
@@ -728,18 +724,12 @@ public class ArenaLoad implements Listener {
 
 		//editing mode
 		if (e.getView().getTitle().equals("Modo " + arena.getName() + ":")){
-			if (e.getCurrentItem().getType() == Material.DIAMOND){
-				arena.setMode(Mode.TypeMode.RANKED_SOLO);
-			}else if (e.getCurrentItem().getType() == Material.IRON_CHESTPLATE){
+			if (e.getCurrentItem().getType() == Material.IRON_CHESTPLATE){
 				arena.setMode(Mode.TypeMode.SOLO);
 			}else if (e.getCurrentItem().getType() == Material.DRAGON_EGG){
 				arena.setMode(Mode.TypeMode.ROOMS);
 			}else if (e.getCurrentItem().getType() == Material.WHITE_WOOL){
 				arena.setMode(Mode.TypeMode.TEAM);
-
-				arena.setTeamSize(2);
-			}else if (e.getCurrentItem().getType() == Material.BLAZE_POWDER){
-				arena.setMode(Mode.TypeMode.RANKED_TEAM);
 
 				arena.setTeamSize(2);
 			}

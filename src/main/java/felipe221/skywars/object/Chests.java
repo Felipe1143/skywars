@@ -7,7 +7,21 @@ import java.util.List;
 
 public class Chests {
 	public enum TypeChest{
-		BASICO, NORMAL, OP
+		BASICO("Básico"), NORMAL("Normal"), OP("OP");
+
+		private String name;
+
+		TypeChest(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
 	}
 
 	public Chests(boolean rollback, Chest chest) {
