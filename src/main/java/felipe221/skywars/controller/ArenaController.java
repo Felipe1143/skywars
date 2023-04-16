@@ -2,15 +2,16 @@ package felipe221.skywars.controller;
 
 
 import felipe221.skywars.Main;
-import felipe221.skywars.events.PlayerJoinEvent;
-import felipe221.skywars.events.PlayerLeaveEvent;
+import felipe221.skywars.events.PlayerJoinGameEvent;
+import felipe221.skywars.events.PlayerLeaveGameEvent;
 import felipe221.skywars.load.ChestLoad;
+import felipe221.skywars.load.ItemsLoad;
+import felipe221.skywars.load.MessagesLoad;
 import felipe221.skywars.load.WorldLoad;
 import felipe221.skywars.object.*;
 import felipe221.skywars.object.Arena.Status;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -19,7 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,14 +42,12 @@ public class ArenaController{
 
 	public void join(){
 		if (arena.getPlayers().size() >= arena.getMax()) {
-			String ARENA_MAX = Main.getConfigManager().getConfig("messages.yml").getString("ARENA_MAX");
-
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', ARENA_MAX));
+			player.sendMessage(MessagesLoad.MessagesLine.ARENA_MAX.getMessage());
 
 			return;
 		}
 
-		PlayerJoinEvent event = new PlayerJoinEvent(arena,player);
+		PlayerJoinGameEvent event = new PlayerJoinGameEvent(arena,player);
 		Bukkit.getServer().getPluginManager().callEvent(event);
 
 		arena.addPlayer(player);
@@ -57,11 +55,8 @@ public class ArenaController{
 
 		player.setLevel(0);
 
-		String SUCCESSFULL_JOIN = Main.getConfigManager().getConfig("messages.yml").getString("SUCCESSFULL_JOIN");
-		player.sendMessage(SUCCESSFULL_JOIN);
-
-		String COUNT_JOIN = Main.getConfigManager().getConfig("messages.yml").getString("COUNT_JOIN");
-		arena.sendMessage(COUNT_JOIN);
+		player.sendMessage(MessagesLoad.MessagesLine.SUCCESSFULL_JOIN.getMessage());
+		arena.sendMessage(MessagesLoad.MessagesLine.COUNT_JOIN.getMessage());
 
 		//set cage in arena
 		Location spawn_location = arena.getRandomSpawn();
@@ -72,7 +67,15 @@ public class ArenaController{
 			cage.create();
 		}
 
-		//todo give items
+		if (ItemsLoad.Items.KITS.isEnable()){
+			player.getInventory().addItem(ItemsLoad.Items.KITS.getItemStack());
+		}
+		if (ItemsLoad.Items.EXIT_GAME.isEnable()){
+			player.getInventory().addItem(ItemsLoad.Items.EXIT_GAME.getItemStack());
+		}
+		if (ItemsLoad.Items.VOTES.isEnable()){
+			player.getInventory().addItem(ItemsLoad.Items.VOTES.getItemStack());
+		}
 
 		checkStart();
 	}
@@ -80,7 +83,7 @@ public class ArenaController{
 	public void leave(boolean quitServer){
 		arena.removePlayer(player);
 
-		PlayerLeaveEvent event = new PlayerLeaveEvent(arena,player);
+		PlayerLeaveGameEvent event = new PlayerLeaveGameEvent(arena,player);
 		Bukkit.getServer().getPluginManager().callEvent(event);
 
 		if (arena.getStatus() == Status.WAITING || arena.getStatus() == Status.STARTING){
@@ -145,19 +148,21 @@ public class ArenaController{
 		return null;
 	}
 
+	public void endGame(){
+
+	}
+
 	@SuppressWarnings("deprecation")
 	public void startCount() {
 		arena.setStatus(Status.STARTING);
 
 		Bukkit.getScheduler().runTaskTimerAsynchronously(Main.getInstance(), new BukkitRunnable() {
-			int seconds = -arena.getTime();
+			int seconds = -arena.getTimeToStart();
 
 			@Override
 			public void run() {
 				if (arena.getPlayers().size() < arena.getMin()) {
-					String PLAYER_OUT_MIN = Main.getConfigManager().getConfig("messages.yml").getString("PLAYER_OUT_MIN");
-					arena.sendMessage(PLAYER_OUT_MIN);
-
+					arena.sendMessage(MessagesLoad.MessagesLine.PLAYER_OUT_MIN.getMessage());
 					arena.setStatus(Status.WAITING);
 
 					cancel();
@@ -184,9 +189,10 @@ public class ArenaController{
 						arena.sendMessage(lines);
 					}
 
-					String START_IN = Main.getConfigManager().getConfig("messages.yml").getString("START_IN");
-					arena.sendMessage(START_IN);
+					arena.sendMessage(MessagesLoad.MessagesLine.START_IN.getMessage());
 				}
+
+				arena.setTime(seconds);
 
 				seconds++;
 			}

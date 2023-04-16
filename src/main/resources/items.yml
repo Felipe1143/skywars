@@ -1,100 +1,106 @@
 Items:
+################## LOBBY ##################
   GAME_SELECTOR:
+    #Si el item estará activo (si no quieres que aparezca setear "Enable: false")
     Enable: true
-    Name: "&cPartidas"
+    #Nombre del item
+    Name: "&aPartidas &7(Click derecho)"
+    #Slot donde aparecerá el item
     Slot: 1
+    #ID del item
     ID: 'CHEST'
-    #Command-Execute: "/lobby"
+    #Si quieres agregar un comando al tocar el item utiliza "Command-Execute: '/leave' (por defecto no ejecuta ninguno '-')"
     Command-Execute: "-"
+    #Lore del item
     Lore:
-      - "&7Selecciona tu partida"
+      - ""
   COSMETICOS:
     Enable: true
-    Name: "&cPartidas"
-    Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
+    Name: "&eSkyWars Menú &7(Click derecho)"
+    Slot: 5
+    ID: 'NETHER_STAR'
     Command-Execute: "-"
     Lore:
-      - "&7Selecciona tu partida"
-  EXIT_GAME:
-    Enable: true
-    Name: "&cPartidas"
-    Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
-    Command-Execute: "-"
-    Lore:
-      - "&7Selecciona tu partida"
+      - ""
   AUTO_JOIN:
     Enable: true
-    Name: "&cPartidas"
-    Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
+    Name: "&b¡Jugar! &7(Click derecho)"
+    Slot: 2
+    ID: 'BOW'
     Command-Execute: "-"
     Lore:
-      - "&7Selecciona tu partida"
-  KITS:
-    Enable: true
-    Name: "&cPartidas"
-    Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
-    Command-Execute: "-"
-    Lore:
-      - "&7Selecciona tu partida"
+      - ""
   LOBBYS:
     Enable: true
-    Name: "&cPartidas"
-    Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
+    Name: "&dLobbys &7(Click derecho)"
+    Slot: 9
+    ID: 'BED'
     Command-Execute: "-"
     Lore:
-      - "&7Selecciona tu partida"
+      - ""
   MODALIDADES:
     Enable: true
-    Name: "&cPartidas"
-    Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
+    Name: "&cModalidades &7(Click derecho)"
+    Slot: 3
+    ID: 'COMPASS'
     Command-Execute: "-"
     Lore:
-      - "&7Selecciona tu partida"
-  PLAY_AGAIN:
-    Enable: true
-    Name: "&cPartidas"
-    Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
-    Command-Execute: "-"
-    Lore:
-      - "&7Selecciona tu partida"
+      - ""
   SHOW_PLAYERS:
     Enable: true
-    Name: "&cPartidas"
-    Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
+    Name: "&aMostrar jugadores &7(Click derecho)"
+    Slot: 8
+    ID: 'FIREWORK_CHARGE'
     Command-Execute: "-"
     Lore:
-      - "&7Selecciona tu partida"
+      - ""
+  HIDE_PLAYERS:
+    Enable: true
+    Name: "&cEsconder jugadores &7(Click derecho)"
+    #EL SLOT DEBE SER EL MISMO QUE 'SHOW_PLAYERS'
+    Slot: 8
+    ID: 'FIRE_CHARGE'
+    Command-Execute: "-"
+    Lore:
+      - ""
+################## EN PARTIDA ##################
+  EXIT_GAME:
+    Enable: true
+    Name: "&cSalir &7(Click derecho)"
+    Slot: 9
+    ID: 'BED'
+    Command-Execute: "-"
+    Lore:
+      - ""
+  KITS:
+    Enable: true
+    Name: "&eKits &7(Click derecho)"
+    Slot: 1
+    ID: 'BOW'
+    Command-Execute: "-"
+    Lore:
+      - ""
+  PLAY_AGAIN:
+    Enable: true
+    Name: "&e¡Jugar otra vez! &7(Click derecho)"
+    Slot: 2
+    ID: 'NETHER_STAR'
+    Command-Execute: "-"
+    Lore:
+      - ""
   VOTES:
     Enable: true
-    Name: "&cPartidas"
+    Name: "&dVotaciones &7(Click derecho)"
     Slot: 1
     ID: 'CHEST'
-    #Command-Execute: "/lobby"
     Command-Execute: "-"
     Lore:
-      - "&7Selecciona tu partida"
+      - ""
   SPECTATOR_TP:
     Enable: true
-    Name: "&cPartidas"
+    Name: "&eJugadores vivos &7(Click derecho)"
     Slot: 1
-    ID: 'CHEST'
-    #Command-Execute: "/lobby"
+    ID: 'COMPASS'
     Command-Execute: "-"
     Lore:
-      - "&7Selecciona tu partida"
+      - ""

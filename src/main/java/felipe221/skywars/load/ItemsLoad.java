@@ -22,6 +22,7 @@ public class ItemsLoad {
         MODALIDADES(false, "", 0, Material.AIR, "", new ArrayList<>()),
         PLAY_AGAIN(false, "", 0, Material.AIR, "", new ArrayList<>()),
         SHOW_PLAYERS(false, "", 0, Material.AIR, "", new ArrayList<>()),
+        HIDE_PLAYERS(false, "", 0, Material.AIR, "", new ArrayList<>()),
         SPECTATOR_TP(false, "", 0, Material.AIR, "", new ArrayList<>()),
         VOTES(false, "", 0, Material.AIR, "", new ArrayList<>());
 

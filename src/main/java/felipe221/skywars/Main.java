@@ -26,6 +26,7 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
 		Bukkit.getPluginManager().registerEvents(new InteractListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DeathListener(), this);
+		Bukkit.getPluginManager().registerEvents(new ShowListener(), this);
 
 		Bukkit.getPluginManager().registerEvents(new TeamController(), this);
 		Bukkit.getPluginManager().registerEvents(new ConfigMenuController(), this);

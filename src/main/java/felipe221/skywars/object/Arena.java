@@ -74,7 +74,7 @@ public class Arena {
 
 	private int max;
 	private int min;
-	private int time;
+	private int time, timeToStart;
 
 	public Arena(int id) {
 		this.spectators = new ArrayList<>();
@@ -95,7 +95,7 @@ public class Arena {
 		this.name = Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Name");
 		this.max = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Max-Players");
 		this.min = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Min-Players");
-		this.time = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
+		this.timeToStart = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
 		this.mode = TypeMode.valueOf(Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Mode"));
 
 		this.spawns = new HashMap<Integer, Location>();
@@ -339,6 +339,14 @@ public class Arena {
 		}
 
 		return list;
+	}
+
+	public int getTimeToStart() {
+		return timeToStart;
+	}
+
+	public void setTimeToStart(int timeToStart) {
+		this.timeToStart = timeToStart;
 	}
 
 	public static ArrayList<Arena> getListArenas() {

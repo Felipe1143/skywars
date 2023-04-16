@@ -46,6 +46,19 @@ public class JoinListener implements Listener{
 		if (ItemsLoad.Items.GAME_SELECTOR.isEnable()) {
 			player.getInventory().setItem(ItemsLoad.Items.GAME_SELECTOR.getSlot(), ItemsLoad.Items.GAME_SELECTOR.getItemStack());
 		}
+		if (ItemsLoad.Items.MODALIDADES.isEnable()) {
+			player.getInventory().setItem(ItemsLoad.Items.MODALIDADES.getSlot(), ItemsLoad.Items.MODALIDADES.getItemStack());
+		}
+		if (ItemsLoad.Items.AUTO_JOIN.isEnable()) {
+			player.getInventory().setItem(ItemsLoad.Items.AUTO_JOIN.getSlot(), ItemsLoad.Items.AUTO_JOIN.getItemStack());
+		}
+		if (ItemsLoad.Items.SHOW_PLAYERS.isEnable()) {
+			player.getInventory().setItem(ItemsLoad.Items.SHOW_PLAYERS.getSlot(), ItemsLoad.Items.SHOW_PLAYERS.getItemStack());
+		}
+		if (ItemsLoad.Items.LOBBYS.isEnable()) {
+			player.getInventory().setItem(ItemsLoad.Items.LOBBYS.getSlot(), ItemsLoad.Items.LOBBYS.getItemStack());
+		}
+
 		player.updateInventory();
 	}
 }
