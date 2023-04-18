@@ -1,4 +1,10 @@
 Menus:
+  KITS:
+    Title: "Kits:"
+    Rows: 5
+    Items:
+      Kit:
+        Name: "&a&n%kit_name%"
   ARENA_SELECTOR:
     Title: "Arenas:"
     Rows: 3

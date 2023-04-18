@@ -8,3 +8,6 @@ commands:
   sw:
     description: SW Private
     permission: skywars.config
+  leave:
+    description: Salir de una arena
+    aliases: /exit

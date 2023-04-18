@@ -1,5 +1,6 @@
 package felipe221.skywars;
 
+import felipe221.skywars.command.LeaveCommand;
 import felipe221.skywars.command.SkyWarsCommand;
 import felipe221.skywars.controller.*;
 import felipe221.skywars.gui.MenuGUI;
@@ -25,6 +26,7 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new BreakListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
 		Bukkit.getPluginManager().registerEvents(new InteractListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DeathListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ShowListener(), this);
 
@@ -37,7 +39,7 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new MenuGUI(), this);
 		Bukkit.getPluginManager().registerEvents(new ArenaLoad(), this);
 
-
+		this.getCommand("leave").setExecutor(new LeaveCommand());
 		this.getCommand("sw").setExecutor(new SkyWarsCommand());
 
 		configManager = new ConfigController(this);

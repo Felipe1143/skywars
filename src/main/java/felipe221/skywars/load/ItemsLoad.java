@@ -1,10 +1,19 @@
 package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
-import felipe221.skywars.util.BukkitUtil;
+import felipe221.skywars.controller.ArenaController;
+import felipe221.skywars.listener.ShowListener;
+import felipe221.skywars.menus.ArenaSelectorMenu;
+import felipe221.skywars.menus.KitsMenu;
+import felipe221.skywars.object.Arena;
+import felipe221.skywars.object.Mode;
+import felipe221.skywars.object.User;
 import felipe221.skywars.util.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -31,6 +40,7 @@ public class ItemsLoad {
         private Material material;
         private int slot;
         private List<String> lore;
+        private Player player;
 
         Items(boolean isEnable, String name, int slot, Material material, String command, List<String> lore) {
             this.command = command;
@@ -39,6 +49,7 @@ public class ItemsLoad {
             this.slot = slot;
             this.material = material;
             this.lore = lore;
+            this.player = null;
         }
 
         public boolean isEnable() {
@@ -50,6 +61,10 @@ public class ItemsLoad {
         }
 
         public String getCommand() {
+            if (this.command.equalsIgnoreCase("-")) {
+                return null;
+            }
+
             return command;
         }
 
@@ -91,8 +106,68 @@ public class ItemsLoad {
             return ItemBuilder.start(this.material).name(this.name).lore(this.lore).build();
         }
 
+        public Player getPlayer() {
+            return player;
+        }
+
+        public void setPlayer(Player player) {
+            this.player = player;
+        }
+
         public void setLore(List<String> lore) {
             this.lore = lore;
+        }
+
+        public void action(){
+            if (this.isEnable) {
+                if (this.player != null) {
+                    if (this.command != null) {
+                        Bukkit.dispatchCommand(this.player, this.command);
+                    }
+                    if (this == KITS) {
+                        KitsMenu.open(this.player);
+                    }
+                    if (this == HIDE_PLAYERS) {
+                        ShowListener.showPlayers(this.player);
+                        this.player.getInventory().setItemInHand(SHOW_PLAYERS.getItemStack());
+                        this.player.updateInventory();
+                    }
+                    if (this == SHOW_PLAYERS) {
+                        ShowListener.hidePlayers(this.player);
+                        this.player.getInventory().setItemInHand(HIDE_PLAYERS.getItemStack());
+                        this.player.updateInventory();
+                    }
+                    if (this == EXIT_GAME) {
+                        Arena arena = User.getUser(this.player).getArena();
+                        ArenaController controller = new ArenaController(arena, this.player);
+                        controller.leave(false);
+                    }
+                    if (this == AUTO_JOIN) {
+                        Arena arena = Arena.getRandomJoineableArena(Mode.TypeMode.SOLO);
+                        ArenaController controller = new ArenaController(arena, this.player);
+                        controller.join();
+                    }
+                    if (this == GAME_SELECTOR) {
+                        ArenaSelectorMenu.open(this.player);
+                    }
+                    if (this == PLAY_AGAIN) {
+                        Arena arena = Arena.getRandomJoineableArena(Mode.TypeMode.SOLO);
+                        ArenaController controller = new ArenaController(arena, this.player);
+                        controller.join();
+                    }
+                    if (this == SPECTATOR_TP){
+                        TPMenu.open(this.player);
+                    }
+                    if (this == COSMETICOS){
+                        CosmeticMenu.open(this.player);
+                    }
+                    if (this == VOTES){
+                        VoteMenu.open(this.player);
+                    }
+
+                    this.player.playSound(player.getLocation(), Sound.BLOCK_COMPOSTER_FILL_SUCCESS, 1, 1);
+                }
+            }
         }
     }
 

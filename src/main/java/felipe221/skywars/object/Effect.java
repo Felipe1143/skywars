@@ -3,7 +3,6 @@ package felipe221.skywars.object;
 import de.slikey.effectlib.util.ParticleEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 public class Effect {
     public enum WinEffect{
@@ -44,7 +43,7 @@ public class Effect {
             this.name = name;
         }
 
-        public KillEffect setLocation(Location player){
+        public KillEffect setLocation(Location location){
             this.location = location;
             return this;
         }

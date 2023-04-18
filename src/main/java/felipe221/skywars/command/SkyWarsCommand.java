@@ -1,22 +1,14 @@
 package felipe221.skywars.command;
 
 import felipe221.skywars.Main;
-import felipe221.skywars.gui.MenuGUI;
-import felipe221.skywars.load.KitLoad;
-import felipe221.skywars.load.MessagesLoad;
-import felipe221.skywars.load.WorldLoad;
 import felipe221.skywars.menus.ConfigMenu;
 import felipe221.skywars.object.Effect;
-import felipe221.skywars.object.Kit;
-import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Random;
 
 public class SkyWarsCommand implements CommandExecutor {
     @Override
@@ -54,7 +46,7 @@ public class SkyWarsCommand implements CommandExecutor {
                     }else if (args[0].equalsIgnoreCase("test")){
                         Effect.KillEffect effect = Effect.KillEffect.valueOf(args[1].toUpperCase());
 
-                        effect.setLocation(player.getLocation());
+                        effect = effect.setLocation(player.getLocation());
                         effect.play();
                     }
                 }

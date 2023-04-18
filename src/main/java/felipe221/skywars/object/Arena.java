@@ -422,4 +422,24 @@ public class Arena {
 	public void remove(){
 		listArenas.remove(this);
 	}
+
+	public static Arena getRandomJoineableArena(TypeMode mode){
+		Arena lastJoineable = null;
+		int size = -1;
+
+		for (Arena arena : listArenas){
+			if (mode == arena.getMode()) {
+				if (arena.getStatus() == Status.WAITING || arena.getStatus() == Status.STARTING) {
+					if (arena.getPlayers().size() < arena.getMax()) {
+						if (arena.getPlayers().size() > size) {
+							lastJoineable = arena;
+							size = arena.getPlayers().size();
+						}
+					}
+				}
+			}
+        }
+
+		return lastJoineable;
+	}
 }

@@ -3,10 +3,8 @@ package felipe221.skywars.load;
 import felipe221.skywars.Main;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.util.BukkitUtil;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,8 @@ public class MessagesLoad {
         SUCCESSFULL_JOIN(""),
         TEAM_MAX(""),
         HAVE_TEAM(""),
-        BORDER_MOVE("");
+        BORDER_MOVE(""),
+        NOT_ARENA("");
 
         private String message;
         private Arena arena;

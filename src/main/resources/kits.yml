@@ -3,7 +3,8 @@ Kits:
     Name: 'Basico'
     Item-Menu: 'WOODEN_SWORD'
     Lore:
-      - "Kit común"
+      - ""
+      - "&f- &aHacha de madera"
     Price: 3000
     Permission: "skywars.kit.basico"
     Items: "-"
