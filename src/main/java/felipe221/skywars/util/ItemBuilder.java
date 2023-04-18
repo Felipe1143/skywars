@@ -51,9 +51,11 @@ public class ItemBuilder {
      * @return The updated {@link ItemBuilder} object.
      */
     public ItemBuilder name(String name){
-        ItemMeta stackMeta = stack.getItemMeta();
-        stackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
-        stack.setItemMeta(stackMeta);
+        if (name != null) {
+            ItemMeta stackMeta = stack.getItemMeta();
+            stackMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+            stack.setItemMeta(stackMeta);
+        }
         return this;
     }
 

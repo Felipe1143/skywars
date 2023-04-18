@@ -4,6 +4,7 @@ import felipe221.skywars.FastBoard;
 import felipe221.skywars.controller.ChestController;
 import felipe221.skywars.controller.KitController;
 import felipe221.skywars.load.ArenaLoad;
+import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +18,12 @@ public class LeaveListener implements Listener {
         Player player = e.getPlayer();
 
         FastBoard board = User.getUser(player).getBoard();
+        Arena arena = User.getUser(player).getArena();
+        if (arena.getStatus() == Arena.Status.WAITING || arena.getStatus() == Arena.Status.STARTING){
+            User.getUser(player).getCage().remove();
+        }
+
+        User.getUser(player).setArena(null);
 
         User.getUser(player).send();
         User.getUser(player).remove();

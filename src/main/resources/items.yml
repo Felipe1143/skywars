@@ -34,7 +34,7 @@ Items:
     Enable: true
     Name: "&dLobbys &7(Click derecho)"
     Slot: 9
-    ID: 'BED'
+    ID: 'RED_BED'
     Command-Execute: "-"
     Lore:
       - ""
@@ -50,7 +50,7 @@ Items:
     Enable: true
     Name: "&aMostrar jugadores &7(Click derecho)"
     Slot: 8
-    ID: 'FIREWORK_CHARGE'
+    ID: 'FIREWORK_STAR'
     Command-Execute: "-"
     Lore:
       - ""
@@ -68,7 +68,7 @@ Items:
     Enable: true
     Name: "&cSalir &7(Click derecho)"
     Slot: 9
-    ID: 'BED'
+    ID: 'RED_BED'
     Command-Execute: "-"
     Lore:
       - ""
@@ -91,7 +91,7 @@ Items:
   VOTES:
     Enable: true
     Name: "&dVotaciones &7(Click derecho)"
-    Slot: 1
+    Slot: 2
     ID: 'CHEST'
     Command-Execute: "-"
     Lore:

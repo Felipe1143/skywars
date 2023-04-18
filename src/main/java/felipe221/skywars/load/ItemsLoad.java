@@ -3,8 +3,7 @@ package felipe221.skywars.load;
 import felipe221.skywars.Main;
 import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.listener.ShowListener;
-import felipe221.skywars.menus.ArenaSelectorMenu;
-import felipe221.skywars.menus.KitsMenu;
+import felipe221.skywars.menus.*;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.Mode;
 import felipe221.skywars.object.User;
@@ -121,7 +120,7 @@ public class ItemsLoad {
         public void action(){
             if (this.isEnable) {
                 if (this.player != null) {
-                    if (this.command != null) {
+                    if (!this.command.equalsIgnoreCase("-")) {
                         Bukkit.dispatchCommand(this.player, this.command);
                     }
                     if (this == KITS) {
@@ -139,27 +138,25 @@ public class ItemsLoad {
                     }
                     if (this == EXIT_GAME) {
                         Arena arena = User.getUser(this.player).getArena();
-                        ArenaController controller = new ArenaController(arena, this.player);
-                        controller.leave(false);
+                        ArenaController.leave(this.player, arena);
                     }
                     if (this == AUTO_JOIN) {
                         Arena arena = Arena.getRandomJoineableArena(Mode.TypeMode.SOLO);
-                        ArenaController controller = new ArenaController(arena, this.player);
-                        controller.join();
+                        ArenaController.join(player, arena);
                     }
                     if (this == GAME_SELECTOR) {
                         ArenaSelectorMenu.open(this.player);
                     }
                     if (this == PLAY_AGAIN) {
-                        Arena arena = Arena.getRandomJoineableArena(Mode.TypeMode.SOLO);
-                        ArenaController controller = new ArenaController(arena, this.player);
-                        controller.join();
+                        Arena arena = Arena.getRandomJoineableArena(User.getUser(player).getArena().getMode());
+                        ArenaController.leave(player, User.getUser(player).getArena());
+                        ArenaController.join(player, arena);
                     }
                     if (this == SPECTATOR_TP){
                         TPMenu.open(this.player);
                     }
                     if (this == COSMETICOS){
-                        CosmeticMenu.open(this.player);
+                        CosmeticosMenu.open(this.player);
                     }
                     if (this == VOTES){
                         VoteMenu.open(this.player);

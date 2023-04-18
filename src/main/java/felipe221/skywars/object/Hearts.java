@@ -31,7 +31,7 @@ public class Hearts {
         }
 
         public void set(Arena arena){
-            for (Player player : arena.getPlayers()){
+            for (Player player : arena.getPlayersAlive()){
                 player.setMaxHealth(this.hearts);
                 player.setHealth(this.hearts);
             }

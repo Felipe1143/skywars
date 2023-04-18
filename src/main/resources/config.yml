@@ -1,56 +1,68 @@
 MYSQL:
-	host: 'localhost'
-	port: 3306
-	user: 'root'
-	password: 'Carbia1143'
-	name: "minecraft"
+  host: 'localhost'
+  port: 3306
+  user: 'root'
+  password: 'Carbia1143'
+  name: "minecraft"
 
 Main-Spawn:
-	World: '-'
-	Location: '0, 0, 0'
+  World: '-'
+  Location: '0, 0, 0'
 
 Scoreboards:
-	IN_GAME:
-		Title: "&e&lSKYWARS"
-		Lines:
-		  - "&7%arena_mode% (%date%)"
-		  - "&7"
-		  - "&fMapa: &a&n%arena_name%"
-		  - "&fEscenario: &e%arena_scenario%"
-		  - "&7"
-		  - "&fJugadores vivos: %arena_alive%"
-		  - "&fAsesinatos: %arena_player_kills%"
-		  - "&7"
-		  - "&emc.felipe221.com"
-	LOBBY:
-		Title: "&e&lSKYWARS"
-		Lines:
-	      - "&7"
-	      - "&fNivel: &e%stats_level%"
-	      - "&fExperiencia &b%stats_xp%/%stats_level_xp%"
-	      - "&7"
-	      - "&fTrail: &a%stats_trail%"
-	      - "&fCaja: &e%stats_cage_name%"
-	      - "&fEfecto de victoria: &6%stats_win_effect%"
-          - "&7"
-          - "&emc.felipe221.com"
-	ENDING:
-		Title: "&e&lSKYWARS"
-		Lines:
-			- "&fMapa: %arena%"
-			- ""
-	RESTARTING:
-		Title: "&e&lSKYWARS"
-		Lines:
-			- "&fMapa: %arena%"
-			- ""
-	WAITING:
-		Title: "&e&lSKYWARS"
-		Lines:
-			- "&fMapa: %arena%"
-			- ""
-	STARTING:
-		Title: "&e&lSKYWARS"
-		Lines:
-			- "&fMapa: %arena%"
-			- ""
+  IN_GAME:
+    Title: "&e&lSKYWARS"
+    Lines:
+      - "&7%arena_mode% (%date%)"
+      - "&7"
+      - "&fMapa: &a&n%arena_name%"
+      - "&fEscenario: &e%arena_scenario%"
+      - "&7"
+      - "&fJugadores vivos: %arena_alive%"
+      - "&fAsesinatos: %arena_player_kills%"
+      - "&7"
+      - "&emc.felipe221.com"
+  LOBBY:
+    Title: "&e&lSKYWARS"
+    Lines:
+      - "&7"
+      - "&fNivel: &e%stats_level%"
+      - "&fExperiencia &b%stats_xp%/%stats_level_xp%"
+      - "&7"
+      - "&fTrail: &aNinguno"
+      - "&fCaja: &eNormaL"
+      - "&fEfecto de victoria: &6Ninguno"
+      - "&7"
+      - "&emc.felipe221.com"
+  ENDING:
+    Title: "&e&lSKYWARS"
+    Lines:
+      - "&fMapa: %arena%"
+      - ""
+  RESTARTING:
+    Title: "&e&lSKYWARS"
+    Lines:
+      - "&fMapa: %arena%"
+      - ""
+  WAITING:
+    Title: "&e&lSKYWARS"
+    Lines:
+      - "&7%arena_mode% (%date%)"
+      - "&7"
+      - "&fMapa: &a&n%arena_name%"
+      - "&fEscenario: &e%arena_scenario%"
+      - "&7"
+      - "&fJugadores: &b%arena_players%/%arena_min% &7(minimos)"
+      - "&7"
+      - "&emc.felipe221.com"
+  STARTING:
+    Title: "&e&lSKYWARS"
+    Lines:
+      - "&7%arena_mode% (%date%)"
+      - "&7"
+      - "&fMapa: &a&n%arena_name%"
+      - "&fEscenario: &e%arena_scenario%"
+      - "&7"
+      - "&fComenzando en &c&n%arena_seconds%& fsegundos"
+      - "&7"
+      - "&emc.felipe221.com"

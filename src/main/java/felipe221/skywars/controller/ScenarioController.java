@@ -67,7 +67,7 @@ public class ScenarioController implements Listener {
     public static void setScenario(Arena arena) {
         //SPEED
         if (arena.getScenario() == Scenario.TypeScenario.SPEED) {
-            for (Player player : arena.getPlayers()) {
+            for (Player player : arena.getAllPlayers()) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
             }
             return;

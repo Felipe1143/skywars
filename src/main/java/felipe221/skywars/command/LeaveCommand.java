@@ -19,8 +19,7 @@ public class LeaveCommand implements CommandExecutor {
                 Arena arena = User.getUser(player).getArena();
 
                 if (arena != null) {
-                    ArenaController controller = new ArenaController(arena, player);
-                    controller.leave(false);
+                    ArenaController.leave(player, arena);
                 }else{
                     player.sendMessage(MessagesLoad.MessagesLine.NOT_ARENA.getMessage());
                 }

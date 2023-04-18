@@ -19,7 +19,7 @@ public class DatabaseController {
 	public DatabaseController(String hostname, int port, String database, String username, String password, Main plugin) { 
 		driver="com.mysql.jdbc.Driver";
 
-		connectionString="jdbc:mysql://" + hostname + ":" + port + "/" + database+ "?user=" + username + "&password=" + password + "&useSSL=false";
+		connectionString="jdbc:mysql://" + hostname + ":" + port + "/" + database+ "?user=" + username + "&password=" + password + "&useSSL=false&allowPublicKeyRetrieval=true";
 		this.plugin = plugin;
 	}
 

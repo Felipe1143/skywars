@@ -31,10 +31,9 @@ public class DeathListener implements Listener {
             }
 
             Arena arena = User.getUser(player).getArena();
-            ArenaController arenaController = new ArenaController(arena);
 
-            arena.removePlayer(player);
-            arena.addSpectators(player);
+            arena.removeAlivePlayer(player);
+            arena.addSpectator(player);
 
             User.getUser(player).setAlive(false);
 
@@ -77,16 +76,16 @@ public class DeathListener implements Listener {
             }
 
             if (arena.isSoloGame()) {
-                Player winner = arenaController.checkWinSolo();
+                Player winner = ArenaController.checkWinSolo(arena);
 
                 if (winner != null) {
-                    arenaController.endGame();
+                    ArenaController.endGame(arena);
                 }
             } else {
-                Teams team = arenaController.checkWinTeam();
+                Teams team = ArenaController.checkWinTeam(arena);
 
                 if (team != null) {
-                    arenaController.endGame();
+                    ArenaController.endGame(arena);
                 }
             }
 

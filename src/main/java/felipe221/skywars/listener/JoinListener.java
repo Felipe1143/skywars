@@ -31,10 +31,11 @@ public class JoinListener implements Listener{
 		User user = User.getUser(player);
 
 		if (!user.exist()) {
-			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats` SET `uuid`='"+player.getUniqueId()+"';");
+			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats_solo` SET `uuid`='"+player.getUniqueId()+"';");
+			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats_team` SET `uuid`='"+player.getUniqueId()+"';");
 		}
 
-		//user.load();
+		user.load();
 		player.getInventory().clear();
 		player.setHealth(20);
 

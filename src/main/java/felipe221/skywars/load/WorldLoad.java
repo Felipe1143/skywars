@@ -17,7 +17,7 @@ public class WorldLoad {
     public static void copyMapWorld(String mapName) {
         try {
             File arenaWorldFolder = new File(mapName);
-            File arenaMapFolder = new File(Main.getInstance().getDataFolder() + "/worlds/" + mapName);
+            File arenaMapFolder = new File(Main.getInstance().getDataFolder() + "/maps/worlds/" + mapName);
 
             FileUtils.deleteQuietly(arenaWorldFolder);
             FileUtils.copyDirectory(arenaMapFolder, arenaWorldFolder);

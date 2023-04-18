@@ -117,7 +117,7 @@ public class ArenaLoad implements Listener {
 
 			inventory.addItem(arenaItem.name(arena.getStatus().getColor() + "&n" + arena.getName())
 					.lore("&7",
-							"&7Jugadores: &a" + arena.getPlayers().size() + "/" + arena.getMax(),
+							"&7Jugadores: &a" + arena.getPlayersAlive().size() + "/" + arena.getMax(),
 							"&7Modo: &e" + arena.getMode().getName(),
 							"&7Escenario: &b" + arena.getScenario().name())
 					.build());

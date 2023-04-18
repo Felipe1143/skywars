@@ -1,6 +1,7 @@
 package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
+import felipe221.skywars.menus.ArenaJoinMenu;
 import felipe221.skywars.object.Kit;
 import felipe221.skywars.object.Mode;
 import felipe221.skywars.object.User;
@@ -23,6 +24,12 @@ public class MenuLoad {
         KITS("", 0, new HashMap<>(), new HashMap<>()),
         TP_SPECTATOR("", 0, new HashMap<>(), new HashMap<>()),
         VOTE("", 0, new HashMap<>(), new HashMap<>()),
+        SOLO("", 0, new HashMap<>(), new HashMap<>()),
+        SCENARIOS("", 0, new HashMap<>(), new HashMap<>()),
+        HEARTS("", 0, new HashMap<>(), new HashMap<>()),
+        PROJECTILES("", 0, new HashMap<>(), new HashMap<>()),
+        TEAM("", 0, new HashMap<>(), new HashMap<>()),
+        ROOMS("", 0, new HashMap<>(), new HashMap<>()),
         COSMETICS("", 0, new HashMap<>(), new HashMap<>());
 
         private String title;
@@ -89,6 +96,8 @@ public class MenuLoad {
                 if (slotEntry == slot){
                     String value = entry.getValue();
 
+                    this.player.closeInventory();
+
                     if (this == KITS){
                         Kit kit = KitLoad.getKitPerName(value);
 
@@ -98,7 +107,7 @@ public class MenuLoad {
                     if (this == ARENA_SELECTOR){
                         for (Mode.TypeMode modes : Mode.TypeMode.values()){
                             if (modes.name().equals(value)){
-
+                                ArenaJoinMenu.open(this.player, modes);
                             }
                         }
                     }
@@ -112,30 +121,34 @@ public class MenuLoad {
             menu.setTitle(Main.getConfigManager().getConfig("menus.yml").getString("Menus." + menu.name() + ".Title"));
             menu.setRows(Main.getConfigManager().getConfig("menus.yml").getInt("Menus." + menu.name() + ".Rows"));
 
-            ConfigurationSection itemsConfig = Main.getConfigManager().getConfig("menus.yml").getConfigurationSection("Menus." + menu.name() + ".Items");
             HashMap<Integer, ItemStack> itemsList = new HashMap<>();
             HashMap<Integer, String> entrysList = new HashMap<>();
 
-            for (Map.Entry<String, Object> entry : itemsConfig.getValues(false).entrySet()) {
-                int slot = 0;
-                Material material = Material.AIR;
-                String name = "";
-                List<String> lore = new ArrayList<>();
+            if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items")) {
+                ConfigurationSection itemsConfig = Main.getConfigManager().getConfig("menus.yml").getConfigurationSection("Menus." + menu.name() + ".Items");
 
-                if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items." + entry.getKey() + ".Slot")){
-                    slot = Main.getConfigManager().getConfig("menus.yml").getInt("Menus." + menu.name() + ".Items." + entry.getKey() + ".Slot");
+                for (Map.Entry<String, Object> entry : itemsConfig.getValues(false).entrySet()) {
+                    int slot = 0;
+                    Material material = Material.CARROT;
+                    String name = "";
+                    List<String> lore = new ArrayList<>();
+                    lore.add("");
+
+                    if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items." + entry.getKey() + ".Slot")) {
+                        slot = Main.getConfigManager().getConfig("menus.yml").getInt("Menus." + menu.name() + ".Items." + entry.getKey() + ".Slot");
+                    }
+                    if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items." + entry.getKey() + ".ID")) {
+                        material = Material.valueOf(Main.getConfigManager().getConfig("menus.yml").getString("Menus." + menu.name() + ".Items." + entry.getKey() + ".ID"));
+                    }
+                    if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items." + entry.getKey() + ".Name")) {
+                        name = Main.getConfigManager().getConfig("menus.yml").getString("Menus." + menu.name() + ".Items." + entry.getKey() + ".Name");
+                    }
+                    if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items." + entry.getKey() + ".Lore")) {
+                        lore = Main.getConfigManager().getConfig("menus.yml").getStringList("Menus." + menu.name() + ".Items." + entry.getKey() + ".Lore");
+                    }
+                    itemsList.put(slot, ItemBuilder.start(material).name(name).lore(lore).build());
+                    entrysList.put(slot, entry.getKey());
                 }
-                if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items." + entry.getKey() + ".ID")){
-                    material = Material.valueOf(Main.getConfigManager().getConfig("menus.yml").getString("Menus." + menu.name() + ".Items." + entry.getKey() + ".ID"));
-                }
-                if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items." + entry.getKey() + ".Name")) {
-                    name = Main.getConfigManager().getConfig("menus.yml").getString("Menus." + menu.name() + ".Items." + entry.getKey() + ".Name");
-                }
-                if (Main.getConfigManager().getConfig("menus.yml").contains("Menus." + menu.name() + ".Items." + entry.getKey() + ".Lore")) {
-                    lore = Main.getConfigManager().getConfig("menus.yml").getStringList("Menus." + menu.name() + ".Items." + entry.getKey() + ".Lore");
-                }
-                itemsList.put(slot, ItemBuilder.start(material).name(name).lore(lore).build());
-                entrysList.put(slot, entry.getKey());
             }
 
             menu.setItems(itemsList);

@@ -78,9 +78,8 @@ public class User {
 				this.solo_games = st.getInt("games");
 				this.solo_kills = st.getInt("kills");
 				this.solo_arrow_hit = st.getInt("arrow_hit");
-				this.solo_block_break = st.getInt("block_break");
+				this.solo_block_break = st.getInt("block_broken");
 				this.solo_block_placed = st.getInt("block_placed");
-				st.close();
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -94,9 +93,8 @@ public class User {
 				this.team_games = st.getInt("games");
 				this.team_kills = st.getInt("kills");
 				this.team_arrow_hit = st.getInt("arrow_hit");
-				this.team_block_break = st.getInt("block_break");
+				this.team_block_break = st.getInt("block_broken");
 				this.team_block_placed = st.getInt("block_placed");
-				sta.close();
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -106,29 +104,29 @@ public class User {
 	}
 
 	public void send(){
-		Main.getDatabaseManager().query("UPDATE `minecraft`.`player_stats_team` SET " +
+		Main.getDatabaseManager().query("UPDATE `minecraft`.`players_stats_team` SET " +
 				"`wins`='" + this.team_wins + "' " +
 				"`kills`='" + this.team_kills + "' " +
-				"`losess`='" + this.team_losses + "' " +
+				"`losses`='" + this.team_losses + "' " +
 				"`games`='" + this.team_games + "' " +
 				"`arrow_hit`='" + this.team_arrow_hit + "' " +
 				"`block_placed`='" + this.team_block_placed + "' " +
 				"`block_broken`='" + this.team_block_break + "' " +
 				" WHERE uuid = '" + player.getUniqueId() + "'");
 
-		Main.getDatabaseManager().query("UPDATE `minecraft`.`player_stats_solo` SET " +
-				"`wins`='" + this.solo_wins + "' " +
-				"`kills`='" + this.solo_kills + "' " +
-				"`losess`='" + this.solo_losses + "' " +
-				"`games`='" + this.solo_games + "' " +
-				"`arrow_hit`='" + this.solo_arrow_hit + "' " +
-				"`block_placed`='" + this.solo_block_placed + "' " +
+		Main.getDatabaseManager().query("UPDATE `minecraft`.`players_stats_solo` SET " +
+				"`wins`='" + this.solo_wins + "', " +
+				"`kills`='" + this.solo_kills + "', " +
+				"`losses`='" + this.solo_losses + "', " +
+				"`games`='" + this.solo_games + "', " +
+				"`arrow_hit`='" + this.solo_arrow_hit + "', " +
+				"`block_placed`='" + this.solo_block_placed + "', " +
 				"`block_broken`='" + this.solo_block_break + "' " +
 				" WHERE uuid = '" + player.getUniqueId() + "'");
 	}
 
 	public boolean exist(){
-		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats_team` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
 		try {
 			if (st.next()) {
 				System.out.println("[Debug - SkyWars] El jugador " + player.getName() + " ya existe en la base de datos");

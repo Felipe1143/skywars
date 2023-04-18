@@ -18,7 +18,7 @@ public class KitsMenu {
 
         for (Kit kit : KitLoad.getKits()){
             if (player.hasPermission(kit.getPermission())){
-                ItemStack kitItem = (ItemStack) MenuLoad.Menus.KITS.getItems().toArray()[0];
+                ItemStack kitItem = MenuLoad.Menus.KITS.getItems().get(0);
                 inventory.addItem(ItemBuilder.start(kit.getItemMenu().getType()).lore(kit.getLore()).name(kitItem.getItemMeta().getDisplayName().replaceAll("%kit_name%", kit.getName())).build());
             }else{
                 inventory.addItem(ItemBuilder.start(Material.RED_STAINED_GLASS_PANE).lore(kit.getLore()).name(kit.getName()).build());

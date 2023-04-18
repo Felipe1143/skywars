@@ -1,5 +1,6 @@
 package felipe221.skywars.object;
 
+import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.Main;
 import felipe221.skywars.load.WorldLoad;
@@ -66,7 +67,7 @@ public class Arena {
 	private ArrayList<Teams> teams;
 	private int teamSize;
 
-	private List<Player> usersInArena;
+	private List<Player> alive;
 	private List<Player> spectators;
 	private HashMap<Integer, Location> spawns;
 	private HashMap<Location, Boolean> spawnsUse;
@@ -79,8 +80,8 @@ public class Arena {
 
 	public Arena(int id) {
 		this.winner = null;
-		this.spectators = new ArrayList<>();
-		this.usersInArena = new ArrayList<Player>();
+		this.spectators = new ArrayList<Player>();
+		this.alive = new ArrayList<Player>();
 		this.chests = new ArrayList<>();
 		this.votes = new ArrayList<>();
 
@@ -146,6 +147,7 @@ public class Arena {
 
 		WorldBorder border = this.world.getWorldBorder();
 		border.setCenter(this.center);
+		ArenaController.resetMap(this);
 
 		listArenas.add(this);
 	}
@@ -208,34 +210,45 @@ public class Arena {
 		this.mode = mode;
 	}
 
-	public List<Player> getPlayers() {
-		return usersInArena;
+	public List<Player> getPlayersAlive() {
+		return alive;
 	}
 
 	public void setPlayers(List<Player> usersInArena) {
-		this.usersInArena = usersInArena;
+		this.alive = usersInArena;
 	}
 
-	public void addPlayer(Player player) {
-		this.usersInArena.add(player);
+	public void addAlivePlayer(Player player) {
+		this.alive.add(player);
 	}
 
-	public void removePlayer(Player player) {
-		this.usersInArena.add(player);
+	public void removeAlivePlayer(Player player) {
+		this.alive.remove(player);
 	}
 
 	public List<Player> getSpectators() {
 		return spectators;
 	}
 
-	public void addSpectators(Player player) {
+	public void addSpectator(Player player){
 		this.spectators.add(player);
+	}
 
-		player.setGameMode(GameMode.SPECTATOR);
+	public void removeSpectator(Player player){
+		this.spectators.remove(player);
+	}
+
+	public List<Player> getAllPlayers(){
+		List<Player> newList = new ArrayList<>();
+
+		newList.addAll(this.spectators);
+		newList.addAll(this.alive);
+
+		return newList;
 	}
 
 	public void sendMessage(String text) {
-		for (Player all : usersInArena) {
+		for (Player all : getAllPlayers()) {
 			all.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
 		}
 	}
@@ -430,10 +443,10 @@ public class Arena {
 		for (Arena arena : listArenas){
 			if (mode == arena.getMode()) {
 				if (arena.getStatus() == Status.WAITING || arena.getStatus() == Status.STARTING) {
-					if (arena.getPlayers().size() < arena.getMax()) {
-						if (arena.getPlayers().size() > size) {
+					if (arena.getPlayersAlive().size() < arena.getMax()) {
+						if (arena.getPlayersAlive().size() > size) {
 							lastJoineable = arena;
-							size = arena.getPlayers().size();
+							size = arena.getPlayersAlive().size();
 						}
 					}
 				}

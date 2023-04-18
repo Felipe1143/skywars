@@ -10,7 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -80,7 +82,7 @@ public class BukkitUtil {
             msg = msg.replaceAll("%player%", player.getName())
                     .replaceAll("%stats_level%", "" + user.getLevel())
                     .replaceAll("%stats_xp%", "" + user.getXP())
-                    .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
+                   // .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
                     .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
                     .replaceAll("%stats_solo_deaths%", "" + user.getSoloLosses())
                     .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
@@ -96,18 +98,19 @@ public class BukkitUtil {
                     .replaceAll("%stats_team_games%", "" + user.getTeamGames())
                     .replaceAll("%stats_team_block_placed%", "" + user.getTeamBlockPlaced())
                     .replaceAll("%stats_team_block_broked%", "" + user.getTeamBlockBreak())
-                    .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit())
-                    .replaceAll("%stats_trail%", "" + user.getTrail().getName())
-                    .replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
-                    .replaceAll("%stats_kill_tematica%", user.getKillTematica())
-                    .replaceAll("%stats_win_effect%", "" + user.getWinEffect());
+                    .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit());
+                    //.replaceAll("%stats_trail%", "" + user.getTrail().getName())
+                    //.replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
+                    //.replaceAll("%stats_kill_tematica%", user.getKillTematica())
+                    //.replaceAll("%stats_win_effect%", "" + user.getWinEffect());
         }
 
         if (arena != null){
-            msg=msg.replaceAll("%arena%", arena.getName())
+            msg=msg.replaceAll("%arena_name%", arena.getName())
                     .replaceAll("%arena_world%", arena.getWorld().getName())
                     .replaceAll("%arena_mode%", arena.getMode().getName())
-                    .replaceAll("%arena_players%", "" + arena.getPlayers().size())
+                    .replaceAll("%arena_players%", "" + arena.getPlayersAlive().size())
+                    .replaceAll("%arena_spectators%", "" + arena.getSpectators().size())
                     .replaceAll("%arena_min%", "" + arena.getMin())
                     .replaceAll("%arena_max%", "" + arena.getMax())
                     .replaceAll("%arena_time%", "" + arena.getTime())
@@ -116,8 +119,13 @@ public class BukkitUtil {
                     .replaceAll("%arena_vote_projectile%", arena.getProjectiles().getName())
                     .replaceAll("%arena_vote_scenario%", "" + arena.getScenario().getName())
                     .replaceAll("%arena_vote_hearts%", "" + arena.getHearts().getName())
+                    .replaceAll("%arena_scenario%", "" + arena.getScenario().getName())
                     .replaceAll("%arena_status%", "" + arena.getStatus().getName());
         }
+        String pattern = "dd/MM/yy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(new Date());
+        msg = msg.replace("%date%", date);
 
         return ChatColor.translateAlternateColorCodes('&',msg);
     }
@@ -137,7 +145,7 @@ public class BukkitUtil {
                 line.replaceAll("%player%", player.getName())
                         .replaceAll("%stats_level%", "" + user.getLevel())
                         .replaceAll("%stats_xp%", "" + user.getXP())
-                        .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
+                       // .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
                         .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
                         .replaceAll("%stats_solo_deaths%", "" + user.getSoloLosses())
                         .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
@@ -153,19 +161,20 @@ public class BukkitUtil {
                         .replaceAll("%stats_team_games%", "" + user.getTeamGames())
                         .replaceAll("%stats_team_block_placed%", "" + user.getTeamBlockPlaced())
                         .replaceAll("%stats_team_block_broked%", "" + user.getTeamBlockBreak())
-                        .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit())
-                        .replaceAll("%stats_trail%", "" + user.getTrail().getName())
-                        .replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
-                        .replaceAll("%stats_kill_tematica%", user.getKillTematica())
-                        .replaceAll("%stats_win_effect%", "" + user.getWinEffect());
+                        .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit());
+                        //.replaceAll("%stats_trail%", "" + user.getTrail().getName())
+                        //.replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
+                        //.replaceAll("%stats_kill_tematica%", user.getKillTematica())
+                        //.replaceAll("%stats_win_effect%", "" + user.getWinEffect());
 
             }
 
             if (arena != null) {
-                line=line.replaceAll("%arena%", arena.getName())
+                line=line.replaceAll("%arena_name%", arena.getName())
                         .replaceAll("%arena_world%", arena.getWorld().getName())
                         .replaceAll("%arena_mode%", arena.getMode().getName())
-                        .replaceAll("%arena_players%", "" + arena.getPlayers().size())
+                        .replaceAll("%arena_players%", "" + arena.getPlayersAlive().size())
+                        .replaceAll("%arena_spectators%", "" + arena.getSpectators().size())
                         .replaceAll("%arena_min%", "" + arena.getMin())
                         .replaceAll("%arena_max%", "" + arena.getMax())
                         .replaceAll("%arena_time%", "" + arena.getTime())
@@ -174,6 +183,7 @@ public class BukkitUtil {
                         .replaceAll("%arena_vote_projectile%", arena.getProjectiles().getName())
                         .replaceAll("%arena_vote_scenario%", "" + arena.getScenario().getName())
                         .replaceAll("%arena_vote_hearts%", "" + arena.getHearts().getName())
+                        .replaceAll("%arena_scenario%", "" + arena.getScenario().getName())
                         .replaceAll("%arena_status%", "" + arena.getStatus().getName());
             }
             line = ChatColor.translateAlternateColorCodes('&', line);

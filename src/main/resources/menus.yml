@@ -1,10 +1,64 @@
 Menus:
+  COSMETICS:
+    Title: "Kits:"
+    Rows: 5
+  PROJECTILES:
+    Title: "Kits:"
+    Rows: 5
+  TP_SPECTATOR:
+    Title: "Kits:"
+    Rows: 5
+  VOTE:
+    Title: "Kits:"
+    Rows: 5
+  HEARTS:
+    Title: "Kits:"
+    Rows: 5
+  SCENARIOS:
+    Title: "Kits:"
+    Rows: 5
   KITS:
     Title: "Kits:"
     Rows: 5
     Items:
       Kit:
         Name: "&a&n%kit_name%"
+  SOLO:
+    Title: "Arenas solo:"
+    Rows: 5
+    Items:
+      Arena:
+        Name: "&a&n%arena%"
+        Lore:
+          - "&7"
+          - "&fJugadores: &b%arena_players%/%arena_max%"
+          - "&fEscenario: &e%arena_scenario%"
+          - "&7"
+          - "&7¡Haz click para ingresar!"
+  TEAM:
+    Title: "Arenas team:"
+    Rows: 5
+    Items:
+      Kit:
+        Name: "&a&n%arena%"
+        Lore:
+          - "&7"
+          - "&fJugadores: &b%arena_players%/%arena_max%"
+          - "&fEscenario: &e%arena_scenario%"
+          - "&7"
+          - "&7¡Haz click para ingresar!"
+  ROOMS :
+    Title: "Arenas rooms:"
+    Rows: 5
+    Items:
+      Kit:
+        Name: "&a&n%arena%"
+        Lore:
+          - "&7"
+          - "&fJugadores: &b%arena_players%/%arena_max%"
+          - "&fEscenario: &e%arena_scenario%"
+          - "&7"
+          - "&7¡Haz click para ingresar!"
   ARENA_SELECTOR:
     Title: "Arenas:"
     Rows: 3

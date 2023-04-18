@@ -32,12 +32,14 @@ public class ShowListener implements Listener {
         Player player = e.getPlayer();
 
         for (Player allPlayers : Bukkit.getOnlinePlayers()) {
-            if (User.getUser(allPlayers).getArena().getID() == User.getUser(player).getArena().getID()){
-                allPlayers.showPlayer(Main.getInstance(), player);
-                player.showPlayer(Main.getInstance(), allPlayers);
-            }else{
-                allPlayers.hidePlayer(Main.getInstance(), player);
-                player.hidePlayer(Main.getInstance(), allPlayers);
+            if (User.getUser(allPlayers).getArena() != null) {
+                if (User.getUser(allPlayers).getArena().getID() == User.getUser(player).getArena().getID()) {
+                    allPlayers.showPlayer(Main.getInstance(), player);
+                    player.showPlayer(Main.getInstance(), allPlayers);
+                } else {
+                    allPlayers.hidePlayer(Main.getInstance(), player);
+                    player.hidePlayer(Main.getInstance(), allPlayers);
+                }
             }
         }
     }

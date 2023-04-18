@@ -7,6 +7,7 @@ import felipe221.skywars.object.User;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,13 +63,16 @@ public class ScoreboardLoad {
             scores.setLines(lines);
         }
 
-        Bukkit.getServer().getScheduler().runTaskTimer(Main.getInstance(), () -> {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                FastBoard board = User.getUser(player).getBoard();
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    FastBoard board = User.getUser(player).getBoard();
 
-                updateBoard(board);
+                    updateBoard(board);
+                }
             }
-        }, 0, 20);
+        }.runTaskTimer(Main.getInstance(), 20L, 0);
     }
 
     private static void updateBoard(FastBoard board) {
@@ -83,7 +87,7 @@ public class ScoreboardLoad {
             for (Scoreboards scores : Scoreboards.values()){
                 if (scores.getStatus() == statusGame){
                     board.updateLines(BukkitUtil.replaceVariables(board.getPlayer(), arena, scores.getLines()));
-                    board.updateTitle(BukkitUtil.replaceVariables(board.getPlayer(),arena,scores.getTitle()));
+                    board.updateTitle(BukkitUtil.replaceVariables(board.getPlayer(), arena,scores.getTitle()));
                 }
             }
         }

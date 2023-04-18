@@ -7,8 +7,8 @@ import org.bukkit.event.HandlerList;
 
 public class PlayerJoinGameEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-    private Arena arena;
-    private Player player;
+    private final Arena arena;
+    private final Player player;
 
     public PlayerJoinGameEvent(Arena arena, Player player) {
         this.arena = arena;
@@ -23,6 +23,7 @@ public class PlayerJoinGameEvent extends Event {
         return player;
     }
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }
