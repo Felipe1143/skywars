@@ -24,7 +24,6 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
 		Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
 		Bukkit.getPluginManager().registerEvents(new BreakListener(), this);
-		Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
 		Bukkit.getPluginManager().registerEvents(new InteractListener(), this);
 		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DeathListener(), this);
