@@ -6,6 +6,7 @@ import felipe221.skywars.load.KitLoad;
 import felipe221.skywars.load.MessagesLoad;
 import felipe221.skywars.load.WorldLoad;
 import felipe221.skywars.menus.ConfigMenu;
+import felipe221.skywars.object.Effect;
 import felipe221.skywars.object.Kit;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.ChatColor;
@@ -50,6 +51,11 @@ public class SkyWarsCommand implements CommandExecutor {
                         Main.getConfigManager().save("config.yml");
 
                         player.sendMessage(ChatColor.GREEN + "¡Spawn cambiado a tu ubicación actual correctamente!");
+                    }else if (args[0].equalsIgnoreCase("test")){
+                        Effect.KillEffect effect = Effect.KillEffect.valueOf(args[1].toUpperCase());
+
+                        effect.setLocation(player.getLocation());
+                        effect.play();
                     }
                 }
             }else{

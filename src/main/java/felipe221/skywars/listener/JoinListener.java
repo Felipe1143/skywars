@@ -34,7 +34,7 @@ public class JoinListener implements Listener{
 			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats` SET `uuid`='"+player.getUniqueId()+"';");
 		}
 
-		user.load();
+		//user.load();
 		player.getInventory().clear();
 		player.setHealth(20);
 

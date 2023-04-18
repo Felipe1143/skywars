@@ -1,7 +1,14 @@
 package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
+import felipe221.skywars.object.Arena;
+import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessagesLoad {
     public enum MessagesLine{
@@ -9,21 +16,86 @@ public class MessagesLoad {
         COUNT_JOIN(""),
         START_IN(""),
         PLAYER_OUT_MIN(""),
-        SUCCESSFULL_JOIN("");
+        SUCCESSFULL_JOIN(""),
+        TEAM_MAX(""),
+        HAVE_TEAM(""),
+        BORDER_MOVE("");
 
         private String message;
+        private Arena arena;
+        private Player player;
 
         MessagesLine(String message){
             this.message = message;
+            this.player = null;
+            this.arena = null;
         }
 
         public String getMessage() {
-            //TODO replace with all variables
-            return ChatColor.translateAlternateColorCodes('&', message);
+            return BukkitUtil.replaceVariables(player, arena,message);
         }
 
         public void setMessage(String message) {
             this.message = message;
+        }
+
+        public Arena getArena() {
+            return arena;
+        }
+
+        public MessagesLine setArena(Arena arena) {
+            this.arena = arena;
+            return this;
+        }
+
+        public Player getPlayer() {
+            return player;
+        }
+
+        public MessagesLine setPlayer(Player player) {
+            this.player = player;
+            return this;
+        }
+    }
+
+    public enum MessagesList{
+        VOTES_CLOSE(new ArrayList<>());
+
+
+        private List<String> message;
+        private Arena arena;
+        private Player player;
+
+        MessagesList(List<String> message){
+            this.message = message;
+            this.player = null;
+            this.arena = null;
+        }
+
+        public List<String> getMessage() {
+            return BukkitUtil.replaceVariables(player, arena,message);
+        }
+
+        public void setMessage(List<String> message) {
+            this.message = message;
+        }
+
+        public Arena getArena() {
+            return arena;
+        }
+
+        public MessagesList setArena(Arena arena) {
+            this.arena = arena;
+            return this;
+        }
+
+        public Player getPlayer() {
+            return player;
+        }
+
+        public MessagesList setPlayer(Player player) {
+            this.player = player;
+            return this;
         }
     }
 
@@ -32,6 +104,12 @@ public class MessagesLoad {
             String msg = line.name().toUpperCase();
 
             line.setMessage(Main.getConfigManager().getConfig("messages.yml").getString("Messages." + msg));
+        }
+
+        for (MessagesList lines : MessagesList.values()){
+            String msg = lines.name().toUpperCase();
+
+            lines.setMessage(Main.getConfigManager().getConfig("messages.yml").getStringList("Messages-List." + msg));
         }
     }
 }

@@ -5,18 +5,22 @@ import felipe221.skywars.Main;
 public class DatabaseLoad {
 
 	public static void load() {
-		//USER TABLE
-		Main.getDatabaseManager().query("CREATE TABLE IF NOT EXISTS `minecraft`.`players` ("
-				+ "  `username` VARCHAR(32) NOT NULL,"
-				+ "  `xp` INT NOT NULL,"
-				+ "  `rankedElo` INT NOT NULL,"
-				+ "  `win_effect` VARCHAR(45) NOT NULL,"
-				+ "  `kit` VARCHAR(45) NOT NULL,"
-				+ "  `cage` VARCHAR(45) NOT NULL,"
-				+ "  `ballon` VARCHAR(45) NOT NULL,"
-				+ "  PRIMARY KEY (`username`))"
-				+ "ENGINE = InnoDB");
-		
+		Main.getDatabaseManager().query("CREATE TABLE IF NOT EXIST `minecraft`.`player_stats_team` " +
+						"(`uuid` VARCHAR(50) NOT NULL,`wins` " +
+				"INT NOT NULL DEFAULT 0,`kills` INT NOT NULL DEFAULT 0,`losses`" +
+				" INT NOT NULL DEFAULT 0,`games` INT NOT NULL DEFAULT 0,`arrow_hit` " +
+				"INT NOT NULL DEFAULT 0,`block_placed` INT NOT NULL DEFAULT 0,`block_broken` " +
+				"INT NOT NULL DEFAULT 0, PRIMARY KEY (`uuid`), UNIQUE INDEX `uuid_UNIQUE` " +
+				"(`uuid` ASC) VISIBLE);");
+
+		Main.getDatabaseManager().query("CREATE TABLE IF NOT EXIST `minecraft`.`player_stats_solo` " +
+				"(`uuid` VARCHAR(50) NOT NULL,`wins` " +
+				"INT NOT NULL DEFAULT 0,`kills` INT NOT NULL DEFAULT 0,`losses`" +
+				" INT NOT NULL DEFAULT 0,`games` INT NOT NULL DEFAULT 0,`arrow_hit` " +
+				"INT NOT NULL DEFAULT 0,`block_placed` INT NOT NULL DEFAULT 0,`block_broken` " +
+				"INT NOT NULL DEFAULT 0, PRIMARY KEY (`uuid`), UNIQUE INDEX `uuid_UNIQUE` " +
+				"(`uuid` ASC) VISIBLE);");
+
 		//RANKED TABLE SOLO
 		Main.getDatabaseManager().query("CREATE TABLE `minecraft`.`ranked_solo` ("
 				+ "  `username` VARCHAR(10) NOT NULL,"
@@ -30,7 +34,7 @@ public class DatabaseLoad {
 				+ "    ON DELETE NO ACTION"
 				+ "    ON UPDATE NO ACTION);"
 				+ "");
-		
+
 		//RANKED TABLE TEAM
 		Main.getDatabaseManager().query("CREATE TABLE `minecraft`.`ranked_team` ("
 				+ "  `username` VARCHAR(10) NOT NULL,"
@@ -44,7 +48,7 @@ public class DatabaseLoad {
 				+ "    ON DELETE NO ACTION"
 				+ "    ON UPDATE NO ACTION);"
 				+ "");
-		
+
 		//SOLO
 		Main.getDatabaseManager().query("CREATE TABLE `minecraft`.`solo` ("
 				+ "  `username` VARCHAR(10) NOT NULL,"
@@ -58,7 +62,7 @@ public class DatabaseLoad {
 				+ "    ON DELETE NO ACTION"
 				+ "    ON UPDATE NO ACTION);"
 				+ "");
-		
+
 		//TEAM
 		Main.getDatabaseManager().query("CREATE TABLE `minecraft`.`ranked_solo` ("
 				+ "  `username` VARCHAR(10) NOT NULL,"

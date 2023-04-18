@@ -1,5 +1,6 @@
 package felipe221.skywars.controller;
 
+import felipe221.skywars.load.MessagesLoad;
 import felipe221.skywars.object.Teams;
 import felipe221.skywars.object.User;
 import org.bukkit.Material;
@@ -42,14 +43,14 @@ public class TeamController implements Listener {
             }
 
             if (isInTeam){
-                //TODO MENSAJES
-                player.sendMessage("Ya pertenes a un equipo");
+                player.sendMessage(MessagesLoad.MessagesLine.HAVE_TEAM.setPlayer(player).setArena(User.getUser(player).getArena()).getMessage());
 
                 return;
             }
             if (team_selected.getPlayers().size() >= team_selected.getSize()){
-                //TODO MENSAJES
-                player.sendMessage("El equipo esta lleno");
+                player.sendMessage(MessagesLoad.MessagesLine.TEAM_MAX.setPlayer(player).setArena(User.getUser(player).getArena()).getMessage());
+
+                return;
             }
 
             team_selected.addPlayer(player);

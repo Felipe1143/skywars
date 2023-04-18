@@ -1,5 +1,6 @@
 package felipe221.skywars.object;
 
+import felipe221.skywars.FastBoard;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

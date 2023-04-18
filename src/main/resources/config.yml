@@ -13,13 +13,27 @@ Scoreboards:
 	IN_GAME:
 		Title: "&e&lSKYWARS"
 		Lines:
-		- "&fJugador: %player%"
-		- ""
+		  - "&7%arena_mode% (%date%)"
+		  - "&7"
+		  - "&fMapa: &a&n%arena_name%"
+		  - "&fEscenario: &e%arena_scenario%"
+		  - "&7"
+		  - "&fJugadores vivos: %arena_alive%"
+		  - "&fAsesinatos: %arena_player_kills%"
+		  - "&7"
+		  - "&emc.felipe221.com"
 	LOBBY:
 		Title: "&e&lSKYWARS"
 		Lines:
-			- "&fMapa: %arena%"
-			- ""
+	      - "&7"
+	      - "&fNivel: &e%stats_level%"
+	      - "&fExperiencia &b%stats_xp%/%stats_level_xp%"
+	      - "&7"
+	      - "&fTrail: &a%stats_trail%"
+	      - "&fCaja: &e%stats_cage_name%"
+	      - "&fEfecto de victoria: &6%stats_win_effect%"
+          - "&7"
+          - "&emc.felipe221.com"
 	ENDING:
 		Title: "&e&lSKYWARS"
 		Lines:

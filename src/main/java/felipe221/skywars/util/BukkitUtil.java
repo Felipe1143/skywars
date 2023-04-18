@@ -80,14 +80,27 @@ public class BukkitUtil {
             msg = msg.replaceAll("%player%", player.getName())
                     .replaceAll("%stats_level%", "" + user.getLevel())
                     .replaceAll("%stats_xp%", "" + user.getXP())
-                   // .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
-                    .replaceAll("%stats_kills%", "" + user.getKills())
-                    .replaceAll("%stats_deaths%", "" + user.getLosses())
-                    .replaceAll("%stats_elo%", "" + user.getRankedElo())
-                    .replaceAll("%stats_kills%", "" + user.getKills());
-                   // .replaceAll("%stats_trail%", "" + user.getTrail().getName())
-                    //.replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
-                    //.replaceAll("%stats_win_effect%", "" + user.getWinEffect())
+                    .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
+                    .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
+                    .replaceAll("%stats_solo_deaths%", "" + user.getSoloLosses())
+                    .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
+                    .replaceAll("%stats_solo_wins%", "" + user.getSoloWins())
+                    .replaceAll("%stats_solo_games%", "" + user.getSoloGames())
+                    .replaceAll("%stats_solo_block_placed%", "" + user.getSoloBlockPlaced())
+                    .replaceAll("%stats_solo_block_broked%", "" + user.getSoloBlockBreak())
+                    .replaceAll("%stats_solo_arrow_hits%", "" + user.getSoloArrowHit())
+                    .replaceAll("%stats_team_kills%", "" + user.getTeamKills())
+                    .replaceAll("%stats_team_deaths%", "" + user.getTeamLosses())
+                    .replaceAll("%stats_team_kills%", "" + user.getTeamKills())
+                    .replaceAll("%stats_team_wins%", "" + user.getTeamWins())
+                    .replaceAll("%stats_team_games%", "" + user.getTeamGames())
+                    .replaceAll("%stats_team_block_placed%", "" + user.getTeamBlockPlaced())
+                    .replaceAll("%stats_team_block_broked%", "" + user.getTeamBlockBreak())
+                    .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit())
+                    .replaceAll("%stats_trail%", "" + user.getTrail().getName())
+                    .replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
+                    .replaceAll("%stats_kill_tematica%", user.getKillTematica())
+                    .replaceAll("%stats_win_effect%", "" + user.getWinEffect());
         }
 
         if (arena != null){
@@ -99,8 +112,10 @@ public class BukkitUtil {
                     .replaceAll("%arena_max%", "" + arena.getMax())
                     .replaceAll("%arena_time%", "" + arena.getTime())
                     .replaceAll("%arena_chest%", arena.getChest().getName())
-                    .replaceAll("%arena_projectiles%", arena.getProjectiles().getName())
-                    .replaceAll("%arena_scenario%", "" + arena.getScenario())
+                    .replaceAll("%arena_vote_time%", "" + arena.getTimeGame().getName())
+                    .replaceAll("%arena_vote_projectile%", arena.getProjectiles().getName())
+                    .replaceAll("%arena_vote_scenario%", "" + arena.getScenario().getName())
+                    .replaceAll("%arena_vote_hearts%", "" + arena.getHearts().getName())
                     .replaceAll("%arena_status%", "" + arena.getStatus().getName());
         }
 
@@ -120,21 +135,34 @@ public class BukkitUtil {
                 User user = User.getUser(player);
 
                 line.replaceAll("%player%", player.getName())
-                                .replaceAll("%stats_level%", "" + user.getLevel())
-                                .replaceAll("%stats_xp%", "" + user.getXP())
-                                // .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
-                                .replaceAll("%stats_kills%", "" + user.getKills())
-                                .replaceAll("%stats_deaths%", "" + user.getLosses())
-                                .replaceAll("%stats_elo%", "" + user.getRankedElo())
-                                .replaceAll("%stats_kills%", "" + user.getKills());
-                        // .replaceAll("%stats_trail%", "" + user.getTrail().getName())
-                        //.replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
-                        //.replaceAll("%stats_win_effect%", "" + user.getWinEffect())
+                        .replaceAll("%stats_level%", "" + user.getLevel())
+                        .replaceAll("%stats_xp%", "" + user.getXP())
+                        .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
+                        .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
+                        .replaceAll("%stats_solo_deaths%", "" + user.getSoloLosses())
+                        .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
+                        .replaceAll("%stats_solo_wins%", "" + user.getSoloWins())
+                        .replaceAll("%stats_solo_games%", "" + user.getSoloGames())
+                        .replaceAll("%stats_solo_block_placed%", "" + user.getSoloBlockPlaced())
+                        .replaceAll("%stats_solo_block_broked%", "" + user.getSoloBlockBreak())
+                        .replaceAll("%stats_solo_arrow_hits%", "" + user.getSoloArrowHit())
+                        .replaceAll("%stats_team_kills%", "" + user.getTeamKills())
+                        .replaceAll("%stats_team_deaths%", "" + user.getTeamLosses())
+                        .replaceAll("%stats_team_kills%", "" + user.getTeamKills())
+                        .replaceAll("%stats_team_wins%", "" + user.getTeamWins())
+                        .replaceAll("%stats_team_games%", "" + user.getTeamGames())
+                        .replaceAll("%stats_team_block_placed%", "" + user.getTeamBlockPlaced())
+                        .replaceAll("%stats_team_block_broked%", "" + user.getTeamBlockBreak())
+                        .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit())
+                        .replaceAll("%stats_trail%", "" + user.getTrail().getName())
+                        .replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
+                        .replaceAll("%stats_kill_tematica%", user.getKillTematica())
+                        .replaceAll("%stats_win_effect%", "" + user.getWinEffect());
 
             }
 
             if (arena != null) {
-                line.replaceAll("%arena%", arena.getName())
+                line=line.replaceAll("%arena%", arena.getName())
                         .replaceAll("%arena_world%", arena.getWorld().getName())
                         .replaceAll("%arena_mode%", arena.getMode().getName())
                         .replaceAll("%arena_players%", "" + arena.getPlayers().size())
@@ -142,8 +170,10 @@ public class BukkitUtil {
                         .replaceAll("%arena_max%", "" + arena.getMax())
                         .replaceAll("%arena_time%", "" + arena.getTime())
                         .replaceAll("%arena_chest%", arena.getChest().getName())
-                        .replaceAll("%arena_projectiles%", arena.getProjectiles().getName())
-                        .replaceAll("%arena_scenario%", "" + arena.getScenario())
+                        .replaceAll("%arena_vote_time%", "" + arena.getTimeGame().getName())
+                        .replaceAll("%arena_vote_projectile%", arena.getProjectiles().getName())
+                        .replaceAll("%arena_vote_scenario%", "" + arena.getScenario().getName())
+                        .replaceAll("%arena_vote_hearts%", "" + arena.getHearts().getName())
                         .replaceAll("%arena_status%", "" + arena.getStatus().getName());
             }
             line = ChatColor.translateAlternateColorCodes('&', line);

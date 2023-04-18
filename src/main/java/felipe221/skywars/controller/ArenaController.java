@@ -4,6 +4,7 @@ package felipe221.skywars.controller;
 import felipe221.skywars.Main;
 import felipe221.skywars.events.PlayerJoinGameEvent;
 import felipe221.skywars.events.PlayerLeaveGameEvent;
+import felipe221.skywars.listener.JoinListener;
 import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.load.ItemsLoad;
 import felipe221.skywars.load.MessagesLoad;
@@ -42,7 +43,7 @@ public class ArenaController{
 
 	public void join(){
 		if (arena.getPlayers().size() >= arena.getMax()) {
-			player.sendMessage(MessagesLoad.MessagesLine.ARENA_MAX.getMessage());
+			player.sendMessage(MessagesLoad.MessagesLine.ARENA_MAX.setPlayer(player).setArena(arena).getMessage());
 
 			return;
 		}
@@ -55,8 +56,8 @@ public class ArenaController{
 
 		player.setLevel(0);
 
-		player.sendMessage(MessagesLoad.MessagesLine.SUCCESSFULL_JOIN.getMessage());
-		arena.sendMessage(MessagesLoad.MessagesLine.COUNT_JOIN.getMessage());
+		player.sendMessage(MessagesLoad.MessagesLine.SUCCESSFULL_JOIN.setPlayer(player).setArena(arena).getMessage());
+		arena.sendMessage(MessagesLoad.MessagesLine.COUNT_JOIN.setArena(arena).setPlayer(player).getMessage());
 
 		//set cage in arena
 		Location spawn_location = arena.getRandomSpawn();
@@ -117,6 +118,10 @@ public class ArenaController{
 			}
 
 			if (alivePlayers == 1) {
+				ArrayList<Player> winner = new ArrayList<>();
+				winner.add(playerWinner);
+
+				arena.setWinner(winner);
 				return playerWinner;
 			}else{
 				return null;
@@ -139,6 +144,7 @@ public class ArenaController{
 			}
 
 			if (aliveTeams == 1){
+				arena.setWinner(teamWinner.getPlayers());
 				return teamWinner;
 			}else{
 				return null;
@@ -149,7 +155,41 @@ public class ArenaController{
 	}
 
 	public void endGame(){
+		for (Player winners : arena.getWinner()){
+			User winnerUser = User.getUser(winners);
 
+			//add win
+			//add xp
+		}
+
+		new BukkitRunnable(){
+			@Override
+			public void run() {
+				resetArena();
+			}
+		}.runTaskLater(Main.getInstance(), 220L);
+	}
+
+	public void resetArena(){
+		final int copyID = arena.getID();
+
+		if (!arena.getPlayers().isEmpty()) {
+			for (Player players : arena.getPlayers()) {
+				players.getInventory().clear();
+				players.setHealth(20);
+				User.getUser(players).setArena(null);
+				User.getUser(players).teleportSpawn();
+				JoinListener.giveItems(players);
+			}
+		}
+
+		arena.remove();
+
+		resetMap();
+
+		Arena newArena = new Arena(copyID);
+
+		System.out.println("[Debug - SkyWars] La arena " + newArena.getName()+ " [" + copyID + "] fue reiniciada correctamente");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -162,7 +202,7 @@ public class ArenaController{
 			@Override
 			public void run() {
 				if (arena.getPlayers().size() < arena.getMin()) {
-					arena.sendMessage(MessagesLoad.MessagesLine.PLAYER_OUT_MIN.getMessage());
+					arena.sendMessage(MessagesLoad.MessagesLine.PLAYER_OUT_MIN.setArena(arena).getMessage());
 					arena.setStatus(Status.WAITING);
 
 					cancel();
@@ -183,13 +223,13 @@ public class ArenaController{
 					VoteController voteController = new VoteController(arena);
 					voteController.load();
 
-					List<String> VOTES_CLOSE = Main.getConfigManager().getConfig("messages.yml").getStringList("VOTES_CLOSE");
+					List<String> VOTES_CLOSE = MessagesLoad.MessagesList.VOTES_CLOSE.setArena(arena).getMessage();
 
 					for (String lines : VOTES_CLOSE) {
 						arena.sendMessage(lines);
 					}
 
-					arena.sendMessage(MessagesLoad.MessagesLine.START_IN.getMessage());
+					arena.sendMessage(MessagesLoad.MessagesLine.START_IN.setArena(arena).getMessage());
 				}
 
 				arena.setTime(seconds);
@@ -202,12 +242,15 @@ public class ArenaController{
 
 	public void start(){
 		arena.setStatus(Status.INGAME);
+		ScenarioController.setScenario(arena);
 
 		for (Player players : arena.getPlayers()){
 			User user = User.getUser(players);
 
 			user.getCage().remove();
 			user.setAlive(true);
+
+			//add games
 		}
 	}
 

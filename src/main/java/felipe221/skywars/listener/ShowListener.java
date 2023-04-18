@@ -57,6 +57,14 @@ public class ShowListener implements Listener {
         }
     }
 
+    public static void deathHide(Player player){
+        for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+            if (User.getUser(allPlayers).getArena().getID() == User.getUser(player).getArena().getID()){
+                allPlayers.hidePlayer(Main.getInstance(), player);
+            }
+        }
+    }
+
     //items lobbys
     public static void showPlayers(Player player){
         for (Player allPlayers : Bukkit.getOnlinePlayers()){

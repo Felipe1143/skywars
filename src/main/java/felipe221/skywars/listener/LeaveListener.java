@@ -18,6 +18,7 @@ public class LeaveListener implements Listener {
 
         FastBoard board = User.getUser(player).getBoard();
 
+        User.getUser(player).send();
         User.getUser(player).remove();
 
         if (board != null) {

@@ -65,6 +65,7 @@ public class Main extends JavaPlugin{
 		ItemsLoad.load();
 		MenuLoad.load();
 		ScoreboardLoad.load();
+		KillsLoad.load();
 
 		LevelController.load();
 	}

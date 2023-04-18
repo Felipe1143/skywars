@@ -12,17 +12,31 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import felipe221.skywars.object.Mode.TypeMode;
+
 
 public class User {
 	private static HashMap<Player, User> cache = new HashMap<Player, User>();
 	
 	private int xp;
-	private int rankedElo;
-	
-	private int wins;
-	private int kills;
-	private int losses;
-	private int games;
+
+	//solo stats
+	private int solo_wins;
+	private int solo_kills;
+	private int solo_losses;
+	private int solo_games;
+	private int solo_block_placed;
+	private int solo_block_break;
+	private int solo_arrow_hit;
+
+	//team stats
+	private int team_wins;
+	private int team_kills;
+	private int team_losses;
+	private int team_games;
+	private int team_block_placed;
+	private int team_block_break;
+	private int team_arrow_hit;
 
 	private String deathMessage;
 	private Effect.KillEffect killEffect;
@@ -31,12 +45,12 @@ public class User {
 
 	private Kit kit;
 	private Cage cage;
-	private Ballon ballons;
-	
+
 	private boolean alive;
 	private Arena arena;
 	private Player player;
 	private FastBoard board;
+	private String killTematica;
 	
 	public User(Player player) {
 		this.arena = null;
@@ -56,23 +70,61 @@ public class User {
 	}
 
 	public void load(){
-		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats_solo` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
 		try {
 			if (st.next()) {
-				this.xp = st.getInt("xp");
-				this.rankedElo = st.getInt("rankedElo");
-				this.wins = st.getInt("wins");
-				this.losses = st.getInt("losses");
-				this.games = st.getInt("games");
-				this.kills = st.getInt("kills");
-				this.kit = KitLoad.getKitPerName(st.getString("kit"));
+				this.solo_wins = st.getInt("wins");
+				this.solo_losses = st.getInt("losses");
+				this.solo_games = st.getInt("games");
+				this.solo_kills = st.getInt("kills");
+				this.solo_arrow_hit = st.getInt("arrow_hit");
+				this.solo_block_break = st.getInt("block_break");
+				this.solo_block_placed = st.getInt("block_placed");
 				st.close();
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 
+		ResultSet sta = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats_team` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
+		try {
+			if (sta.next()) {
+				this.team_wins = st.getInt("wins");
+				this.team_losses = st.getInt("losses");
+				this.team_games = st.getInt("games");
+				this.team_kills = st.getInt("kills");
+				this.team_arrow_hit = st.getInt("arrow_hit");
+				this.team_block_break = st.getInt("block_break");
+				this.team_block_placed = st.getInt("block_placed");
+				sta.close();
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
 		cache.put(player, this);
+	}
+
+	public void send(){
+		Main.getDatabaseManager().query("UPDATE `minecraft`.`player_stats_team` SET " +
+				"`wins`='" + this.team_wins + "' " +
+				"`kills`='" + this.team_kills + "' " +
+				"`losess`='" + this.team_losses + "' " +
+				"`games`='" + this.team_games + "' " +
+				"`arrow_hit`='" + this.team_arrow_hit + "' " +
+				"`block_placed`='" + this.team_block_placed + "' " +
+				"`block_broken`='" + this.team_block_break + "' " +
+				" WHERE uuid = '" + player.getUniqueId() + "'");
+
+		Main.getDatabaseManager().query("UPDATE `minecraft`.`player_stats_solo` SET " +
+				"`wins`='" + this.solo_wins + "' " +
+				"`kills`='" + this.solo_kills + "' " +
+				"`losess`='" + this.solo_losses + "' " +
+				"`games`='" + this.solo_games + "' " +
+				"`arrow_hit`='" + this.solo_arrow_hit + "' " +
+				"`block_placed`='" + this.solo_block_placed + "' " +
+				"`block_broken`='" + this.solo_block_break + "' " +
+				" WHERE uuid = '" + player.getUniqueId() + "'");
 	}
 
 	public boolean exist(){
@@ -100,7 +152,14 @@ public class User {
 		return 0;
 	}
 
-	
+	public String getKillTematica() {
+		return killTematica;
+	}
+
+	public void setKillTematica(String killTematica) {
+		this.killTematica = killTematica;
+	}
+
 	public int getXP() {
 		return xp;
 	}
@@ -113,46 +172,6 @@ public class User {
 		this.xp+=xp;
 	}
 	
-	public int getRankedElo() {
-		return rankedElo;
-	}
-	
-	public void setRankedElo(int rankedElo) {
-		this.rankedElo = rankedElo;
-	}
-	
-	public int getWins() {
-		return wins;
-	}
-	
-	public void setWins(int wins) {
-		this.wins = wins;
-	}
-	
-	public int getKills() {
-		return kills;
-	}
-	
-	public void setKills(int kills) {
-		this.kills = kills;
-	}
-	
-	public int getLosses() {
-		return losses;
-	}
-	
-	public void setLosses(int losses) {
-		this.losses = losses;
-	}
-	
-	public int getGames() {
-		return games;
-	}
-	
-	public void setGames(int games) {
-		this.games = games;
-	}
-
 	public String getDeathMessage() {
 		return deathMessage;
 	}
@@ -200,14 +219,6 @@ public class User {
 	public void setCage(Cage cage) {
 		this.cage = cage;
 	}
-	
-	public Ballon getBallons() {
-		return ballons;
-	}
-	
-	public void setBallons(Ballon ballons) {
-		this.ballons = ballons;
-	}
 
 	public boolean isAlive() {
 		return alive;
@@ -235,6 +246,142 @@ public class User {
 
 	public void setBoard(FastBoard board) {
 		this.board = board;
+	}
+
+	public void addSoloWin(){
+		this.solo_wins++;
+	}
+
+	public void addTeamWin(){
+		this.team_wins++;
+	}
+
+	public void addSoloGame(){
+		this.solo_games++;
+	}
+
+	public void addTeamGame(){
+		this.team_games++;
+	}
+
+	public void addSoloLosses(){
+		this.solo_losses++;
+	}
+
+	public void addTeamLosses(){
+		this.team_losses++;
+	}
+
+	public int getSoloWins() {
+		return solo_wins;
+	}
+
+	public void setSoloWins(int solo_wins) {
+		this.solo_wins = solo_wins;
+	}
+
+	public int getSoloKills() {
+		return solo_kills;
+	}
+
+	public void setSoloKills(int solo_kills) {
+		this.solo_kills = solo_kills;
+	}
+
+	public int getSoloLosses() {
+		return solo_losses;
+	}
+
+	public void setSoloLosses(int soloLosses) {
+		this.solo_losses = soloLosses;
+	}
+
+	public int getSoloGames() {
+		return solo_games;
+	}
+
+	public void setSoloGames(int solo_games) {
+		this.solo_games = solo_games;
+	}
+
+	public int getSoloBlockPlaced() {
+		return solo_block_placed;
+	}
+
+	public void setSoloBlockPlaced(int solo_block_placed) {
+		this.solo_block_placed = solo_block_placed;
+	}
+
+	public int getSoloBlockBreak() {
+		return solo_block_break;
+	}
+
+	public void setSoloBlockBreak(int solo_block_break) {
+		this.solo_block_break = solo_block_break;
+	}
+
+	public int getSoloArrowHit() {
+		return solo_arrow_hit;
+	}
+
+	public void setSoloArrowHit(int solo_arrow_hit) {
+		this.solo_arrow_hit = solo_arrow_hit;
+	}
+
+	public int getTeamWins() {
+		return team_wins;
+	}
+
+	public void setTeamWins(int team_wins) {
+		this.team_wins = team_wins;
+	}
+
+	public int getTeamKills() {
+		return team_kills;
+	}
+
+	public void setTeamKills(int team_kills) {
+		this.team_kills = team_kills;
+	}
+
+	public int getTeamLosses() {
+		return team_losses;
+	}
+
+	public void setTeamLosses(int teamLosses) {
+		this.team_losses = teamLosses;
+	}
+
+	public int getTeamGames() {
+		return this.team_games;
+	}
+
+	public void setTeamGames(int team_games) {
+		this.team_games = team_games;
+	}
+
+	public int getTeamBlockPlaced() {
+		return team_block_placed;
+	}
+
+	public void setTeamBlockPlaced(int team_block_placed) {
+		this.team_block_placed = team_block_placed;
+	}
+
+	public int getTeamBlockBreak() {
+		return team_block_break;
+	}
+
+	public void setTeamBlockBreak(int team_block_break) {
+		this.team_block_break = team_block_break;
+	}
+
+	public int getTeamArrowHit() {
+		return team_arrow_hit;
+	}
+
+	public void setTeamArrowHit(int team_arrow_hit) {
+		this.team_arrow_hit = team_arrow_hit;
 	}
 
 	public void teleportSpawn(){

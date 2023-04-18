@@ -50,6 +50,7 @@ public class Arena {
 	private String name;
 	private String world_name;
 	private World world;
+	private ArrayList<Player> winner;
 
 	//votes
 	private List<Vote> votes;
@@ -77,6 +78,7 @@ public class Arena {
 	private int time, timeToStart;
 
 	public Arena(int id) {
+		this.winner = null;
 		this.spectators = new ArrayList<>();
 		this.usersInArena = new ArrayList<Player>();
 		this.chests = new ArrayList<>();
@@ -97,6 +99,7 @@ public class Arena {
 		this.min = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Min-Players");
 		this.timeToStart = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
 		this.mode = TypeMode.valueOf(Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Mode"));
+		this.center = BukkitUtil.parseLocation(this.world, Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Center"));
 
 		this.spawns = new HashMap<Integer, Location>();
 		this.spawnsUse = new HashMap<Location, Boolean>();
@@ -140,6 +143,9 @@ public class Arena {
 				this.spawnsUse.put(new Location(this.world,i,i,i), false);
 			}
 		}
+
+		WorldBorder border = this.world.getWorldBorder();
+		border.setCenter(this.center);
 
 		listArenas.add(this);
 	}
@@ -311,6 +317,14 @@ public class Arena {
 		return status;
 	}
 
+	public ArrayList<Player> getWinner() {
+		return winner;
+	}
+
+	public void setWinner(ArrayList<Player> winner) {
+		this.winner = winner;
+	}
+
 	public void setStatus(Status status) {
 		this.status = status;
 	}
@@ -403,5 +417,9 @@ public class Arena {
 
 	public void setHearts(Hearts.TypeHearts hearts) {
 		this.hearts = hearts;
+	}
+
+	public void remove(){
+		listArenas.remove(this);
 	}
 }
