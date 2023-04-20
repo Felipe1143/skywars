@@ -1,10 +1,12 @@
 package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
-import felipe221.skywars.menus.ArenaJoinMenu;
-import felipe221.skywars.object.Kit;
-import felipe221.skywars.object.Mode;
-import felipe221.skywars.object.User;
+import felipe221.skywars.controller.ArenaController;
+import felipe221.skywars.menus.cage.CageMaterialMenu;
+import felipe221.skywars.menus.cage.CageMenu;
+import felipe221.skywars.menus.cage.CageTypeMenu;
+import felipe221.skywars.menus.lobby.ArenaJoinMenu;
+import felipe221.skywars.object.*;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,6 +23,9 @@ import java.util.stream.Collectors;
 public class MenuLoad {
     public enum Menus{
         ARENA_SELECTOR("", 0, new HashMap<>(), new HashMap<>()),
+        CAGE_TYPE("", 0, new HashMap<>(), new HashMap<>()),
+        CAGE_MATERIAL("", 0, new HashMap<>(), new HashMap<>()),
+        CAGE_MAIN("", 0, new HashMap<>(), new HashMap<>()),
         KITS("", 0, new HashMap<>(), new HashMap<>()),
         TP_SPECTATOR("", 0, new HashMap<>(), new HashMap<>()),
         VOTE("", 0, new HashMap<>(), new HashMap<>()),
@@ -36,6 +41,7 @@ public class MenuLoad {
         private int rows;
         private HashMap<Integer, ItemStack> items;
         private HashMap<Integer, String> entrys;
+        private HashMap<Integer, Object> data;
         private Player player;
 
         Menus(String title, int rows, HashMap<Integer, ItemStack> items, HashMap<Integer, String> entrys) {
@@ -44,6 +50,7 @@ public class MenuLoad {
             this.items = items;
             this.entrys = entrys;
             this.player = null;
+            this.data = null;
         }
 
         public String getTitle() {
@@ -78,6 +85,18 @@ public class MenuLoad {
             return items.values().stream().collect(Collectors.toCollection(ArrayList::new));
         }
 
+        public void setData(int slot, Object object){
+            if (this.data == null){
+                this.data = new HashMap<>();
+            }
+
+            this.data.put(slot, object);
+        }
+
+        public Object getData(int slot){
+            return this.data.get(slot);
+        }
+
         public HashMap<Integer, String> getEntrys() {
             return entrys;
         }
@@ -91,24 +110,105 @@ public class MenuLoad {
         }
 
         public void action(int slot){
-            for (Map.Entry<Integer, String> entry : entrys.entrySet()){
-                int slotEntry = entry.getKey();
-                if (slotEntry == slot){
-                    String value = entry.getValue();
+            //is a paged menu, with many items within config
+            if (this.data != null){
+                for (Map.Entry<Integer, Object> entry : this.data.entrySet()) {
+                    int slotEntry = entry.getKey();
 
-                    this.player.closeInventory();
+                    if (slotEntry == slot) {
+                        Object value = entry.getValue();
 
-                    if (this == KITS){
-                        Kit kit = KitLoad.getKitPerName(value);
+                        if (this == KITS) {
+                            //value data = kit config name
+                            Kit kitSelected = KitLoad.getKitPerNameConfig((String) value);
 
-                        User.getUser(player).setKit(kit);
-                    }
+                            User.getUser(player).setKit(kitSelected);
+                            player.sendMessage(MessagesLoad.MessagesLine.KIT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%kit_name%", kitSelected.getName()));
 
-                    if (this == ARENA_SELECTOR){
-                        for (Mode.TypeMode modes : Mode.TypeMode.values()){
-                            if (modes.name().equals(value)){
-                                ArenaJoinMenu.open(this.player, modes);
+                            this.player.closeInventory();
+                        }
+
+                        if (this == CAGE_MATERIAL) {
+                            //value data = material id
+                            Material material = Material.getMaterial((String) value);
+
+                            if (player.hasPermission("skywars.material." + material.name())){
+                                User.getUser(player).getCage().setMaterialCage(material);
+                                player.sendMessage(MessagesLoad.MessagesLine.CAGE_MATERIAL_SELECTED.setPlayer(this.player).getMessage());
+
+                                this.player.closeInventory();
+                            }else{
+                                player.sendMessage(MessagesLoad.MessagesLine.CAGE_MATERIAL_LOCKED.setPlayer(this.player).getMessage());
                             }
+                        }
+
+                        if (this == SOLO || this == TEAM || this == ROOMS) {
+                            //value data = arena id
+                            Arena arena = Arena.getByName((String) value);
+
+                            ArenaController.join(player, arena);
+
+                            this.player.closeInventory();
+                        }
+                    }
+                }
+            }else{
+                //others menu
+                for (Map.Entry<Integer, String> entry : this.entrys.entrySet()) {
+                    int slotEntry = entry.getKey();
+
+                    if (slotEntry == slot) {
+                        String value = entry.getValue();
+
+                        if (this == ARENA_SELECTOR) {
+                            for (Mode.TypeMode modes : Mode.TypeMode.values()) {
+                                if (modes.name().equals(value)) {
+                                    this.player.closeInventory();
+                                    ArenaJoinMenu.open(this.player, modes);
+
+                                    return;
+                                }
+                            }
+                        }
+
+                        if (this == CAGE_TYPE) {
+                            for (Cage.TypeCage typeCage : Cage.TypeCage.values()) {
+                                if (typeCage.name().equalsIgnoreCase(value)) {
+                                    if (player.hasPermission("skywars.type." + typeCage.name())){
+                                        this.player.closeInventory();
+                                        User.getUser(player).getCage().setType(typeCage);
+                                        player.sendMessage(MessagesLoad.MessagesLine.CAGE_TYPE_SELECTED.setPlayer(this.player).getMessage());
+
+                                    }else{
+                                        player.sendMessage(MessagesLoad.MessagesLine.CAGE_TYPE_LOCKED.setPlayer(this.player).getMessage());
+
+                                   }
+
+                                    return;
+                                }
+                            }
+                        }
+
+                        if (this == CAGE_MAIN) {
+                            this.player.closeInventory();
+
+                            if (value.equalsIgnoreCase("TYPE")) {
+                                CageTypeMenu.open(player);
+                            }else if (value.equalsIgnoreCase("MATERIAL")){
+                                CageMaterialMenu.open(player);
+                            }
+
+                            return;
+                        }
+
+                        if (this == COSMETICS) {
+                            this.player.closeInventory();
+
+                            if (value.equalsIgnoreCase("CAJAS")) {
+                                CageMenu.open(player);
+                            }
+
+                            return;
                         }
                     }
                 }
@@ -151,6 +251,7 @@ public class MenuLoad {
                 }
             }
 
+            menu.setEntrys(entrysList);
             menu.setItems(itemsList);
         }
     }

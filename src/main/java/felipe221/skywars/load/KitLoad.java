@@ -85,14 +85,19 @@ public class KitLoad {
         player.sendMessage(ChatColor.GREEN + "¡Kit eliminado correctamente!");
     }
 
-    public static Kit getKitPerName(String name){
+    public static Kit getKitPerNameConfig(String name){
         for (Kit kit : getKits()){
-            if (kit.getName().equalsIgnoreCase(name)){
+            if (kit.getConfigName().equalsIgnoreCase(name)){
                 return kit;
             }
         }
 
         return null;
+    }
+
+    //prevent mysql errors
+    public static boolean exist(Kit kit){
+        return kits_global.contains(kit);
     }
 
     public static void fromConfig(Player player, Kit kit){

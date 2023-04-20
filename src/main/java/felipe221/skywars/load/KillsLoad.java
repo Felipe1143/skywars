@@ -62,6 +62,11 @@ public class KillsLoad {
         }
     }
 
+    //prevent mysql errors
+    public static boolean existTematica(String tematica){
+        return listTematicas.containsKey(tematica);
+    }
+
     public static String getRandomMessageByTypeKill(String tematica, Kills.TypeKill typeKill){
         Random rand = new Random();
         ArrayList<Kills> killsArrayList = listTematicas.get(tematica);

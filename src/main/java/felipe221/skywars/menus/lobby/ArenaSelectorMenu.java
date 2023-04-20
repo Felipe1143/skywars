@@ -1,4 +1,4 @@
-package felipe221.skywars.menus;
+package felipe221.skywars.menus.lobby;
 
 import felipe221.skywars.load.MenuLoad;
 import org.bukkit.Bukkit;

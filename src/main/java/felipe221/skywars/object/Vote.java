@@ -25,7 +25,7 @@ public class Vote {
 
         //set options
         for (Object a : options){
-            votes.put(options, 0);
+            votes.put(a, 0);
         }
     }
 
@@ -88,5 +88,6 @@ public class Vote {
 
     public void closeVotes(){
         close = true;
+        setWinner();
     }
 }

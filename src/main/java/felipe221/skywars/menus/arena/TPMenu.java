@@ -1,4 +1,4 @@
-package felipe221.skywars.menus;
+package felipe221.skywars.menus.arena;
 
 import org.bukkit.entity.Player;
 

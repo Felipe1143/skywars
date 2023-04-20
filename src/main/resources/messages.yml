@@ -8,6 +8,13 @@ Messages:
   HAVE_TEAM: ""
   BORDER_MOVE: "&a¡El borde del mapa se está moviendo! Ahora se encuentra a &a&n%radius% &abloques"
   NOT_ARENA: "&c¡No estás en ninguna arena!"
+  KIT_SELECTED: "&a¡Kit &n%kit_name%&a seleccionado correctamente!"
+  KIT_LOCKED: "&c¡No tienes este kit comprado!"
+  CAGE_MATERIAL_SELECTED: "&a¡Material de caja cambiado a &n%stats_cage_material%&a correctamente!"
+  CAGE_MATERIAL_LOCKED: "&c¡No tienes este material desbloqueado!"
+  CAGE_TYPE_SELECTED: "&a¡Tipo de caja cambiado a &n%stats_cage_type%&a correctamente!"
+  CAGE_TYPE_LOCKED: "&c¡No tienes este material desbloqueado!"
+  ARENA_STARTED: "&c¡La arena ya está en juego!"
 
 Messages-List:
   VOTES_CLOSE:
@@ -23,6 +30,20 @@ Messages-List:
 
 # Agregar 0, 1, 2, 3, 4... en orden
 Kill-Messages:
+  ################################################################################
+  ## NO CAMBIAR EL NOMBRE NI BORRAR 'NONE', YA QUE SON LOS MENSAJES POR DEFECTO ##
+  ## IGUALMENTE SE PUEDEN AGREGAR MENSAJES AQUÍ
+  ################################################################################
+  NONE:
+    Bow:
+      0: "%player% fue asesinado por %killer% con arco"
+    Sword:
+      0: "%player% fue asesinado por %killer%"
+      1: "%killer% destrozó a %player%"
+    Void:
+      0: "%player% murió tocando el vacío"
+  #################################################################
+  ## DESDE AQUÍ, AGREGAR LOS DESEADOS SIN LIMITE EN ESTE FORMATO ##
   Pirata:
     Bow:
       0: "%player% fue asesinado por %killer% con arco"

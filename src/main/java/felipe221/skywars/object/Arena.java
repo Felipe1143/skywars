@@ -70,7 +70,7 @@ public class Arena {
 	private List<Player> alive;
 	private List<Player> spectators;
 	private HashMap<Integer, Location> spawns;
-	private HashMap<Location, Boolean> spawnsUse;
+	private HashMap<Location, Player> spawnsUse;
 	private Location center;
 	private List<Chests> chests;
 
@@ -101,9 +101,9 @@ public class Arena {
 		this.timeToStart = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + ".Time-To-Start");
 		this.mode = TypeMode.valueOf(Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Mode"));
 		this.center = BukkitUtil.parseLocation(this.world, Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Center"));
-
+		this.time = 0;
 		this.spawns = new HashMap<Integer, Location>();
-		this.spawnsUse = new HashMap<Location, Boolean>();
+		this.spawnsUse = new HashMap<Location, Player>();
 
         //vote create
 		this.votes.add(new Vote(Vote.TypeVote.SCENARIOS, Scenario.TypeScenario.LUCKY, Scenario.TypeScenario.SPEED, Scenario.TypeScenario.ANTIKB, Scenario.TypeScenario.SCAFFOLD, Scenario.TypeScenario.TORMENTA));
@@ -134,14 +134,14 @@ public class Arena {
 		for (String locations : Main.getConfigManager().getConfig("arenas.yml").getStringList("Arenas." + id + ".Spawns")) {
 			Location finalLoc = BukkitUtil.parseLocation(this.world, locations);
 			this.spawns.put(counter, finalLoc);
-			this.spawnsUse.put(finalLoc, false);
+			this.spawnsUse.put(finalLoc, null);
 			counter++;
 		}
 
 		if (this.spawns.size() < (this.max / (teamSize == 0 ? 1 : teamSize))){
 			for (int i=this.spawns.size(); i< (this.max / (teamSize == 0 ? 1 : teamSize));i++){
 				this.spawns.put(i, new Location(this.world,i,i,i));
-				this.spawnsUse.put(new Location(this.world,i,i,i), false);
+				this.spawnsUse.put(new Location(this.world,i,i,i), null);
 			}
 		}
 
@@ -262,16 +262,15 @@ public class Arena {
 		});
 	}
 
-	public Location getRandomSpawn(){
+	public Location getRandomSpawn(Player player){
 		for (Location location : getSpawnsLocations()){
-			boolean inUse = spawnsUse.get(location);
+			Player inUse = spawnsUse.get(location);
 
-			if (inUse){
+			if (inUse != null){
 				continue;
 			}
 
-			//set used
-			spawnsUse.put(location, true);
+			spawnsUse.put(location, player);
 			return location;
 		}
 
@@ -454,5 +453,25 @@ public class Arena {
         }
 
 		return lastJoineable;
+	}
+
+	public static Arena getByID(int id){
+		for (Arena arenas : getListArenas()){
+			if (arenas.getID() == id){
+				return arenas;
+			}
+		}
+
+		return null;
+	}
+
+	public static Arena getByName(String name){
+		for (Arena arenas : getListArenas()){
+			if (arenas.getName().equalsIgnoreCase(name)){
+				return arenas;
+			}
+		}
+
+		return null;
 	}
 }

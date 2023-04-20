@@ -1,7 +1,171 @@
 Menus:
-  COSMETICS:
-    Title: "Kits:"
+  CAGE_MAIN:
+    Title: "Cajas:"
+    Rows: 3
+    Items:
+      MATERIAL:
+        Name: "&eMaterial"
+        Slot: 14
+        ID: 'GLASS'
+        Lore:
+          - "&7"
+          - "&7-> Cambia el material con el que"
+          - "&7se hará la caja"
+          - ""
+          - "&7Material actual: &e%stats_cage_material%"
+          - ""
+          - "&7¡Haz click para editar!"
+      TYPE:
+        Name: "&aTipo"
+        Slot: 12
+        ID: 'ENDER_CHEST'
+        Lore:
+          - "&7"
+          - "&7-> Cambia la forma con la que"
+          - "&7se hará la caja"
+          - ""
+          - "&7Tipo actual: &e%stats_cage_type%"
+          - ""
+          - "&7¡Haz click para editar!"
+  CAGE_MATERIAL: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE MATERIALES SE GENERA SOLA CON LA CONFIG SETEADA
+    Title: "Materiales:"
     Rows: 5
+    Items:
+      MATERIAL:
+        Name: "&a&n%cage_name%"
+        Lore:
+          - "&f"
+          - "&7Estado: &e%cage_status%"
+          - "&7"
+          - "&7¡Haz click para seleccionar!"
+  CAGE_TYPE:
+    Title: "Tipos:"
+    Rows: 3
+    Items:
+      COMUN:
+        Name: "&e&nNormal"
+        Slot: 10
+        ID: 'GLASS'
+        Lore:
+          - "&7"
+          - "&7Estado: &e&n%cage_status%"
+          - ""
+          - "&7¡Haz click para cambiar!"
+      ESFERA:
+        Name: "&e&nEsfera"
+        Slot: 14
+        ID: 'SNOWBALL'
+        Lore:
+          - "&7"
+          - "&7Estado: &e%cage_status%"
+          - ""
+          - "&7¡Haz click para cambiar!"
+      DOMO:
+        Name: "&e&nDomo"
+        Slot: 16
+        ID: 'BONE_MEAL'
+        Lore:
+          - "&7"
+          - "&7Estado: &e%cage_status%"
+          - ""
+          - "&7¡Haz click para cambiar!"
+      PIRAMIDE:
+        Name: "&e&nPiramide"
+        Slot: 12
+        ID: 'YELLOW_DYE'
+        Lore:
+          - "&7"
+          - "&7Estado: &e%cage_status%"
+          - ""
+          - "&7¡Haz click para cambiar!"
+  COSMETICS:
+    Title: "Menú principal:"
+    Rows: 6
+    Items:
+      CAJAS:
+        Name: "&a&nCajas"
+        Slot: 15
+        ID: 'YELLOW_STAINED_GLASS'
+        Lore:
+          - "&7"
+          - "&7¡Cambia la forma y el material"
+          - "&7de tu zona de aparición!"
+          - ""
+          - "&7Tipo actual: &b%stats_cage_type%"
+          - "&7Material actual: &e%stats_cage_material%"
+          - ""
+          - "&7¡Haz click para editar!"
+      TOPS:
+        Name: "&e&nMejores jugadores"
+        Slot: 22
+        ID: 'PLAYER_HEAD'
+        Lore:
+          - "&7"
+          - "&7¡Observa los mejores jugadores"
+          - "&7y sus estadisticas!"
+          - ""
+          - "&7¡Haz click para ver!"
+      WIN_EFFECT:
+        Name: "&d&nEfecto de victoria"
+        Slot: 11
+        ID: 'HONEYCOMB'
+        Lore:
+          - "&7"
+          - "&7¿Quieres resaltar al ganar una"
+          - "&7partida? ¡Esto es para tí!"
+          - ""
+          - "&7Efecto actual: &e%stats_win_effect%"
+          - ""
+          - "&7¡Haz click para editar!"
+      TRAILS:
+        Name: "&b&nTrails"
+        Slot: 34
+        ID: 'ARROW'
+        Lore:
+          - "&7"
+          - "&7¡Deja un rastro especial al lanzar"
+          - "&7un proyectil!"
+          - ""
+          - "&7Trail actual: &a%stats_trail%"
+          - ""
+          - "&7¡Haz click para editar!"
+      LEVELS:
+        Name: "&6&nEstadisticas"
+        Slot: 41
+        ID: 'EXPERIENCE_BOTTLE'
+        Lore:
+          - "&7"
+          - "&7¿Quieres ver tu progreso en"
+          - "&7SkyWars y destacar entre tus amigos?"
+          - ""
+          - "&7Nivel actual: &b%stats_level% (%stats_xp%xp)"
+          - ""
+          - "&7¡Haz click para ver!"
+      TEMATICA:
+        Name: "&a&nTematicas"
+        Slot: 39
+        ID: 'PAPER'
+        Lore:
+          - "&7"
+          - "&7Cambia tus mensajes al asesinar"
+          - "&7jugadores, pudiendo elegir entre"
+          - "&7distintos tipos de mensajes"
+          - "&7"
+          - "&7Tematica actual: &e%stats_kill_tematica%"
+          - ""
+          - "&7¡Haz click para ver!"
+      KILL_EFFECT:
+        Name: "&c&nEfecto de asesinato"
+        Slot: 28
+        ID: 'STONE_SWORD'
+        Lore:
+          - "&7"
+          - "&7¡Deja una marca especial y única al"
+          - "&7matar algún jugador! "
+          - "&7"
+          - "&7Efecto actual: &c%stats_kill_effect%"
+          - ""
+          - "&7¡Haz click para ver!"
   PROJECTILES:
     Title: "Kits:"
     Rows: 5
@@ -9,26 +173,80 @@ Menus:
     Title: "Kits:"
     Rows: 5
   VOTE:
-    Title: "Kits:"
-    Rows: 5
+    Title: "Votaciones:"
+    Rows: 3
+    Items:
+      HEARTS:
+        Slot: 11
+        ID: 'GLASS'
+        Name: "&d&nCorazones"
+        Lore:
+          - "&7"
+          - "&7Vota por la cantidad de corazones que "
+          - "&7tendrás en la partida"
+          - "&7"
+          - "&7¡Haz click para ver las opciones!"
+      FINALS:
+        Slot: 12
+        ID: 'TNT'
+        Name: "&c&nFinales"
+        Lore:
+          - "&7"
+          - "&7Vota por el final que tendrá"
+          - "&7la partida si no termina rapidamente"
+          - "&7"
+          - "&7¡Haz click para ver las opciones!"
+      PROJECTILES:
+        Slot: 13
+        ID: 'ARROW'
+        Name: "&e&nProyectiles"
+        Lore:
+          - "&7"
+          - "&7Vota por el efecto que tendrán"
+          - "&7tus flechas al golpear"
+          - "&7"
+          - "&7¡Haz click para ver las opciones!"
+      TIME:
+        Slot: 14
+        ID: 'CLOCK'
+        Name: "&6&nTiempo"
+        Lore:
+          - "&7"
+          - "&7Vota por el tiempo el que"
+          - "&7transcurrirá la partida"
+          - "&7"
+          - "&7¡Haz click para ver las opciones!"
+      CHESTS:
+        Slot: 15
+        ID: 'CHEST'
+        Name: "&a&nCofres"
+        Lore:
+          - "&7"
+          - "&7Vota por el loot que tendrán"
+          - "&7los cofres al empezar"
+          - "&7"
+          - "&7¡Haz click para ver las opciones!"
+      SCENARIOS:
+        Name:
+        Lore:
   HEARTS:
     Title: "Kits:"
     Rows: 5
   SCENARIOS:
     Title: "Kits:"
     Rows: 5
-  KITS:
+  KITS: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE KITS SE GENERA SOLA CON LA DESCRIPCION
     Title: "Kits:"
     Rows: 5
     Items:
       Kit:
-        Name: "&a&n%kit_name%"
+        Name: "&a&n%kit_name%" ##ES LO UNICO EDITABLE
   SOLO:
     Title: "Arenas solo:"
     Rows: 5
     Items:
       Arena:
-        Name: "&a&n%arena%"
+        Name: "&a&n%arena_name%"
         Lore:
           - "&7"
           - "&fJugadores: &b%arena_players%/%arena_max%"
@@ -40,7 +258,7 @@ Menus:
     Rows: 5
     Items:
       Kit:
-        Name: "&a&n%arena%"
+        Name: "&a&n%arena_name%"
         Lore:
           - "&7"
           - "&fJugadores: &b%arena_players%/%arena_max%"
@@ -52,7 +270,7 @@ Menus:
     Rows: 5
     Items:
       Kit:
-        Name: "&a&n%arena%"
+        Name: "&a&n%arena_name%"
         Lore:
           - "&7"
           - "&fJugadores: &b%arena_players%/%arena_max%"

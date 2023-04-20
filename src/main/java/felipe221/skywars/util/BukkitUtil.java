@@ -1,6 +1,7 @@
 package felipe221.skywars.util;
 
 import felipe221.skywars.Main;
+import felipe221.skywars.load.CageLoad;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.User;
 import org.apache.commons.lang.Validate;
@@ -70,6 +71,16 @@ public class BukkitUtil {
         }
     }
 
+    public static List<String> replaceVariableInList(List<String> array,String replace, String to){
+        List<String> newList = new ArrayList<>();
+
+        for (String line : array){
+            line = line.replaceAll(replace, to);
+            newList.add(line);
+        }
+
+        return newList;
+    }
 
     public static String replaceVariables(Player player, Arena arena, String msg){
         if (msg == null){
@@ -82,7 +93,7 @@ public class BukkitUtil {
             msg = msg.replaceAll("%player%", player.getName())
                     .replaceAll("%stats_level%", "" + user.getLevel())
                     .replaceAll("%stats_xp%", "" + user.getXP())
-                   // .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
+                    .replaceAll("%stats_kit_active%", (user.getKit() == null ? "Ninguno" : user.getKit().getName()))
                     .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
                     .replaceAll("%stats_solo_deaths%", "" + user.getSoloLosses())
                     .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
@@ -98,11 +109,13 @@ public class BukkitUtil {
                     .replaceAll("%stats_team_games%", "" + user.getTeamGames())
                     .replaceAll("%stats_team_block_placed%", "" + user.getTeamBlockPlaced())
                     .replaceAll("%stats_team_block_broked%", "" + user.getTeamBlockBreak())
-                    .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit());
-                    //.replaceAll("%stats_trail%", "" + user.getTrail().getName())
-                    //.replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
-                    //.replaceAll("%stats_kill_tematica%", user.getKillTematica())
-                    //.replaceAll("%stats_win_effect%", "" + user.getWinEffect());
+                    .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit())
+                    .replaceAll("%stats_trail%", "" + user.getTrail().getName())
+                    .replaceAll("%stats_kill_effect%", "" + user.getKillEffect().getName())
+                    .replaceAll("%stats_kill_tematica%", user.getKillTematicaName())
+                    .replaceAll("%stats_cage_material%", CageLoad.getMaterialName(user.getCage().getMaterialCage()))
+                    .replaceAll("%stats_cage_type%", user.getCage().getType().getName())
+                    .replaceAll("%stats_win_effect%", "" + user.getWinEffect().getName());
         }
 
         if (arena != null){
@@ -113,7 +126,7 @@ public class BukkitUtil {
                     .replaceAll("%arena_spectators%", "" + arena.getSpectators().size())
                     .replaceAll("%arena_min%", "" + arena.getMin())
                     .replaceAll("%arena_max%", "" + arena.getMax())
-                    .replaceAll("%arena_time%", "" + arena.getTime())
+                    .replaceAll("%arena_seconds%", "" + (arena.getTime() < 0 ? -arena.getTime() : arena.getTime()))
                     .replaceAll("%arena_chest%", arena.getChest().getName())
                     .replaceAll("%arena_vote_time%", "" + arena.getTimeGame().getName())
                     .replaceAll("%arena_vote_projectile%", arena.getProjectiles().getName())
@@ -142,10 +155,10 @@ public class BukkitUtil {
             if (player != null) {
                 User user = User.getUser(player);
 
-                line.replaceAll("%player%", player.getName())
+                line = line.replaceAll("%player%", player.getName())
                         .replaceAll("%stats_level%", "" + user.getLevel())
                         .replaceAll("%stats_xp%", "" + user.getXP())
-                       // .replaceAll("%stats_kit_active%", "" + user.getKit().getName())
+                        .replaceAll("%stats_kit_active%", (user.getKit() == null ? "Ninguno" : user.getKit().getName()))
                         .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
                         .replaceAll("%stats_solo_deaths%", "" + user.getSoloLosses())
                         .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
@@ -161,11 +174,13 @@ public class BukkitUtil {
                         .replaceAll("%stats_team_games%", "" + user.getTeamGames())
                         .replaceAll("%stats_team_block_placed%", "" + user.getTeamBlockPlaced())
                         .replaceAll("%stats_team_block_broked%", "" + user.getTeamBlockBreak())
-                        .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit());
-                        //.replaceAll("%stats_trail%", "" + user.getTrail().getName())
-                        //.replaceAll("%stats_kill_efect%", "" + user.getKillEffect().getName())
-                        //.replaceAll("%stats_kill_tematica%", user.getKillTematica())
-                        //.replaceAll("%stats_win_effect%", "" + user.getWinEffect());
+                        .replaceAll("%stats_team_arrow_hits%", "" + user.getTeamArrowHit())
+                        .replaceAll("%stats_trail%", "" + user.getTrail().getName())
+                        .replaceAll("%stats_kill_effect%", "" + user.getKillEffect().getName())
+                        .replaceAll("%stats_kill_tematica%", user.getKillTematicaName())
+                        .replaceAll("%stats_cage_material%", CageLoad.getMaterialName(user.getCage().getMaterialCage()))
+                        .replaceAll("%stats_cage_type%", user.getCage().getType().getName())
+                        .replaceAll("%stats_win_effect%", "" + user.getWinEffect().getName());
 
             }
 
@@ -177,7 +192,7 @@ public class BukkitUtil {
                         .replaceAll("%arena_spectators%", "" + arena.getSpectators().size())
                         .replaceAll("%arena_min%", "" + arena.getMin())
                         .replaceAll("%arena_max%", "" + arena.getMax())
-                        .replaceAll("%arena_time%", "" + arena.getTime())
+                        .replaceAll("%arena_seconds%", "" + (arena.getTime() < 0 ? -arena.getTime() : arena.getTime()))
                         .replaceAll("%arena_chest%", arena.getChest().getName())
                         .replaceAll("%arena_vote_time%", "" + arena.getTimeGame().getName())
                         .replaceAll("%arena_vote_projectile%", arena.getProjectiles().getName())
@@ -186,9 +201,15 @@ public class BukkitUtil {
                         .replaceAll("%arena_scenario%", "" + arena.getScenario().getName())
                         .replaceAll("%arena_status%", "" + arena.getStatus().getName());
             }
+            String pattern = "dd/MM/yy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String date = simpleDateFormat.format(new Date());
+            line = line.replace("%date%", date);
+
             line = ChatColor.translateAlternateColorCodes('&', line);
             newList.add(line);
         }
+
 
         return newList;
     }

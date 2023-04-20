@@ -45,7 +45,7 @@ public class ArenaLoad implements Listener {
 			 Arena arena = new Arena(Integer.parseInt(id));
 
 			 System.out.println("[" + (Integer.parseInt(id) + 1) + "] " +
-					 arena.getName());
+					 arena.getName() + " (" + arena.getSpawns().toString() +")");
 		}
 	}
 
@@ -105,25 +105,6 @@ public class ArenaLoad implements Listener {
 
 
 		player.openInventory(inventory);
-	}
-
-	public static void getAllArenaListMenu(Player player){
-		MenuGUI inventory = new MenuGUI("Arenas: ", 5);
-		inventory.initBeauty();
-		inventory.initMapList();
-
-		for (Arena arena : Arena.getListArenas()){
-			ItemBuilder arenaItem = ItemBuilder.start(arena.getStatus().getMaterial());
-
-			inventory.addItem(arenaItem.name(arena.getStatus().getColor() + "&n" + arena.getName())
-					.lore("&7",
-							"&7Jugadores: &a" + arena.getPlayersAlive().size() + "/" + arena.getMax(),
-							"&7Modo: &e" + arena.getMode().getName(),
-							"&7Escenario: &b" + arena.getScenario().name())
-					.build());
-		}
-
-		player.openInventory(inventory.getInventory());
 	}
 
 	public static void getArenaFromConfig(Player player, Arena arena) {
@@ -196,7 +177,7 @@ public class ArenaLoad implements Listener {
 				.lore("&7Cambia el tiempo en que tardará",
 						"&7la arena en comenzar",
 						"&7",
-						"&7Tiempo actual: &c" + arena.getTime() + " segundos").build());
+						"&7Tiempo actual: &c" + arena.getTimeToStart() + " segundos").build());
 
 		inventory.setItem(16, ItemBuilder.start(Material.GLASS).name("&cCambiar/agregar spawns")
 				.lore("&7Cambia la ubicación de los spawns",
@@ -228,7 +209,7 @@ public class ArenaLoad implements Listener {
 		}
 
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Spawns", spawn);
-		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Time-To-Start", arena.getTime());
+		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Time-To-Start", arena.getTimeToStart());
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Teams", arena.getTeams());
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Team-Size", arena.getTeamSize());
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Center", arena.getCenter().getBlockX() + ", " + arena.getCenter().getBlockY() + ", " +arena.getCenter().getBlockZ());
@@ -452,7 +433,7 @@ public class ArenaLoad implements Listener {
 				player.sendMessage(ChatColor.RED + "Vuelva a escribir los segundos en el chat");
 			}else{
 				creating.remove(player);
-				arena.setTime(Integer.parseInt(msg));
+				arena.setTimeToStart(Integer.parseInt(msg));
 
 				player.sendMessage(ChatColor.GREEN + "¡Tiempo de inicio cambiado correctamente!" );
 

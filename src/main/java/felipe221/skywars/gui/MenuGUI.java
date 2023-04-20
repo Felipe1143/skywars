@@ -5,6 +5,7 @@ import felipe221.skywars.controller.ConfigMenuController;
 import felipe221.skywars.controller.KitController;
 import felipe221.skywars.load.ArenaLoad;
 import felipe221.skywars.load.KitLoad;
+import felipe221.skywars.load.MenuLoad;
 import felipe221.skywars.menus.ConfigMenu;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.Kit;
@@ -28,15 +29,17 @@ import java.util.Map;
 
 public class MenuGUI implements InventoryHolder, Listener {
     private Map<Integer, ItemStack> items;
+
     private int rows;
     private int currentPage;
     private String name;
 
     private boolean configKit;
     private boolean configMaps;
-    private boolean mapList;
-    private boolean kitList;
+    private boolean listItems;
     private boolean beauty;
+
+    private MenuLoad.Menus typeMenu;
 
     public MenuGUI(){
         //to listener
@@ -53,8 +56,7 @@ public class MenuGUI implements InventoryHolder, Listener {
         this.name = ChatColor.translateAlternateColorCodes('&', name);
         this.configKit = false;
         this.configMaps = false;
-        this.mapList = false;
-        this.kitList = false;
+        this.listItems = false;
         this.beauty = false;
     }
 
@@ -66,12 +68,8 @@ public class MenuGUI implements InventoryHolder, Listener {
         this.configMaps = true;
     }
 
-    public void initMapList(){
-        this.mapList = true;
-    }
-
-    public void initKitList(){
-        this.kitList = true;
+    public void initList(){
+        this.listItems = true;
     }
 
     public void initBeauty(){
@@ -84,6 +82,14 @@ public class MenuGUI implements InventoryHolder, Listener {
 
     public String getDisplayName(){
         return name;
+    }
+
+    public MenuLoad.Menus getTypeMenu() {
+        return typeMenu;
+    }
+
+    public void setTypeMenu(MenuLoad.Menus typeMenu) {
+        this.typeMenu = typeMenu;
     }
 
     public void addItem(ItemStack item){
@@ -356,6 +362,11 @@ public class MenuGUI implements InventoryHolder, Listener {
 
                 if (items.containsKey(key)) {
                     inventory.setItem(counter, items.get(key));
+                    if (listItems){
+                        if (getTypeMenu() != null) {
+                            getTypeMenu().setData(counter, getTypeMenu().getEntrys().get(key));
+                        }
+                    }
                 }
 
                 counter++;
@@ -366,6 +377,12 @@ public class MenuGUI implements InventoryHolder, Listener {
 
                 if (items.containsKey(key)) {
                     inventory.setItem(counter, items.get(key));
+
+                    if (listItems){
+                        if (getTypeMenu() != null) {
+                            getTypeMenu().setData(counter, getTypeMenu().getEntrys().get(key));
+                        }
+                    }
                 }
 
                 counter++;

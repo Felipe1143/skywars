@@ -3,7 +3,11 @@ package felipe221.skywars.load;
 import felipe221.skywars.Main;
 import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.listener.ShowListener;
-import felipe221.skywars.menus.*;
+import felipe221.skywars.menus.arena.KitsMenu;
+import felipe221.skywars.menus.arena.TPMenu;
+import felipe221.skywars.menus.vote.VoteMenu;
+import felipe221.skywars.menus.lobby.ArenaSelectorMenu;
+import felipe221.skywars.menus.lobby.CosmeticosMenu;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.Mode;
 import felipe221.skywars.object.User;
@@ -138,7 +142,7 @@ public class ItemsLoad {
                     }
                     if (this == EXIT_GAME) {
                         Arena arena = User.getUser(this.player).getArena();
-                        ArenaController.leave(this.player, arena);
+                        ArenaController.leave(this.player, arena, false);
                     }
                     if (this == AUTO_JOIN) {
                         Arena arena = Arena.getRandomJoineableArena(Mode.TypeMode.SOLO);
@@ -149,7 +153,7 @@ public class ItemsLoad {
                     }
                     if (this == PLAY_AGAIN) {
                         Arena arena = Arena.getRandomJoineableArena(User.getUser(player).getArena().getMode());
-                        ArenaController.leave(player, User.getUser(player).getArena());
+                        ArenaController.leave(player, User.getUser(player).getArena(), false);
                         ArenaController.join(player, arena);
                     }
                     if (this == SPECTATOR_TP){

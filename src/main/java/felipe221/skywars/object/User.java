@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 import felipe221.skywars.FastBoard;
 import felipe221.skywars.Main;
+import felipe221.skywars.load.CageLoad;
+import felipe221.skywars.load.KillsLoad;
 import felipe221.skywars.load.KitLoad;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
@@ -17,7 +19,7 @@ import felipe221.skywars.object.Mode.TypeMode;
 
 public class User {
 	private static HashMap<Player, User> cache = new HashMap<Player, User>();
-	
+
 	private int xp;
 
 	//solo stats
@@ -57,8 +59,6 @@ public class User {
 		this.alive = false;
 		this.player = player;
 		this.board = new FastBoard(player);
-		//set with mysql
-		this.cage = new Cage(Material.GLASS, Cage.TypeCage.COMUN, null);
 	}
 	
 	public static User getUser(Player player) {
@@ -88,13 +88,40 @@ public class User {
 		ResultSet sta = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats_team` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
 		try {
 			if (sta.next()) {
-				this.team_wins = st.getInt("wins");
-				this.team_losses = st.getInt("losses");
-				this.team_games = st.getInt("games");
-				this.team_kills = st.getInt("kills");
-				this.team_arrow_hit = st.getInt("arrow_hit");
-				this.team_block_break = st.getInt("block_broken");
-				this.team_block_placed = st.getInt("block_placed");
+				this.team_wins = sta.getInt("wins");
+				this.team_losses = sta.getInt("losses");
+				this.team_games = sta.getInt("games");
+				this.team_kills = sta.getInt("kills");
+				this.team_arrow_hit = sta.getInt("arrow_hit");
+				this.team_block_break = sta.getInt("block_broken");
+				this.team_block_placed = sta.getInt("block_placed");
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		ResultSet stb = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
+		try {
+			if (stb.next()) {
+				this.trail = Projectiles.Trails.valueOf(stb.getString("trail"));
+				this.winEffect = Effect.WinEffect.valueOf(stb.getString("win_effect"));
+				this.killEffect = Effect.KillEffect.valueOf(stb.getString("kill_effect"));
+				this.killTematica = stb.getString("tematica");
+				Material material = Material.valueOf(stb.getString("cage_material"));
+				Cage.TypeCage type = Cage.TypeCage.valueOf(stb.getString("cage_type"));
+
+				if (CageLoad.exist(material)){
+					this.cage = new Cage(material, type, null);
+				}else{
+					this.cage = new Cage(Material.GLASS, type, null);
+				}
+
+				if (stb.getString("kit").equalsIgnoreCase("NONE")){
+					this.kit = null;
+				}else{
+					this.kit = KitLoad.getKitPerNameConfig(stb.getString("kit"));
+				}
+
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -105,14 +132,14 @@ public class User {
 
 	public void send(){
 		Main.getDatabaseManager().query("UPDATE `minecraft`.`players_stats_team` SET " +
-				"`wins`='" + this.team_wins + "' " +
-				"`kills`='" + this.team_kills + "' " +
-				"`losses`='" + this.team_losses + "' " +
-				"`games`='" + this.team_games + "' " +
-				"`arrow_hit`='" + this.team_arrow_hit + "' " +
-				"`block_placed`='" + this.team_block_placed + "' " +
+				"`wins`='" + this.team_wins + "', " +
+				"`kills`='" + this.team_kills + "',  " +
+				"`losses`='" + this.team_losses + "', " +
+				"`games`='" + this.team_games + "', " +
+				"`arrow_hit`='" + this.team_arrow_hit + "', " +
+				"`block_placed`='" + this.team_block_placed + "', " +
 				"`block_broken`='" + this.team_block_break + "' " +
-				" WHERE uuid = '" + player.getUniqueId() + "'");
+				"WHERE uuid = '" + player.getUniqueId() + "';");
 
 		Main.getDatabaseManager().query("UPDATE `minecraft`.`players_stats_solo` SET " +
 				"`wins`='" + this.solo_wins + "', " +
@@ -122,14 +149,23 @@ public class User {
 				"`arrow_hit`='" + this.solo_arrow_hit + "', " +
 				"`block_placed`='" + this.solo_block_placed + "', " +
 				"`block_broken`='" + this.solo_block_break + "' " +
-				" WHERE uuid = '" + player.getUniqueId() + "'");
+				"WHERE uuid = '" + player.getUniqueId() + "'");
+
+		Main.getDatabaseManager().query("UPDATE `minecraft`.`players_stats` SET " +
+				"`trail`='" + this.trail.name() + "', " +
+				"`win_effect`='" + this.winEffect.name() + "', " +
+				"`tematica`='" + this.getKillTematica() + "', " +
+				"`kill_effect`='" + this.killEffect.name() + "', " +
+				"`cage_material`='" + this.cage.getMaterialCage().name() + "', " +
+				"`cage_type`='" + this.cage.getType().name() + "', " +
+				"`kit`='" + (kit == null ? "NONE" : kit.getConfigName()) + "' " +
+				"WHERE uuid = '" + player.getUniqueId() + "'");
 	}
 
-	public boolean exist(){
-		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats_team` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
+	public boolean existSolo(){
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats_solo` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
 		try {
 			if (st.next()) {
-				System.out.println("[Debug - SkyWars] El jugador " + player.getName() + " ya existe en la base de datos");
 				st.close();
 
 				return true;
@@ -141,6 +177,50 @@ public class User {
 		System.out.println("[Debug - SkyWars] El jugador " + player.getName() + " no existe en la base de datos");
 		return false;
 	}
+
+	public boolean existTeam(){
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats_team` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
+		try {
+			if (st.next()) {
+				st.close();
+
+				return true;
+			}
+		}catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		System.out.println("[Debug - SkyWars] El jugador " + player.getName() + " no existe en la base de datos");
+		return false;
+	}
+
+	public boolean existStats(){
+		ResultSet st = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
+		try {
+			if (st.next()) {
+				st.close();
+
+				return true;
+			}
+		}catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		System.out.println("[Debug - SkyWars] El jugador " + player.getName() + " no existe en la base de datos");
+		return false;
+	}
+
+	public void addInTable(){
+		if (!existSolo()) {
+			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats_solo` SET `uuid`='" + player.getUniqueId() + "';");
+		}
+		if (!existTeam()) {
+			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats_team` SET `uuid`='" + player.getUniqueId() + "';");
+		}
+		if (!existStats()){
+			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats` SET `uuid`='"+player.getUniqueId()+"';");
+		}
+	}
 	
 	public int getLevel() {
 		if (getXP() >= 0){
@@ -151,7 +231,24 @@ public class User {
 	}
 
 	public String getKillTematica() {
-		return killTematica;
+		if (KillsLoad.existTematica(this.killTematica)) {
+			return killTematica;
+		}else{
+			//default msg
+			return "NONE";
+		}
+	}
+
+	public String getKillTematicaName() {
+		if (KillsLoad.existTematica(this.killTematica)) {
+			if (killTematica.equalsIgnoreCase("NONE")){
+				return "Ninguna";
+			}
+
+			return killTematica;
+		}else{
+			return "Ninguna";
+		}
 	}
 
 	public void setKillTematica(String killTematica) {
@@ -203,7 +300,11 @@ public class User {
 	}
 
 	public Kit getKit() {
-		return kit;
+		if (KitLoad.exist(this.kit)) {
+			return kit;
+		}
+
+		return null;
 	}
 	
 	public void setKit(Kit kit) {
@@ -390,5 +491,35 @@ public class User {
 		}else{
 			System.out.println("[Debug - SkyWars] No se encontró una localización de spawn seteada");
 		}
+	}
+
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"xp=" + xp +
+				", solo_wins=" + solo_wins +
+				", solo_kills=" + solo_kills +
+				", solo_losses=" + solo_losses +
+				", solo_games=" + solo_games +
+				", solo_block_placed=" + solo_block_placed +
+				", solo_block_break=" + solo_block_break +
+				", solo_arrow_hit=" + solo_arrow_hit +
+				", team_wins=" + team_wins +
+				", team_kills=" + team_kills +
+				", team_losses=" + team_losses +
+				", team_games=" + team_games +
+				", team_block_placed=" + team_block_placed +
+				", team_block_break=" + team_block_break +
+				", team_arrow_hit=" + team_arrow_hit +
+				", deathMessage='" + deathMessage + '\'' +
+				", killEffect=" + killEffect +
+				", winEffect=" + winEffect +
+				", trail=" + trail +
+				", kit=" + kit +
+				", cage_material=" + cage.getMaterialCage() +
+				", cage_type=" + cage.getType().getName()+
+				", killTematica='" + killTematica + '\'' +
+				'}';
 	}
 }

@@ -18,7 +18,14 @@ public class MessagesLoad {
         TEAM_MAX(""),
         HAVE_TEAM(""),
         BORDER_MOVE(""),
-        NOT_ARENA("");
+        NOT_ARENA(""),
+        KIT_LOCKED(""),
+        CAGE_MATERIAL_SELECTED(""),
+        CAGE_MATERIAL_LOCKED(""),
+        CAGE_TYPE_SELECTED(""),
+        CAGE_TYPE_LOCKED(""),
+        ARENA_STARTED(""),
+        KIT_SELECTED("");
 
         private String message;
         private Arena arena;

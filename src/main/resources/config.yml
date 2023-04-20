@@ -9,6 +9,15 @@ Main-Spawn:
   World: '-'
   Location: '0, 0, 0'
 
+Cages-Materials:
+  ####################################
+  #GLASS: <- ID DEL BLOQUE
+  #"Cristal" <- NOMBRE QUE SE MOSTRARÁ
+  ####################################
+  GLASS: "Cristal"  ### NO BORRAR ####
+  ####################################
+  TNT: "Dinamita"
+
 Scoreboards:
   IN_GAME:
     Title: "&e&lSKYWARS"
@@ -29,9 +38,9 @@ Scoreboards:
       - "&fNivel: &e%stats_level%"
       - "&fExperiencia &b%stats_xp%/%stats_level_xp%"
       - "&7"
-      - "&fTrail: &aNinguno"
-      - "&fCaja: &eNormaL"
-      - "&fEfecto de victoria: &6Ninguno"
+      - "&fTrail: &a%stats_trail%"
+      - "&fCaja: &e%stats_cage_type%"
+      - "&fEfecto de victoria: &6%stats_win_effect%"
       - "&7"
       - "&emc.felipe221.com"
   ENDING:
@@ -63,6 +72,6 @@ Scoreboards:
       - "&fMapa: &a&n%arena_name%"
       - "&fEscenario: &e%arena_scenario%"
       - "&7"
-      - "&fComenzando en &c&n%arena_seconds%& fsegundos"
+      - "&fComenzando en &c&n%arena_seconds%&f segundos"
       - "&7"
       - "&emc.felipe221.com"

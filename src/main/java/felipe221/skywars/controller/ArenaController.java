@@ -36,11 +36,15 @@ public class ArenaController{
 			return;
 		}
 
-		PlayerJoinGameEvent event = new PlayerJoinGameEvent(arena,player);
-		Bukkit.getServer().getPluginManager().callEvent(event);
+		if (arena.getStatus() == Status.RESTARTING || arena.getStatus() == Status.NONE || arena.getStatus() == Status.INGAME || arena.getStatus() == Status.ENDING) {
+			player.sendMessage(MessagesLoad.MessagesLine.ARENA_STARTED.setPlayer(player).setArena(arena).getMessage());
+
+			return;
+		}
 
 		arena.addAlivePlayer(player);
 		user.setArena(arena);
+		user.setAlive(true);
 
 		player.setLevel(0);
 		player.getInventory().clear();
@@ -49,13 +53,13 @@ public class ArenaController{
 		arena.sendMessage(MessagesLoad.MessagesLine.COUNT_JOIN.setArena(arena).setPlayer(player).getMessage());
 
 		//set cage in arena
-		Location spawn_location = arena.getRandomSpawn();
+		Location spawn_location = arena.getRandomSpawn(player);
 
 		if (spawn_location != null) {
-			player.teleport(spawn_location.getBlock().getLocation().add(0,1,0));
 			Cage cage = user.getCage();
 			cage.setLocation(spawn_location.getBlock().getLocation());
 			cage.create();
+			player.teleport(spawn_location.getBlock().getLocation().add(0.5,0,0.5));
 		}
 
 		if (ItemsLoad.Items.KITS.isEnable()){
@@ -69,9 +73,12 @@ public class ArenaController{
 		}
 
 		checkStart(arena);
+
+		PlayerJoinGameEvent event = new PlayerJoinGameEvent(arena,player);
+		Bukkit.getServer().getPluginManager().callEvent(event);
 	}
 
-	public static void leave(Player player, Arena arena){
+	public static void leave(Player player, Arena arena, boolean quit){
 		User user = User.getUser(player);
 
 		arena.removeAlivePlayer(player);
@@ -85,11 +92,16 @@ public class ArenaController{
 		}
 
 		user.setArena(null);
+		user.setAlive(false);
 
-		user.teleportSpawn();
-		player.getInventory().clear();
-		player.setLevel(user.getLevel());
-		JoinListener.giveItems(player);
+		if (!quit) {
+			user.teleportSpawn();
+
+			player.getInventory().clear();
+			player.setLevel(user.getLevel());
+
+			JoinListener.giveItems(player);
+		}
 	}
 
 	public static void checkStart(Arena arena) {
@@ -191,7 +203,7 @@ public class ArenaController{
 	public static void startCount(Arena arena) {
 		arena.setStatus(Status.STARTING);
 
-		Bukkit.getScheduler().runTaskTimerAsynchronously(Main.getInstance(), new BukkitRunnable() {
+		new BukkitRunnable(){
 			int seconds = -arena.getTimeToStart();
 
 			@Override
@@ -204,8 +216,13 @@ public class ArenaController{
 				}
 
 				if (seconds == 0) {
-					start(arena);
-					fillChests(arena);
+					BukkitUtil.runSync(new Runnable() {
+						@Override
+						public void run() {
+							start(arena);
+							fillChests(arena);
+						}
+					});
 				}
 
 				if (seconds == (arena.getTime() / 2)) {
@@ -228,11 +245,10 @@ public class ArenaController{
 				}
 
 				arena.setTime(seconds);
-
 				seconds++;
 			}
 
-		}, 0L, 20);
+		}.runTaskTimerAsynchronously(Main.getInstance(), 0, 20);
 	}
 
 	public static void start(Arena arena){
@@ -244,8 +260,6 @@ public class ArenaController{
 
 			user.getCage().remove();
 			user.setAlive(true);
-
-			//add games
 		}
 	}
 

@@ -4,11 +4,28 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import java.lang.reflect.Type;
+
 public class Cage {
     public enum TypeCage{
-        COMUN,
-        ESFERA,
-        ARBOL,
+        COMUN ("Común"),
+        ESFERA ("Esfera"),
+        PIRAMIDE("Piramide"),
+        DOMO ("Domo");
+
+        private String name;
+
+        TypeCage(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     private Material material_cage;
@@ -46,66 +63,485 @@ public class Cage {
     }
 
     public void create(){
-        //comun
+        Block block = null;
+        location.getChunk().setForceLoaded(true);
+
         if (this.type == TypeCage.COMUN) {
-            try {
-                for (int y = 0; y < 4; y++) {
-                    if (y > 0) {
-                        this.location.add(0.0D, 1.0D, 0.0D);
-                    }
-                    Block block = this.location.getBlock();
-                    if (y == 0 || y == 3) {
-                        setTypeBlock(block, this.material_cage);
-                    }
-                    this.location.add(1.0D, 0.0D, 0.0D);
-                    block = this.location.getBlock();
-                    setTypeBlock(block, this.material_cage);
-                    this.location.add(-2.0D, 0.0D, 0.0D);
-                    block = this.location.getBlock();
-                    setTypeBlock(block, this.material_cage);
-                    this.location.add(1.0D, 0.0D, 1.0D);
-                    block = this.location.getBlock();
-                    setTypeBlock(block, this.material_cage);
-                    this.location.add(0.0D, 0.0D, -2.0D);
-                    block = this.location.getBlock();
-                    setTypeBlock(block, this.material_cage);
-                    this.location.add(0.0D, 0.0D, 1.0D);
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
+            Block blockUnder = location.getBlock().getLocation().add(0, -1, 0).getBlock();
+            blockUnder.setType(this.material_cage);
+            Block blockUp = location.getBlock().getLocation().add(0, 3, 0).getBlock();
+            blockUp.setType(this.material_cage);
+
+            for (int y = 0; y<3; y++){
+                block = location.getBlock().getLocation().add(0, y, -1).getBlock();
+                block.setType(this.material_cage);
+                block = location.getBlock().getLocation().add(0, y, 1).getBlock();
+                block.setType(this.material_cage);
+                block = location.getBlock().getLocation().add(1, y, 0).getBlock();
+                block.setType(this.material_cage);
+                block = location.getBlock().getLocation().add(-1, y, 0).getBlock();
+                block.setType(this.material_cage);
             }
+
+            return;
+        }
+
+        if (this.type == TypeCage.PIRAMIDE){
+            block = location.getBlock().getLocation().add(0, 0, 0).getBlock(); block.setType(this.material_cage); 
+            block = location.getBlock().getLocation().add(1, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, -3).getBlock(); block.setType(this.material_cage);
+
+            block = location.getBlock().getLocation().add(1, 1, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 1, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 1, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 1, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 1, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 1, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 1, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 1, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 1, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 1, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 1, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 1, -3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 2, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 2, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 2, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 2, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 2, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 2, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 2, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 2, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 2, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 2, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 2, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 2, -3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 3, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 3, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 3, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 3, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 3, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 3, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 3, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 3, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 4, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 4, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 4, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 4, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 5, 0).getBlock(); block.setType(this.material_cage);
+        }
+        
+        if (this.type == TypeCage.ESFERA){
+            block = location.getBlock().getLocation().add(0, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 1, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 1, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 1, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 1, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 1, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 1, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 1, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 1, -1).getBlock(); block.setType(this.material_cage);
+
+            block = location.getBlock().getLocation().add(3, 2, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 2, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 2, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 2, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 2, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 2, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 2, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 2, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 2, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 2, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 2, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 2, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(4, 3, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(4, 3, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 3, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 3, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 3, 4).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 3, 4).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 3, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 3, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 3, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 3, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 3, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 3, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 3, -3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 3, -3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 3, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 3, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 4, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 4, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 4, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 4, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 4, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 4, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 4, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 4, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 4, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 4, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 4, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 4, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 5, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 5, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 5, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 5, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 5, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 5, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 5, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 5, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 6, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 6, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 6, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 6, 1).getBlock(); block.setType(this.material_cage);
+        }
+        
+        if (this.type == TypeCage.DOMO){
+            block = location.getBlock().getLocation().add(0, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(4, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(4, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, 4).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, 4).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 0, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 0, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 0, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 0, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 0, -3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 0, -3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 0, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 0, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(4, 1, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(4, 1, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 1, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 1, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 1, 4).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 1, 4).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 1, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 1, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 1, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-3, 1, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 1, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 1, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 1, -3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 1, -3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 1, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 1, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 2, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(3, 2, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 2, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 2, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 2, 3).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 2, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 2, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-2, 2, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 2, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 2, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 2, -2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 2, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 3, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(2, 3, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 3, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 3, 2).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 3, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(-1, 3, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 3, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 3, -1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 4, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 4, 0).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(1, 4, 1).getBlock(); block.setType(this.material_cage);
+            block = location.getBlock().getLocation().add(0, 4, 1).getBlock(); block.setType(this.material_cage);
         }
     }
 
     public void remove(){
-        //comun
+        Block block = null;
+
         if (this.type == TypeCage.COMUN) {
-            try {
-                for (int y = 0; y < 4; y++) {
-                    if (y > 0) {
-                        this.location.add(0.0D, 1.0D, 0.0D);
-                    }
-                    Block block = this.location.getBlock();
-                    if (y == 0 || y == 3) {
-                        setTypeBlock(block, Material.AIR);
-                    }
-                    this.location.add(1.0D, 0.0D, 0.0D);
-                    block = this.location.getBlock();
-                    setTypeBlock(block, Material.AIR);
-                    this.location.add(-2.0D, 0.0D, 0.0D);
-                    block = this.location.getBlock();
-                    setTypeBlock(block, Material.AIR);
-                    this.location.add(1.0D, 0.0D, 1.0D);
-                    block = this.location.getBlock();
-                    setTypeBlock(block, Material.AIR);
-                    this.location.add(0.0D, 0.0D, -2.0D);
-                    block = this.location.getBlock();
-                    setTypeBlock(block, Material.AIR);
-                    this.location.add(0.0D, 0.0D, 1.0D);
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
+            location.getChunk().setForceLoaded(true);
+            Block blockUnder = location.getBlock().getLocation().add(0, -1, 0).getBlock();
+            blockUnder.setType(Material.AIR);
+            Block blockUp = location.getBlock().getLocation().add(0, 3, 0).getBlock();
+            blockUp.setType(Material.AIR);
+
+            for (int y = 0; y<3; y++){
+                block = location.getBlock().getLocation().add(0, y, -1).getBlock();
+                block.setType(Material.AIR);
+                block = location.getBlock().getLocation().add(0, y, 1).getBlock();
+                block.setType(Material.AIR);
+                block = location.getBlock().getLocation().add(1, y, 0).getBlock();
+                block.setType(Material.AIR);
+                block = location.getBlock().getLocation().add(-1, y, 0).getBlock();
+                block.setType(Material.AIR);
             }
         }
+
+        if (this.type == TypeCage.PIRAMIDE){
+            block = location.getBlock().getLocation().add(0, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, -3).getBlock(); block.setType(Material.AIR);
+
+            block = location.getBlock().getLocation().add(1, 1, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 1, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 1, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 1, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 1, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 1, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 1, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 1, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 1, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 1, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 1, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 1, -3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 2, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 2, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 2, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 2, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 2, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 2, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 2, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 2, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 2, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 2, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 2, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 2, -3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 3, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 3, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 3, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 3, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 3, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 3, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 3, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 3, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 4, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 4, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 4, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 4, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 5, 0).getBlock(); block.setType(Material.AIR);
+        }
+
+        if (this.type == TypeCage.ESFERA){
+            block = location.getBlock().getLocation().add(0, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 1, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 1, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 1, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 1, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 1, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 1, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 1, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 1, -1).getBlock(); block.setType(Material.AIR);
+
+            block = location.getBlock().getLocation().add(3, 2, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 2, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 2, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 2, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 2, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 2, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 2, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 2, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 2, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 2, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 2, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 2, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(4, 3, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(4, 3, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 3, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 3, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 3, 4).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 3, 4).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 3, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 3, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 3, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 3, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 3, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 3, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 3, -3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 3, -3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 3, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 3, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 4, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 4, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 4, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 4, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 4, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 4, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 4, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 4, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 4, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 4, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 4, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 4, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 5, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 5, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 5, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 5, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 5, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 5, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 5, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 5, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 6, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 6, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 6, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 6, 1).getBlock(); block.setType(Material.AIR);
+        }
+
+        if (this.type == TypeCage.DOMO){
+            block = location.getBlock().getLocation().add(0, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(4, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(4, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, 4).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, 4).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 0, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 0, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 0, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 0, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 0, -3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 0, -3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 0, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 0, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(4, 1, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(4, 1, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 1, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 1, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 1, 4).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 1, 4).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 1, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 1, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 1, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-3, 1, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 1, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 1, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 1, -3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 1, -3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 1, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 1, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 2, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(3, 2, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 2, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 2, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 2, 3).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 2, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 2, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-2, 2, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 2, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 2, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 2, -2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 2, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 3, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(2, 3, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 3, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 3, 2).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 3, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(-1, 3, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 3, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 3, -1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 4, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 4, 0).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(1, 4, 1).getBlock(); block.setType(Material.AIR);
+            block = location.getBlock().getLocation().add(0, 4, 1).getBlock(); block.setType(Material.AIR);
+        }
+
     }
 }

@@ -30,12 +30,10 @@ public class JoinListener implements Listener{
 		Player player = e.getPlayer();
 		User user = User.getUser(player);
 
-		if (!user.exist()) {
-			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats_solo` SET `uuid`='"+player.getUniqueId()+"';");
-			Main.getDatabaseManager().query("INSERT INTO `minecraft`.`players_stats_team` SET `uuid`='"+player.getUniqueId()+"';");
-		}
-
+		user.addInTable();
 		user.load();
+		System.out.println(user.toString());
+
 		player.getInventory().clear();
 		player.setHealth(20);
 
@@ -58,6 +56,9 @@ public class JoinListener implements Listener{
 		}
 		if (ItemsLoad.Items.LOBBYS.isEnable()) {
 			player.getInventory().setItem(ItemsLoad.Items.LOBBYS.getSlot(), ItemsLoad.Items.LOBBYS.getItemStack());
+		}
+		if (ItemsLoad.Items.COSMETICOS.isEnable()) {
+			player.getInventory().setItem(ItemsLoad.Items.COSMETICOS.getSlot(), ItemsLoad.Items.COSMETICOS.getItemStack());
 		}
 
 		player.updateInventory();

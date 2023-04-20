@@ -58,7 +58,8 @@ public class Main extends JavaPlugin{
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
+		DatabaseLoad.load();
 		ArenaLoad.load();
 		ChestLoad.load();
 		KitLoad.load();
@@ -67,6 +68,7 @@ public class Main extends JavaPlugin{
 		MenuLoad.load();
 		ScoreboardLoad.load();
 		KillsLoad.load();
+		CageLoad.load();
 
 		LevelController.load();
 	}

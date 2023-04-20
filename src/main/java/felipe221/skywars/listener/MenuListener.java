@@ -22,6 +22,8 @@ public class MenuListener implements Listener {
 
         for (MenuLoad.Menus menus : MenuLoad.Menus.values()){
             if (menus.getTitle().equalsIgnoreCase(e.getView().getTitle())){
+                e.setCancelled(true);
+                menus.setPlayer(player);
                 menus.action(e.getSlot());
             }
         }

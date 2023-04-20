@@ -1,6 +1,7 @@
 package felipe221.skywars.listener;
 
 import felipe221.skywars.FastBoard;
+import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.controller.ChestController;
 import felipe221.skywars.controller.KitController;
 import felipe221.skywars.load.ArenaLoad;
@@ -19,13 +20,14 @@ public class LeaveListener implements Listener {
 
         FastBoard board = User.getUser(player).getBoard();
         Arena arena = User.getUser(player).getArena();
-        if (arena.getStatus() == Arena.Status.WAITING || arena.getStatus() == Arena.Status.STARTING){
-            User.getUser(player).getCage().remove();
+
+        if (arena != null) {
+            ArenaController.leave(player, arena, true);
         }
 
         User.getUser(player).setArena(null);
-
         User.getUser(player).send();
+        System.out.println(User.getUser(player).toString());
         User.getUser(player).remove();
 
         if (board != null) {

@@ -72,7 +72,7 @@ public class ScoreboardLoad {
                     updateBoard(board);
                 }
             }
-        }.runTaskTimer(Main.getInstance(), 20L, 0);
+        }.runTaskTimerAsynchronously(Main.getInstance(), 0, 20);
     }
 
     private static void updateBoard(FastBoard board) {
