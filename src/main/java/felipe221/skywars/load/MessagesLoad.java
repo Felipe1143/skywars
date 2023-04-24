@@ -25,6 +25,20 @@ public class MessagesLoad {
         CAGE_TYPE_SELECTED(""),
         CAGE_TYPE_LOCKED(""),
         ARENA_STARTED(""),
+        VOTES_IS_CLOSED(""),
+        ALREADY_VOTE(""),
+        SUCCESSFULL_VOTE(""),
+        NOT_PERMISSION(""),
+        TEMATICA_SELECTED(""),
+        TEMATICA_LOCKED(""),
+        KILL_EFFECT_SELECTED(""),
+        KILL_EFFECT_LOCKED(""),
+        WIN_EFFECT_SELECTED(""),
+        WIN_EFFECT_LOCKED(""),
+        TRAIL_EFFECT_SELECTED(""),
+        TRAIL_EFFECT_LOCKED(""),
+        JOIN_TEAM(""),
+        JOIN_TEAM_FULL(""),
         KIT_SELECTED("");
 
         private String message;

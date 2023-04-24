@@ -36,8 +36,10 @@ public class VoteMenu {
         for (Map.Entry<Integer, ItemStack> entry : MenuLoad.Menus.valueOf(type.name()).getItemsWithSlot().entrySet()) {
             int slot = entry.getKey();
             ItemStack item = entry.getValue();
+            String nameType = MenuLoad.Menus.valueOf(type.name()).getEntrys().get(slot);
+            int votes = User.getUser(player).getArena().getVoteByEnum(type).getVotes(nameType);
 
-            menu.setItem(slot, ItemBuilder.start(item.getType()).lore(BukkitUtil.replaceVariables(player, User.getUser(player).getArena(), item.getItemMeta().getLore())).name(BukkitUtil.replaceVariables(player, User.getUser(player).getArena(), item.getItemMeta().getDisplayName())).build());
+            menu.setItem(slot, ItemBuilder.start(item.getType()).lore(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariables(player, User.getUser(player).getArena(), item.getItemMeta().getLore()), "%votes%", "" + votes)).name(BukkitUtil.replaceVariables(player, User.getUser(player).getArena(), item.getItemMeta().getDisplayName())).build());
         }
 
         player.openInventory(menu);

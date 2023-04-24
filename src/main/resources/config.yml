@@ -5,18 +5,100 @@ MYSQL:
   password: 'Carbia1143'
   name: "minecraft"
 
+Game-Stats:
+  XP-Kill: 20
+  XP-Win: 150
+  Coins-Kill: 30
+  Coins-Win: 200
+
 Main-Spawn:
   World: '-'
   Location: '0, 0, 0'
+
+## LO UNICO EDITABLE ES EL NOMBRE DE LOS EFECTOS Y SU PRECIOS
+## NO SE PUEDEN AGREGAR NI QUITAR
+Kill-Effect:
+  NONE:
+    Name: "Ninguno"
+    Price: 0
+    ID: "PAPER"
+  COLD:
+    Name: "Nieve"
+    Price: 2000
+    ID: "SNOWBALL"
+
+Win-Effect:
+  NONE:
+    Name: "Ninguno"
+    Price: 0
+    ID: "PAPER"
+
+Trails:
+  NONE:
+    Name: "Ninguno"
+    Price: 0
+    ID: "PAPER"
+  COLD:
+    Name: "Nieve"
+    Price: 0
+    ID: "PAPER"
+  LAVA:
+    Name: "Lava"
+    Price: 0
+    ID: "PAPER"
+  VORTEX:
+    Name: "Vortex"
+    Price: 0
+    ID: "PAPER"
+  CLOUD:
+    Name: "Nubes"
+    Price: 0
+    ID: "PAPER"
+  HEART:
+    Name: "Corazones"
+    Price: 0
+    ID: "PAPER"
+  COOKIE:
+    Name: "Cookies"
+    Price: 0
+    ID: "PAPER"
+  COIN:
+    Name: "Monedas"
+    Price: 0
+    ID: "PAPER"
+  MEAT:
+    Name: "Comida"
+    Price: 0
+    ID: "PAPER"
+  RAINBOW:
+    Name: "Arcoiris"
+    Price: 0
+    ID: "PAPER"
+  RAYO:
+    Name: "Rayo"
+    Price: 0
+    ID: "PAPER"
+
+
 
 Cages-Materials:
   ####################################
   #GLASS: <- ID DEL BLOQUE
   #"Cristal" <- NOMBRE QUE SE MOSTRARÁ
   ####################################
-  GLASS: "Cristal"  ### NO BORRAR ####
+  GLASS: ### NO BORRAR ####
+    Name: "Cristal"
+    Price: 0
   ####################################
-  TNT: "Dinamita"
+  TNT:
+    Name: "Dinamita"
+    Price: 0
+  WHITE_STAINED_GLASS:
+    Name: "Cristal blanco"
+    Price: 1000
+  BLACK_WOOL:
+    Name: "Lana negra"
+    Price: 1000
 
 Scoreboards:
   IN_GAME:
@@ -36,7 +118,7 @@ Scoreboards:
     Lines:
       - "&7"
       - "&fNivel: &e%stats_level%"
-      - "&fExperiencia &b%stats_xp%/%stats_level_xp%"
+      - "&fExperiencia &b%stats_xp%/%stats_next_level_xp%"
       - "&7"
       - "&fTrail: &a%stats_trail%"
       - "&fCaja: &e%stats_cage_type%"

@@ -1,4 +1,5 @@
 Menus:
+  ##################################### CAJAS #####################################
   CAGE_MAIN:
     Title: "Cajas:"
     Rows: 3
@@ -78,6 +79,7 @@ Menus:
           - "&7Estado: &e%cage_status%"
           - ""
           - "&7¡Haz click para cambiar!"
+  ###############################################################################################################
   COSMETICS:
     Title: "Menú principal:"
     Rows: 6
@@ -129,7 +131,7 @@ Menus:
           - "&7Trail actual: &a%stats_trail%"
           - ""
           - "&7¡Haz click para editar!"
-      LEVELS:
+      STATS:
         Name: "&6&nEstadisticas"
         Slot: 41
         ID: 'EXPERIENCE_BOTTLE'
@@ -141,6 +143,19 @@ Menus:
           - "&7Nivel actual: &b%stats_level% (%stats_xp%xp)"
           - ""
           - "&7¡Haz click para ver!"
+      SHOP:
+        Name: "&a&eTienda"
+        Slot: 40
+        ID: 'CHEST'
+        Lore:
+          - "&7"
+          - "&7¡Compra todo lo que quieras"
+          - "&7en la tienda! Deberás ganar puntos"
+          - "&7y luego canjearlos aqui"
+          - ""
+          - "&7Puntos: &6%stats_coins%"
+          - "&7"
+          - "&7¡Haz click para hacer compras!"
       TEMATICA:
         Name: "&a&nTematicas"
         Slot: 39
@@ -166,19 +181,274 @@ Menus:
           - "&7Efecto actual: &c%stats_kill_effect%"
           - ""
           - "&7¡Haz click para ver!"
+  TEMATICAS: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE TEMATICAS SE GENERA SOLA
+    Title: "Tematicas:"
+    Rows: 4
+    Items:
+      TEMATICA:
+        Name: "&a&n%tematica_name%"
+        Lore:
+          - "&f"
+          - "&7Estado: &e%tematica_status%"
+          - "&7"
+          - "&7¡Haz click para seleccionar!"
+  KILL_EFFECT: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE EFECTOS DE ASESINATO SE GENERA SOLA
+    Title: "Efectos de asesinato:"
+    Rows: 4
+    Items:
+      EFECTO:
+        Name: "&a&n%effect_name%"
+        Lore:
+          - "&f"
+          - "&7Estado: &e%effect_status%"
+          - "&7"
+          - "&7¡Haz click para seleccionar!"
+  WIN_EFFECT: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE EFECTOS DE VICTORIA SE GENERA SOLA
+    Title: "Efectos de victoria:"
+    Rows: 4
+    Items:
+      EFECTO:
+        Name: "&a&n%effect_name%"
+        Lore:
+          - "&f"
+          - "&7Estado: &e%effect_status%"
+          - "&7"
+          - "&7¡Haz click para seleccionar!"
+  TRAILS: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE TRAILS  SE GENERA SOLA
+    Title: "Trails:"
+    Rows: 3
+    Items:
+      TRAIL:
+        Name: "&a&n%trail_name%"
+        Lore:
+          - "&f"
+          - "&7Estado: &e%trail_status%"
+          - "&7"
+          - "&7¡Haz click para seleccionar!"
+  STATS:
+    Title: "Estadisticas:"
+    Rows: 3
+    Items:
+      GAMES:
+        Slot: 10
+        ID: 'CHEST'
+        Name: "&ePartidas jugadas"
+        Lore:
+          - "&7"
+          - "&7Partidas en solitario: &e%stats_solo_games%"
+          - "&7Partidas en equipo: &e%stats_team_games%"
+          - "&7"
+      WINS:
+        Slot: 11
+        ID: 'GOLDEN_APPLE'
+        Name: "&aPartidas ganadas"
+        Lore:
+          - "&7"
+          - "&7Partidas ganadas en solitario: &a%stats_solo_wins%"
+          - "&7Partidas ganadas en equipo: &a%stats_team_wins%"
+          - "&7"
+      LOSSES:
+        Slot: 12
+        ID: 'REDSTONE'
+        Name: "&cPartidas perdidas"
+        Lore:
+          - "&7"
+          - "&7Partidas perdidas en solitario: &c%stats_solo_losses%"
+          - "&7Partidas perdidas en equipo: &c%stats_team_losses%"
+          - "&7"
+      KILLS:
+        Slot: 13
+        ID: 'DIAMOND_SWORD'
+        Name: "&6Asesinatos"
+        Lore:
+          - "&7"
+          - "&7Asesinatos en solitario: &6%stats_solo_kills%"
+          - "&7Asesinatos en equipo: &6%stats_team_kills%"
+          - "&7"
+      ARROWS:
+        Slot: 14
+        ID: 'ARROW'
+        Name: "&dFlechas acertadas"
+        Lore:
+          - "&7"
+          - "&7Flechas acertadas en solitario: &d%stats_solo_arrow_hit%"
+          - "&7Flechas acertadas en equipo: &d%stats_team_arrow_hit%"
+          - "&7"
+      BLOCK_PLACED:
+        Slot: 15
+        ID: 'OAK_PLANKS'
+        Name: "&aBloques colocados"
+        Lore:
+          - "&7"
+          - "&7Bloques colocados en solitario: &a%stats_solo_block_placed%"
+          - "&7Bloques colocados en equipo: &a%stats_team_block_placed%"
+          - "&7"
+      BLOCK_BROKEN:
+        Slot: 16
+        ID: 'GOLDEN_PICKAXE'
+        Name: "&cBloques rotos"
+        Lore:
+          - "&7"
+          - "&7Bloques rotos en solitario: &c%stats_solo_block_broken%"
+          - "&7Bloques rotos en equipo: &c%stats_team_block_broken%"
+          - "&7"
+  ##################################### VOTE MENU #####################################
   PROJECTILES:
-    Title: "Kits:"
-    Rows: 5
-  TP_SPECTATOR:
-    Title: "Kits:"
-    Rows: 5
+    Title: "Proyectiles:"
+    Rows: 3
+    Items:
+      NORMAL:
+        Slot: 11
+        ID: 'ARROW'
+        Name: "&e&nNormal"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      TP:
+        Slot: 13
+        ID: 'ARROW'
+        Name: "&e&nTP"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      EXPLOSIVE:
+        Slot: 15
+        ID: 'ARROW'
+        Name: "&e&nExplosivos"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+  TIME:
+    Title: "Tiempo:"
+    Rows: 3
+    Items:
+      DAY:
+        Slot: 11
+        ID: 'YELLOW_WOOL'
+        Name: "&d&nDía"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      SUNSET:
+        Slot: 13
+        ID: 'ORANGE_WOOL'
+        Name: "&d&nAtardecer"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      NIGHT:
+        Slot: 15
+        ID: 'BLACK_WOOL'
+        Name: "&d&nNoche"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+  FINALS:
+    Title: "Finales:"
+    Rows: 3
+  CHESTS:
+    Title: "Cofres:"
+    Rows: 3
+    Items:
+      BASICO:
+        Slot: 11
+        ID: 'CHEST'
+        Name: "&d&nBásico"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      NORMAL:
+        Slot: 13
+        ID: 'CHEST'
+        Name: "&d&nNormal"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      OP:
+        Slot: 15
+        ID: 'CHEST'
+        Name: "&d&nOP"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+  HEARTS:
+    Title: "Corazones:"
+    Rows: 3
+    Items:
+      C10:
+        Slot: 11
+        ID: 'GOLDEN_APPLE'
+        Name: "&c&n10 corazones"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      C20:
+        Slot: 13
+        ID: 'GOLDEN_APPLE'
+        Name: "&c&n20 corazones"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      C30:
+        Slot: 15
+        ID: 'GOLDEN_APPLE'
+        Name: "&c&n30 corazones"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+  SCENARIOS:
+    Title: "Escenarios:"
+    Rows: 3
+    Items:
+      NORMAL:
+        Slot: 10
+        ID: 'GRASS_BLOCK'
+        Name: "&e&nNormal"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      ANTIKB:
+        Slot: 11
+        ID: 'STICK'
+        Name: "&e&nAnti KB"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      LUCKY:
+        Slot: 12
+        ID: 'CHEST'
+        Name: "&e&nLucky"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      SPEED:
+        Slot: 14
+        ID: 'SUGAR'
+        Name: "&e&nVelocidad"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      SCAFFOLD:
+        Slot: 15
+        ID: 'OAK_PLANKS'
+        Name: "&e&nScaffold"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
+      TORMENTA:
+        Slot: 16
+        ID: 'WATER_BUCKET'
+        Name: "&e&nTormenta"
+        Lore:
+          - "&7"
+          - "&7Votos actuales: &e&n%votes%"
   VOTE:
     Title: "Votaciones:"
     Rows: 3
     Items:
       HEARTS:
-        Slot: 11
-        ID: 'GLASS'
+        Slot: 10
+        ID: 'GOLDEN_APPLE'
         Name: "&d&nCorazones"
         Lore:
           - "&7"
@@ -187,7 +457,7 @@ Menus:
           - "&7"
           - "&7¡Haz click para ver las opciones!"
       FINALS:
-        Slot: 12
+        Slot: 15
         ID: 'TNT'
         Name: "&c&nFinales"
         Lore:
@@ -197,7 +467,7 @@ Menus:
           - "&7"
           - "&7¡Haz click para ver las opciones!"
       PROJECTILES:
-        Slot: 13
+        Slot: 14
         ID: 'ARROW'
         Name: "&e&nProyectiles"
         Lore:
@@ -207,7 +477,7 @@ Menus:
           - "&7"
           - "&7¡Haz click para ver las opciones!"
       TIME:
-        Slot: 14
+        Slot: 12
         ID: 'CLOCK'
         Name: "&6&nTiempo"
         Lore:
@@ -217,7 +487,7 @@ Menus:
           - "&7"
           - "&7¡Haz click para ver las opciones!"
       CHESTS:
-        Slot: 15
+        Slot: 11
         ID: 'CHEST'
         Name: "&a&nCofres"
         Lore:
@@ -227,20 +497,39 @@ Menus:
           - "&7"
           - "&7¡Haz click para ver las opciones!"
       SCENARIOS:
-        Name:
+        Slot: 16
+        ID: 'BONE_MEAL'
+        Name: "&b&nEscenarios"
         Lore:
-  HEARTS:
-    Title: "Kits:"
-    Rows: 5
-  SCENARIOS:
-    Title: "Kits:"
-    Rows: 5
+          - "&7"
+          - "&7Vota por el escenario especial"
+          - "&7que tendrá la partida"
+          - "&7"
+          - "&7¡Haz click para ver las opciones!"
+  ############################################################################################################
   KITS: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE KITS SE GENERA SOLA CON LA DESCRIPCION
     Title: "Kits:"
     Rows: 5
     Items:
       Kit:
         Name: "&a&n%kit_name%" ##ES LO UNICO EDITABLE
+  TEAMS: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE EQUIPOS SE GENERA SOLA
+    Title: "Equipos:"
+    Rows: 4
+    Items:
+      Equipos:
+        Name: "%team_color%&n%team_name%"
+        Lore:
+          - "&7"
+          - "&7Jugadores: %team_color%%team_players%/%team_max%"
+          - "&7"
+          - "&7¡Haz click para unirte!"
+  SPECTATOR_TP: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE JUGADORES VIVOS SE GENERA SOLA
+    Title: "Jugadores vivos:"
+    Rows: 5
+    Items:
+      Kit:
+        Name: "&a&n%player_name%" ##ES LO UNICO EDITABLE
   SOLO:
     Title: "Arenas solo:"
     Rows: 5

@@ -28,6 +28,9 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DeathListener(), this);
 		Bukkit.getPluginManager().registerEvents(new ShowListener(), this);
+		Bukkit.getPluginManager().registerEvents(new PlaceListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MoveInventoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new DropItemListener(), this);
 
 		Bukkit.getPluginManager().registerEvents(new TeamController(), this);
 		Bukkit.getPluginManager().registerEvents(new ConfigMenuController(), this);
@@ -69,6 +72,7 @@ public class Main extends JavaPlugin{
 		ScoreboardLoad.load();
 		KillsLoad.load();
 		CageLoad.load();
+		EffectLoad.load();
 
 		LevelController.load();
 	}

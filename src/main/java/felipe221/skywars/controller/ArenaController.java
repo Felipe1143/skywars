@@ -15,6 +15,7 @@ import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -48,18 +49,29 @@ public class ArenaController{
 
 		player.setLevel(0);
 		player.getInventory().clear();
+		player.setHealth(20);
+		player.setMaxHealth(20);
+		player.getActivePotionEffects().clear();
+
 
 		player.sendMessage(MessagesLoad.MessagesLine.SUCCESSFULL_JOIN.setPlayer(player).setArena(arena).getMessage());
 		arena.sendMessage(MessagesLoad.MessagesLine.COUNT_JOIN.setArena(arena).setPlayer(player).getMessage());
 
 		//set cage in arena
-		Location spawn_location = arena.getRandomSpawn(player);
+		if (arena.isSoloGame()) {
+			Location spawn_location = arena.getRandomSpawn(player);
 
-		if (spawn_location != null) {
-			Cage cage = user.getCage();
-			cage.setLocation(spawn_location.getBlock().getLocation());
-			cage.create();
-			player.teleport(spawn_location.getBlock().getLocation().add(0.5,0,0.5));
+			if (spawn_location != null) {
+				Cage cage = user.getCage();
+				cage.setLocation(spawn_location.getBlock().getLocation());
+				cage.create();
+				player.teleport(spawn_location.getBlock().getLocation().add(0.5, 0, 0.5));
+			}
+		}else{
+			player.teleport(arena.getWaitSpawn());
+
+			//TODO
+			//add team selector
 		}
 
 		if (ItemsLoad.Items.KITS.isEnable()){
@@ -87,17 +99,51 @@ public class ArenaController{
 		PlayerLeaveGameEvent event = new PlayerLeaveGameEvent(arena,player);
 		Bukkit.getServer().getPluginManager().callEvent(event);
 
-		if (arena.getStatus() == Status.WAITING || arena.getStatus() == Status.STARTING){
-			user.getCage().remove();
-		}
-
 		user.setArena(null);
 		user.setAlive(false);
+		arena.removeAlivePlayer(player);
+
+
+		if (arena.getStatus() == Status.WAITING || arena.getStatus() == Status.STARTING){
+			for (Vote votes : arena.getVotes()){
+				votes.removeVote(player);
+			}
+
+			if (arena.isSoloGame()) {
+				user.getCage().remove();
+			}else{
+				for (Teams teams : arena.getTeams()){
+					if (teams.getPlayers().contains(player)){
+						teams.removePlayer(player);
+					}
+				}
+			}
+		}else{
+			if (arena.getStatus() == Status.INGAME) {
+				user.addLosses(1);
+
+				if (arena.isSoloGame()) {
+					Player winner = ArenaController.checkWinSolo(arena);
+
+					if (winner != null) {
+						ArenaController.endGame(arena);
+					}
+				} else {
+					Teams team = ArenaController.checkWinTeam(arena);
+
+					if (team != null) {
+						ArenaController.endGame(arena);
+					}
+				}
+			}
+		}
 
 		if (!quit) {
 			user.teleportSpawn();
-
 			player.getInventory().clear();
+			player.setHealth(20);
+			player.setMaxHealth(20);
+			player.getActivePotionEffects().clear();
 			player.setLevel(user.getLevel());
 
 			JoinListener.giveItems(player);
@@ -165,7 +211,7 @@ public class ArenaController{
 		for (Player winners : arena.getWinner()){
 			User winnerUser = User.getUser(winners);
 
-			//add win
+			winnerUser.addWins(1);
 			//add xp
 		}
 
@@ -203,16 +249,30 @@ public class ArenaController{
 	public static void startCount(Arena arena) {
 		arena.setStatus(Status.STARTING);
 
+		if (!arena.isSoloGame()) {
+			for (Teams teams : arena.getTeams()) {
+				Cage cage = new Cage(Material.GLASS, Cage.TypeCage.ESFERA, teams.getSpawn());
+				cage.setLocation(teams.getSpawn().getBlock().getLocation());
+				cage.create();
+
+				for (Player playersTeam : teams.getPlayers()) {
+					playersTeam.teleport(teams.getSpawn().getBlock().getLocation().add(0.5, 0, 0.5));
+				}
+			}
+		}
+
 		new BukkitRunnable(){
 			int seconds = -arena.getTimeToStart();
 
 			@Override
 			public void run() {
-				if (arena.getPlayersAlive().size() < arena.getMin()) {
-					arena.sendMessage(MessagesLoad.MessagesLine.PLAYER_OUT_MIN.setArena(arena).getMessage());
-					arena.setStatus(Status.WAITING);
+				if (arena.getStatus() == Status.STARTING && arena.isSoloGame()) {
+					if (arena.getPlayersAlive().size() < arena.getMin()) {
+						arena.sendMessage(MessagesLoad.MessagesLine.PLAYER_OUT_MIN.setArena(arena).getMessage());
+						arena.setStatus(Status.WAITING);
 
-					cancel();
+						cancel();
+					}
 				}
 
 				if (seconds == 0) {
@@ -232,8 +292,12 @@ public class ArenaController{
 					}
 
 					//load votes
-					VoteController voteController = new VoteController(arena);
-					voteController.load();
+					BukkitUtil.runSync(new Runnable() {
+						@Override
+						public void run() {
+							VoteController.load(arena);
+						}
+					});
 
 					List<String> VOTES_CLOSE = MessagesLoad.MessagesList.VOTES_CLOSE.setArena(arena).getMessage();
 
@@ -260,6 +324,7 @@ public class ArenaController{
 
 			user.getCage().remove();
 			user.setAlive(true);
+			user.addGame(1);
 		}
 	}
 

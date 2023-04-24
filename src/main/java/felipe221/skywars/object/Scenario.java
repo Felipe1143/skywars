@@ -8,7 +8,7 @@ public class Scenario {
         NORMAL("Normal"),
         ANTIKB("Anti KB"),
         LUCKY("Lucky"),
-        SPEED("Speed"),
+        SPEED("Velocidad"),
         SCAFFOLD("Scaffold"),
         TORMENTA("Tormenta");
 

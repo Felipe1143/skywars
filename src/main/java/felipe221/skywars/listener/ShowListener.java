@@ -71,7 +71,6 @@ public class ShowListener implements Listener {
     public static void showPlayers(Player player){
         for (Player allPlayers : Bukkit.getOnlinePlayers()){
             if (User.getUser(allPlayers).getArena() == null){
-                allPlayers.showPlayer(Main.getInstance(), player);
                 player.showPlayer(Main.getInstance(), allPlayers);
             }else{
                 allPlayers.hidePlayer(Main.getInstance(), player);
@@ -83,7 +82,6 @@ public class ShowListener implements Listener {
     public static void hidePlayers(Player player){
         for (Player allPlayers : Bukkit.getOnlinePlayers()){
             if (User.getUser(allPlayers).getArena() == null){
-                allPlayers.hidePlayer(Main.getInstance(), player);
                 player.hidePlayer(Main.getInstance(), allPlayers);
             }else{
                 allPlayers.hidePlayer(Main.getInstance(), player);

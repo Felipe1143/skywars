@@ -14,13 +14,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import felipe221.skywars.object.Mode.TypeMode;
-
 
 public class User {
 	private static HashMap<Player, User> cache = new HashMap<Player, User>();
 
 	private int xp;
+	private int coins;
 
 	//solo stats
 	private int solo_wins;
@@ -43,7 +42,7 @@ public class User {
 	private String deathMessage;
 	private Effect.KillEffect killEffect;
 	private Effect.WinEffect winEffect;
-	private Projectiles.Trails trail;
+	private Effect.Trail trail;
 
 	private Kit kit;
 	private Cage cage;
@@ -103,7 +102,8 @@ public class User {
 		ResultSet stb = Main.getDatabaseManager().query("SELECT * FROM `minecraft`.`players_stats` WHERE uuid = '" + player.getUniqueId() + "';").getResultSet();
 		try {
 			if (stb.next()) {
-				this.trail = Projectiles.Trails.valueOf(stb.getString("trail"));
+				this.coins = stb.getInt("coins");
+				this.trail = Effect.Trail.valueOf(stb.getString("trail"));
 				this.winEffect = Effect.WinEffect.valueOf(stb.getString("win_effect"));
 				this.killEffect = Effect.KillEffect.valueOf(stb.getString("kill_effect"));
 				this.killTematica = stb.getString("tematica");
@@ -153,6 +153,7 @@ public class User {
 
 		Main.getDatabaseManager().query("UPDATE `minecraft`.`players_stats` SET " +
 				"`trail`='" + this.trail.name() + "', " +
+				"`coins`='" + this.coins + "', " +
 				"`win_effect`='" + this.winEffect.name() + "', " +
 				"`tematica`='" + this.getKillTematica() + "', " +
 				"`kill_effect`='" + this.killEffect.name() + "', " +
@@ -251,6 +252,14 @@ public class User {
 		}
 	}
 
+	public int getCoins() {
+		return coins;
+	}
+
+	public void setCoins(int coins) {
+		this.coins = coins;
+	}
+
 	public void setKillTematica(String killTematica) {
 		this.killTematica = killTematica;
 	}
@@ -291,11 +300,11 @@ public class User {
 		this.winEffect = winEffect;
 	}
 
-	public Projectiles.Trails getTrail() {
+	public Effect.Trail getTrail() {
 		return trail;
 	}
 
-	public void setTrail(Projectiles.Trails trail) {
+	public void setTrail(Effect.Trail trail) {
 		this.trail = trail;
 	}
 
@@ -347,140 +356,116 @@ public class User {
 		this.board = board;
 	}
 
-	public void addSoloWin(){
-		this.solo_wins++;
+	public void addGame(int value){
+		if (this.arena.isSoloGame()){
+			this.solo_games= this.solo_games + value;
+		}else{
+			this.team_games= this.team_games + value;
+		}
 	}
 
-	public void addTeamWin(){
-		this.team_wins++;
+	public void addLosses(int value){
+		if (this.arena.isSoloGame()){
+			this.solo_losses= this.solo_losses + value;
+		}else{
+			this.team_losses= this.team_losses + value;
+		}
 	}
 
-	public void addSoloGame(){
-		this.solo_games++;
+	public void addWins(int value){
+		if (this.arena.isSoloGame()){
+			this.solo_wins= this.solo_wins + value;
+		}else{
+			this.team_wins= this.team_wins + value;
+		}
 	}
 
-	public void addTeamGame(){
-		this.team_games++;
+	public void addKills(int value){
+		if (this.arena.isSoloGame()){
+			this.solo_kills= this.solo_kills + value;
+		}else{
+			this.team_kills= this.team_kills + value;
+		}
 	}
 
-	public void addSoloLosses(){
-		this.solo_losses++;
+	public void addArrowHits(int value){
+		if (this.arena.isSoloGame()){
+			this.solo_arrow_hit= this.solo_arrow_hit + value;
+		}else{
+			this.team_arrow_hit= this.team_arrow_hit + value;
+		}
 	}
 
-	public void addTeamLosses(){
-		this.team_losses++;
+	public void addBlockPlaced(int value){
+		if (this.arena.isSoloGame()){
+			this.solo_block_placed= this.solo_block_placed + value;
+		}else{
+			this.team_block_placed= this.team_block_placed + value;
+		}
+	}
+
+	public void addBlockBroken(int value){
+		if (this.arena.isSoloGame()){
+			this.solo_block_break= this.solo_block_break + value;
+		}else{
+			this.team_block_break= this.team_block_break + value;
+		}
 	}
 
 	public int getSoloWins() {
 		return solo_wins;
 	}
 
-	public void setSoloWins(int solo_wins) {
-		this.solo_wins = solo_wins;
-	}
-
 	public int getSoloKills() {
 		return solo_kills;
-	}
-
-	public void setSoloKills(int solo_kills) {
-		this.solo_kills = solo_kills;
 	}
 
 	public int getSoloLosses() {
 		return solo_losses;
 	}
 
-	public void setSoloLosses(int soloLosses) {
-		this.solo_losses = soloLosses;
-	}
-
 	public int getSoloGames() {
 		return solo_games;
-	}
-
-	public void setSoloGames(int solo_games) {
-		this.solo_games = solo_games;
 	}
 
 	public int getSoloBlockPlaced() {
 		return solo_block_placed;
 	}
 
-	public void setSoloBlockPlaced(int solo_block_placed) {
-		this.solo_block_placed = solo_block_placed;
-	}
-
 	public int getSoloBlockBreak() {
 		return solo_block_break;
-	}
-
-	public void setSoloBlockBreak(int solo_block_break) {
-		this.solo_block_break = solo_block_break;
 	}
 
 	public int getSoloArrowHit() {
 		return solo_arrow_hit;
 	}
 
-	public void setSoloArrowHit(int solo_arrow_hit) {
-		this.solo_arrow_hit = solo_arrow_hit;
-	}
-
 	public int getTeamWins() {
 		return team_wins;
-	}
-
-	public void setTeamWins(int team_wins) {
-		this.team_wins = team_wins;
 	}
 
 	public int getTeamKills() {
 		return team_kills;
 	}
 
-	public void setTeamKills(int team_kills) {
-		this.team_kills = team_kills;
-	}
-
 	public int getTeamLosses() {
 		return team_losses;
 	}
 
-	public void setTeamLosses(int teamLosses) {
-		this.team_losses = teamLosses;
-	}
-
 	public int getTeamGames() {
-		return this.team_games;
-	}
-
-	public void setTeamGames(int team_games) {
-		this.team_games = team_games;
+		return team_games;
 	}
 
 	public int getTeamBlockPlaced() {
 		return team_block_placed;
 	}
 
-	public void setTeamBlockPlaced(int team_block_placed) {
-		this.team_block_placed = team_block_placed;
-	}
-
 	public int getTeamBlockBreak() {
 		return team_block_break;
 	}
 
-	public void setTeamBlockBreak(int team_block_break) {
-		this.team_block_break = team_block_break;
-	}
-
 	public int getTeamArrowHit() {
 		return team_arrow_hit;
-	}
-
-	public void setTeamArrowHit(int team_arrow_hit) {
-		this.team_arrow_hit = team_arrow_hit;
 	}
 
 	public void teleportSpawn(){

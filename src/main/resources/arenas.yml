@@ -6,11 +6,12 @@ Arenas:
   Max-Players: 10
   Min-Players: 5
   Time-To-Start: 10 #SECONDS
-  Team-Size: 0
   Scenario: "NORMAL"
   Center: "0, 1, 0"
-  Wait-Lobby:
   Spawns:
   - "0, 1, 0"
   - "0, 1, 1"
   - "0, 1, 2"
+  Teams:
+   Team-Size: 0
+   Wait-Lobby: "0, 1, 0"

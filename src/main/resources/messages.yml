@@ -13,8 +13,23 @@ Messages:
   CAGE_MATERIAL_SELECTED: "&a¡Material de caja cambiado a &n%stats_cage_material%&a correctamente!"
   CAGE_MATERIAL_LOCKED: "&c¡No tienes este material desbloqueado!"
   CAGE_TYPE_SELECTED: "&a¡Tipo de caja cambiado a &n%stats_cage_type%&a correctamente!"
-  CAGE_TYPE_LOCKED: "&c¡No tienes este material desbloqueado!"
+  CAGE_TYPE_LOCKED: "&c¡No tienes esta caja desbloqueada!"
   ARENA_STARTED: "&c¡La arena ya está en juego!"
+  VOTES_IS_CLOSED: "&c¡Las votaciones ya están cerradas!"
+  ALREADY_VOTE: "&c¡Ya votaste aquí!"
+  SUCCESSFULL_VOTE: "&a¡Voto agregado correctamente!"
+  NOT_PERMISSION: "&c¡No tienes permiso para hacer esto!"
+  TEMATICA_SELECTED: "&a¡La temática &n%tematica_name%&a fue colocada correctamente!"
+  TEMATICA_LOCKED: "&c¡No tienes esta tematica desbloqueada!"
+  KILL_EFFECT_SELECTED: "&a¡El efecto de asesinato &n%effect_name%&a fue colocado correctamente!"
+  KILL_EFFECT_LOCKED: "&c¡No tienes este efecto desbloqueado!"
+  WIN_EFFECT_SELECTED: "&a¡El efecto de victoria &n%effect_name%&a fue colocado correctamente!"
+  WIN_EFFECT_LOCKED: "&c¡No tienes este efecto desbloqueado!"
+  TRAIL_EFFECT_SELECTED: "&a¡El rastro de flecha &n%trail_name%&a fue colocado correctamente!"
+  TRAIL_EFFECT_LOCKED: "&c¡No tienes este efecto desbloqueado!"
+  JOIN_TEAM: "&f¡Ingresaste correctamente al equipo %team_color%%team_name%&f!"
+  JOIN_TEAM_FULL: "&c¡Este equipo ya está lleno!"
+
 
 Messages-List:
   VOTES_CLOSE:
@@ -32,9 +47,11 @@ Messages-List:
 Kill-Messages:
   ################################################################################
   ## NO CAMBIAR EL NOMBRE NI BORRAR 'NONE', YA QUE SON LOS MENSAJES POR DEFECTO ##
-  ## IGUALMENTE SE PUEDEN AGREGAR MENSAJES AQUÍ
+  ## IGUALMENTE SE PUEDEN AGREGAR O CAMBIAR MENSAJES AQUÍ
   ################################################################################
   NONE:
+    Price: 3000
+    ID: 'PAPER'
     Bow:
       0: "%player% fue asesinado por %killer% con arco"
     Sword:
@@ -45,6 +62,8 @@ Kill-Messages:
   #################################################################
   ## DESDE AQUÍ, AGREGAR LOS DESEADOS SIN LIMITE EN ESTE FORMATO ##
   Pirata:
+    Price: 3000
+    ID: 'BOW'
     Bow:
       0: "%player% fue asesinado por %killer% con arco"
     Sword:
@@ -53,6 +72,8 @@ Kill-Messages:
     Void:
       0: "%player% murió tocando el vacío"
   Angel:
+    Price: 3000
+    ID: 'BONE_MEAL'
     Bow:
       0: "%player% fue asesinado por %killer% con arco"
     Sword:

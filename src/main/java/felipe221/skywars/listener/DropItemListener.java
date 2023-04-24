@@ -5,15 +5,15 @@ import felipe221.skywars.object.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 
-public class BreakListener implements Listener {
+public class DropItemListener implements Listener {
     @EventHandler
-    public void onPlayerBreak(BlockBreakEvent e){
+    public void onPlayerDropItem(PlayerDropItemEvent e){
         Player player = e.getPlayer();
         Arena arena = User.getUser(player).getArena();
 
-        if (arena == null) {
+        if (arena == null){
             if (player.hasPermission("skywars.config") || player.hasPermission("skywars.admin")){
                 return;
             }
@@ -22,8 +22,6 @@ public class BreakListener implements Listener {
         }else{
             if (arena.getStatus() != Arena.Status.INGAME){
                 e.setCancelled(true);
-            }else{
-                User.getUser(player).addBlockBroken(1);
             }
         }
     }

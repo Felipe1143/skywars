@@ -16,6 +16,7 @@ public class LeaveListener implements Listener {
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e){
+        e.setQuitMessage(null);
         Player player = e.getPlayer();
 
         FastBoard board = User.getUser(player).getBoard();

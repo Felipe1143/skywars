@@ -27,6 +27,8 @@ public class JoinListener implements Listener{
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
+		e.setJoinMessage(null);
+
 		Player player = e.getPlayer();
 		User user = User.getUser(player);
 
@@ -36,9 +38,13 @@ public class JoinListener implements Listener{
 
 		player.getInventory().clear();
 		player.setHealth(20);
+		player.setMaxHealth(20);
+		player.getActivePotionEffects().clear();
 
 		user.teleportSpawn();
 		giveItems(player);
+		ShowListener.showPlayers(player);
+
 	}
 
 	public static void giveItems(Player player){
@@ -51,8 +57,8 @@ public class JoinListener implements Listener{
 		if (ItemsLoad.Items.AUTO_JOIN.isEnable()) {
 			player.getInventory().setItem(ItemsLoad.Items.AUTO_JOIN.getSlot(), ItemsLoad.Items.AUTO_JOIN.getItemStack());
 		}
-		if (ItemsLoad.Items.SHOW_PLAYERS.isEnable()) {
-			player.getInventory().setItem(ItemsLoad.Items.SHOW_PLAYERS.getSlot(), ItemsLoad.Items.SHOW_PLAYERS.getItemStack());
+		if (ItemsLoad.Items.HIDE_PLAYERS.isEnable()) {
+			player.getInventory().setItem(ItemsLoad.Items.HIDE_PLAYERS.getSlot(), ItemsLoad.Items.HIDE_PLAYERS.getItemStack());
 		}
 		if (ItemsLoad.Items.LOBBYS.isEnable()) {
 			player.getInventory().setItem(ItemsLoad.Items.LOBBYS.getSlot(), ItemsLoad.Items.LOBBYS.getItemStack());

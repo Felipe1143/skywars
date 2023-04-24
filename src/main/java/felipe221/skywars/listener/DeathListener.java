@@ -1,7 +1,6 @@
 package felipe221.skywars.listener;
 
 import felipe221.skywars.controller.ArenaController;
-import felipe221.skywars.events.PlayerLeaveGameEvent;
 import felipe221.skywars.load.ItemsLoad;
 import felipe221.skywars.load.KillsLoad;
 import felipe221.skywars.object.Arena;
@@ -13,10 +12,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-
-import java.util.HashMap;
 
 public class DeathListener implements Listener {
     @EventHandler
@@ -25,6 +21,19 @@ public class DeathListener implements Listener {
 
         Player player = (Player) e.getEntity();
 
+        //arrow hit stats
+        if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE){
+            if (player.getLastDamageCause().getEntity() instanceof Arrow) {
+                Arrow arrow = (Arrow) e.getEntity().getLastDamageCause().getEntity();
+                if (arrow.getShooter() instanceof Player) {
+                    Player killer = (Player) arrow.getShooter();
+
+                    User.getUser(killer).addArrowHits(1);
+                }
+            }
+        }
+
+        //on player death
         if(player.getHealth() - e.getFinalDamage() <= 0){
             if (User.getUser(player).getArena() == null) {
                 return;
@@ -36,6 +45,7 @@ public class DeathListener implements Listener {
             arena.addSpectator(player);
 
             User.getUser(player).setAlive(false);
+            User.getUser(player).addLosses(1);
 
             player.getInventory().clear();
             player.setGameMode(GameMode.CREATIVE);

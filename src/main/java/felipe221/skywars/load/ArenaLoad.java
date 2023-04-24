@@ -41,11 +41,13 @@ public class ArenaLoad implements Listener {
 		System.out.println("[SkyWars] Arenas cargadas: ");
 		for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
 			 String id = entry.getKey();
-			 
-			 Arena arena = new Arena(Integer.parseInt(id));
 
-			 System.out.println("[" + (Integer.parseInt(id) + 1) + "] " +
-					 arena.getName() + " (" + arena.getSpawns().toString() +")");
+			 try {
+				 Arena arena = new Arena(Integer.parseInt(id));
+			 } catch (NullPointerException e){
+				 System.out.println("[Debug - SkyWars - ERROR] Hubo un problema al cargar el mapa con el id [" + (Integer.parseInt(id) + 1) + "]. Porfavor revisa 'arenas.yml'");
+				 e.printStackTrace();
+			}
 		}
 	}
 
@@ -117,6 +119,14 @@ public class ArenaLoad implements Listener {
 							"&7divisible por el número máximo de jugadores",
 							"&7",
 							"&7Tamaño actual: &3" + arena.getTeamSize() + " jugadores"
+					).build());
+
+			inventory.setItem(23, ItemBuilder.start(Material.BONE_MEAL).name("&dCambiar lobby de espera")
+					.lore("&7Cambia el lugar donde esperarán los jugadores",
+							"&7para poder empezar la partida. Aquí podrán seleccionar",
+							"&7equipos.",
+							"&7",
+							"&7Ubicación actual: &d" + arena.getWaitSpawn().getBlockX() + "," + arena.getWaitSpawn().getBlockY() + "," + arena.getWaitSpawn().getBlockZ()
 					).build());
 		}
 
@@ -210,9 +220,9 @@ public class ArenaLoad implements Listener {
 
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Spawns", spawn);
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Time-To-Start", arena.getTimeToStart());
-		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Teams", arena.getTeams());
-		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Team-Size", arena.getTeamSize());
+		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Teams.Team-Size", arena.getTeamSize());
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Center", arena.getCenter().getBlockX() + ", " + arena.getCenter().getBlockY() + ", " +arena.getCenter().getBlockZ());
+		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Teams.Wait-Lobby", arena.getWaitSpawn().getBlockX() + ", " + arena.getWaitSpawn().getBlockY() + ", " +arena.getWaitSpawn().getBlockZ());
 
 		Main.getConfigManager().save("arenas.yml");
 
@@ -253,8 +263,8 @@ public class ArenaLoad implements Listener {
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Min-Players", 5);
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Spawns", spawns);
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Time-To-Start", 10);
-		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Teams", teams);
-		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Team-Size", 0);
+		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Teams.Wait-Lobby", "0, 60, 0");
+		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Teams.Team-Size", 0);
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Center", "0, 60, 0");
 
 		Main.getConfigManager().save("arenas.yml");
@@ -659,6 +669,18 @@ public class ArenaLoad implements Listener {
 
 				player.sendMessage(ChatColor.GREEN + "¡El centro del mapa fue actualizado a tu ubicación actual!");
 				creating.put(player, "CENTER");
+				player.closeInventory();
+				creating.remove(player);
+				getArenaFromConfig(player, editing.get(player));
+
+				return;
+			}
+
+			if (e.getCurrentItem().getType() == Material.BONE_MEAL){
+				arena.setCenter(player.getLocation());
+
+				player.sendMessage(ChatColor.GREEN + "¡El spawn de espera del mapa fue actualizado a tu ubicación actual!");
+				creating.put(player, "WAIT");
 				player.closeInventory();
 				creating.remove(player);
 				getArenaFromConfig(player, editing.get(player));

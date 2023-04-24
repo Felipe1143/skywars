@@ -148,7 +148,7 @@ public class MenuGUI implements InventoryHolder, Listener {
 
     public int getFinalPage(){
         if (beauty){
-            int slot = 10;
+            int slot = 0;
             for (int nextSlot : items.keySet()) {
                 if (nextSlot > slot) {
                     slot = nextSlot;
@@ -158,7 +158,7 @@ public class MenuGUI implements InventoryHolder, Listener {
             // Add one to make the math easier.
             double highestSlot = slot + 1;
 
-            return (int) Math.ceil(highestSlot / (double) (36)) - 1;
+            return (int) Math.ceil(highestSlot / (double) (21)) - 1;
         }else {
             // Get the highest slot number.
             int slot = 0;
@@ -337,26 +337,26 @@ public class MenuGUI implements InventoryHolder, Listener {
 
         // Add the main inventory items
         int counter = 0;
-        for(int key = (currentPage * ((rows-1)*9)); key <= Collections.max(items.keySet()); key++){
-            if (beauty) {
-                if (counter == 0){
+        if (beauty) {
+            for(int key = (currentPage * 21); key <= Collections.max(items.keySet()); key++) {
+                if (counter == 0) {
                     counter = 10;
                 }
 
-                if (counter == 17){
+                if (counter == 17) {
                     counter = 19;
                 }
 
-                if (counter == 26){
+                if (counter == 26) {
                     counter = 28;
                 }
 
-                if (counter == 35){
+                if (counter == 35) {
                     //out index
                     counter = 1000;
                 }
 
-                if (counter >= (rows-1) * 9) {
+                if (counter >= (rows - 1) * 9) {
                     break;
                 }
 
@@ -368,25 +368,25 @@ public class MenuGUI implements InventoryHolder, Listener {
                         }
                     }
                 }
-
                 counter++;
-            }else {
+            }
+        }else {
+            for(int key = (currentPage * ((rows-1)*9)); key <= Collections.max(items.keySet()); key++) {
                 if (counter >= (rows * 9)) {
                     break;
                 }
 
                 if (items.containsKey(key)) {
                     inventory.setItem(counter, items.get(key));
-
                     if (listItems){
                         if (getTypeMenu() != null) {
                             getTypeMenu().setData(counter, getTypeMenu().getEntrys().get(key));
                         }
                     }
                 }
-
                 counter++;
             }
+
         }
 
         return inventory;

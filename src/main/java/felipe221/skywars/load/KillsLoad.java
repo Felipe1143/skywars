@@ -2,7 +2,9 @@ package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
 import felipe221.skywars.object.Kills;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +13,8 @@ import java.util.Random;
 
 public class KillsLoad {
     private static HashMap<String, ArrayList<Kills>> listTematicas = new HashMap<>();
+    private static HashMap<String, Integer> priceTematicas = new HashMap<>();
+    private static HashMap<String, Material> itemsTematicas = new HashMap<>();
 
     public static void load(){
         ConfigurationSection listTemas = Main.getConfigManager().getConfig("messages.yml").getConfigurationSection("Kill-Messages");
@@ -18,6 +22,9 @@ public class KillsLoad {
 
         for (Map.Entry<String, Object> entry : listTemas.getValues(false).entrySet()) {
             String nameTematica = entry.getKey();
+
+            priceTematicas.put(entry.getKey(), Main.getConfigManager().getConfig("messages.yml").getInt("Kill-Messages." + entry.getKey() + ".Price"));
+            itemsTematicas.put(entry.getKey(), Material.valueOf(Main.getConfigManager().getConfig("messages.yml").getString("Kill-Messages." + entry.getKey() + ".ID")));
 
             //BOW MESSAGES
             ConfigurationSection listBow = Main.getConfigManager().getConfig("messages.yml").getConfigurationSection("Kill-Messages." + entry.getKey() + ".Bow");
@@ -60,6 +67,18 @@ public class KillsLoad {
 
             listTematicas.put(nameTematica, listKill);
         }
+    }
+
+    public static int getPriceForTematica(String tematica){
+        return priceTematicas.getOrDefault(tematica, 0);
+    }
+
+    public static Material getMaterialForTematica(String tematica){
+        return itemsTematicas.getOrDefault(tematica, Material.CARROT);
+    }
+
+    public static HashMap<String, ArrayList<Kills>> getListTematicas(){
+        return listTematicas;
     }
 
     //prevent mysql errors
