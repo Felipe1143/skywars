@@ -604,3 +604,6 @@ Menus:
           - "&7¡Pero podrás invitar solo a la gente que tu quieras!"
           - "&7"
           - "&7Arenas disponibles: %rooms_available%"
+  SOUNDS: ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE KITS SE GENERA SOLA CON LA DESCRIPCION
+    Title: "Sonidos:"
+    Rows: 5

@@ -2,9 +2,11 @@ package felipe221.skywars.command;
 
 import felipe221.skywars.Main;
 import felipe221.skywars.menus.ConfigMenu;
+import felipe221.skywars.menus.lobby.SoundListMenu;
 import felipe221.skywars.object.Effect;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +32,8 @@ public class SkyWarsCommand implements CommandExecutor {
                 }else{
                     if (args[0].contains("setup")) {
                         ConfigMenu.openConfigMenu(player);
+                    }else if (args[0].contains("sounds")) {
+                        SoundListMenu.open(player);
                     }else if (args[0].equalsIgnoreCase("setspawn")){
                         Location locPlayer = player.getLocation();
 

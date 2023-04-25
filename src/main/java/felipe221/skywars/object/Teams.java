@@ -124,6 +124,21 @@ public class Teams {
     }
 
     public void addPlayer(Player player){
+        Teams team_selected = null;
+        boolean isInTeam = false;
+
+        for (Teams teams : User.getUser(player).getArena().getTeams()) {
+            if (teams.getPlayers().contains(player)){
+                isInTeam = true;
+                break;
+            }
+        }
+
+        if (isInTeam){
+            player.sendMessage(MessagesLoad.MessagesLine.HAVE_TEAM.setPlayer(player).setArena(User.getUser(player).getArena()).getMessage());
+
+            return;
+        }
 
         if (this.size < this.players.size()){
             this.players.add(player);

@@ -245,7 +245,6 @@ public class ArenaController{
 		System.out.println("[Debug - SkyWars] La arena " + newArena.getName()+ " [" + copyID + "] fue reiniciada correctamente");
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void startCount(Arena arena) {
 		arena.setStatus(Status.STARTING);
 
@@ -273,6 +272,10 @@ public class ArenaController{
 
 						cancel();
 					}
+				}
+
+				if (seconds == 60){
+					arena.getChestController().rollback();
 				}
 
 				if (seconds == 0) {

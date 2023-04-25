@@ -115,7 +115,7 @@ public class BukkitUtil {
                     .replaceAll("%stats_trail%", "" + user.getTrail().getName())
                     .replaceAll("%stats_kill_effect%", "" + user.getKillEffect().getName())
                     .replaceAll("%stats_kill_tematica%", user.getKillTematicaName())
-                    .replaceAll("%stats_cage_material%", CageLoad.getMaterialName(user.getCage().getMaterialCage()))
+                    .replaceAll("%stats_cage_material%", CageLoad.getNameByMaterial(user.getCage().getMaterialCage()))
                     .replaceAll("%stats_cage_type%", user.getCage().getType().getName())
                     .replaceAll("%stats_win_effect%", "" + user.getWinEffect().getName());
         }
@@ -181,7 +181,7 @@ public class BukkitUtil {
                         .replaceAll("%stats_trail%", "" + user.getTrail().getName())
                         .replaceAll("%stats_kill_effect%", "" + user.getKillEffect().getName())
                         .replaceAll("%stats_kill_tematica%", user.getKillTematicaName())
-                        .replaceAll("%stats_cage_material%", CageLoad.getMaterialName(user.getCage().getMaterialCage()))
+                        .replaceAll("%stats_cage_material%", CageLoad.getNameByMaterial(user.getCage().getMaterialCage()))
                         .replaceAll("%stats_cage_type%", user.getCage().getType().getName())
                         .replaceAll("%stats_win_effect%", "" + user.getWinEffect().getName());
 

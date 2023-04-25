@@ -6,6 +6,7 @@ import de.slikey.effectlib.util.ParticleEffect;
 import felipe221.skywars.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 
 public class Effect {
     public enum WinEffect{

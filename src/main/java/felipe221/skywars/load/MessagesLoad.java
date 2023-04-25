@@ -15,7 +15,6 @@ public class MessagesLoad {
         START_IN(""),
         PLAYER_OUT_MIN(""),
         SUCCESSFULL_JOIN(""),
-        TEAM_MAX(""),
         HAVE_TEAM(""),
         BORDER_MOVE(""),
         NOT_ARENA(""),

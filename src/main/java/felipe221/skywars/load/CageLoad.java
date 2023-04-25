@@ -7,20 +7,23 @@ import java.util.*;
 
 public class CageLoad {
     public static HashMap<Material, String> cagesMaterial = new HashMap<Material, String>();
+    public static HashMap<Material, Integer> cagesPrices = new HashMap<Material, Integer>();
 
     public static void load() {
         ConfigurationSection configurationSection = Main.getConfigManager().getConfig("config.yml").getConfigurationSection("Cages-Materials");
 
         for (Map.Entry<String, Object> entry : configurationSection.getValues(false).entrySet()) {
             Material material = Material.getMaterial(entry.getKey());
+            String name = Main.getConfigManager().getConfig("config.yml").getString("Cages-Materials." + entry.getKey() + ".Name");
+            int price = Main.getConfigManager().getConfig("config.yml").getInt("Cages-Materials." + entry.getKey() + ".Price");
 
             if (material == null){
                 System.out.println("[SkyWars - ERROR - CAGES] El material con la ID [" + entry.getKey() + "] no existe en Minecraft (config.yml)");
                 continue;
             }
 
-            String name = (String) entry.getValue();
             cagesMaterial.put(material, name);
+            cagesPrices.put(material, price);
         }
     }
 
@@ -32,7 +35,11 @@ public class CageLoad {
         return list;
     }
 
-    public static String getMaterialName(Material material){
+    public static int getPriceByMaterial(Material material){
+        return cagesPrices.get(material);
+    }
+
+    public static String getNameByMaterial(Material material){
         return cagesMaterial.get(material);
     }
 

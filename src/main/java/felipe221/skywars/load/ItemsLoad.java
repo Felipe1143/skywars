@@ -5,6 +5,7 @@ import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.listener.ShowListener;
 import felipe221.skywars.menus.arena.KitsMenu;
 import felipe221.skywars.menus.arena.TPMenu;
+import felipe221.skywars.menus.arena.TeamMenu;
 import felipe221.skywars.menus.vote.VoteMenu;
 import felipe221.skywars.menus.lobby.ArenaSelectorMenu;
 import felipe221.skywars.menus.lobby.CosmeticosMenu;
@@ -34,6 +35,7 @@ public class ItemsLoad {
         MODALIDADES(false, "", 0, Material.AIR, "", new ArrayList<>()),
         PLAY_AGAIN(false, "", 0, Material.AIR, "", new ArrayList<>()),
         SHOW_PLAYERS(false, "", 0, Material.AIR, "", new ArrayList<>()),
+        TEAM_SELECTOR(false, "", 0, Material.AIR, "", new ArrayList<>()),
         HIDE_PLAYERS(false, "", 0, Material.AIR, "", new ArrayList<>()),
         SPECTATOR_TP(false, "", 0, Material.AIR, "", new ArrayList<>()),
         VOTES(false, "", 0, Material.AIR, "", new ArrayList<>());
@@ -164,6 +166,9 @@ public class ItemsLoad {
                     }
                     if (this == VOTES){
                         VoteMenu.open(this.player);
+                    }
+                    if (this == TEAM_SELECTOR){
+                        TeamMenu.open(this.player);
                     }
 
                     this.player.playSound(player.getLocation(), Sound.BLOCK_COMPOSTER_FILL_SUCCESS, 1, 1);

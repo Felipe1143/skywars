@@ -24,8 +24,44 @@ Kill-Effect:
     ID: "PAPER"
   COLD:
     Name: "Nieve"
-    Price: 2000
+    Price: 0
     ID: "SNOWBALL"
+  LAVA:
+    Name: "Lava"
+    Price: 0
+    ID: "LAVA_BUCKET"
+  VORTEX:
+    Name: "Vortex"
+    Price: 0
+    ID: "BRICKS"
+  CLOUD:
+    Name: "Nubes"
+    Price: 0
+    ID: "BONE_MEAL"
+  HEART:
+    Name: "Corazones"
+    Price: 0
+    ID: "APPLE"
+  COOKIE:
+    Name: "Cookies"
+    Price: 0
+    ID: "COOKIE"
+  COIN:
+    Name: "Monedas"
+    Price: 0
+    ID: "GOLD_NUGGET"
+  MEAT:
+    Name: "Comida"
+    Price: 0
+    ID: "COOKED_BEEF"
+  RAINBOW:
+    Name: "Arcoiris"
+    Price: 0
+    ID: "RED_WOOL"
+  RAYO:
+    Name: "Rayo"
+    Price: 0
+    ID: "WATER_BUCKET"
 
 Win-Effect:
   NONE:
@@ -36,46 +72,6 @@ Win-Effect:
 Trails:
   NONE:
     Name: "Ninguno"
-    Price: 0
-    ID: "PAPER"
-  COLD:
-    Name: "Nieve"
-    Price: 0
-    ID: "PAPER"
-  LAVA:
-    Name: "Lava"
-    Price: 0
-    ID: "PAPER"
-  VORTEX:
-    Name: "Vortex"
-    Price: 0
-    ID: "PAPER"
-  CLOUD:
-    Name: "Nubes"
-    Price: 0
-    ID: "PAPER"
-  HEART:
-    Name: "Corazones"
-    Price: 0
-    ID: "PAPER"
-  COOKIE:
-    Name: "Cookies"
-    Price: 0
-    ID: "PAPER"
-  COIN:
-    Name: "Monedas"
-    Price: 0
-    ID: "PAPER"
-  MEAT:
-    Name: "Comida"
-    Price: 0
-    ID: "PAPER"
-  RAINBOW:
-    Name: "Arcoiris"
-    Price: 0
-    ID: "PAPER"
-  RAYO:
-    Name: "Rayo"
     Price: 0
     ID: "PAPER"
 

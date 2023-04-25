@@ -11,6 +11,7 @@ import felipe221.skywars.object.*;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class MenuLoad {
     public enum Menus{
         //LOBBY
+        SOUNDS("", 0, new HashMap<>(), new HashMap<>()),
         COSMETICS("", 0, new HashMap<>(), new HashMap<>()),
         ARENA_SELECTOR("", 0, new HashMap<>(), new HashMap<>()),
         SOLO("", 0, new HashMap<>(), new HashMap<>()),
@@ -222,6 +224,11 @@ public class MenuLoad {
                             }else{
                                 player.sendMessage(MessagesLoad.MessagesLine.CAGE_MATERIAL_LOCKED.setPlayer(this.player).getMessage());
                             }
+                        }
+
+                        if (this == SOUNDS){
+                            Sound sound = Sound.valueOf((String) value);
+                            player.playSound(player.getLocation(), sound, 1,1);
                         }
 
                         if (this == SOLO || this == TEAM || this == ROOMS) {

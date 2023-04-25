@@ -104,3 +104,11 @@ Items:
     Command-Execute: "-"
     Lore:
       - ""
+  TEAM_SELECTOR:
+    Enable: true
+    Name: "&eEquipos &7(Click derecho)"
+    Slot: 3
+    ID: 'CHEST'
+    Command-Execute: "-"
+    Lore:
+      - ""

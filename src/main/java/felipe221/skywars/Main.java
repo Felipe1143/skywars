@@ -32,7 +32,6 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new MoveInventoryListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DropItemListener(), this);
 
-		Bukkit.getPluginManager().registerEvents(new TeamController(), this);
 		Bukkit.getPluginManager().registerEvents(new ConfigMenuController(), this);
 		Bukkit.getPluginManager().registerEvents(new ChestController(), this);
 		Bukkit.getPluginManager().registerEvents(new KitController(), this);

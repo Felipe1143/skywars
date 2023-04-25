@@ -28,7 +28,7 @@ public class CageMaterialMenu {
                 ItemStack itemStack = MenuLoad.Menus.CAGE_MATERIAL.getItems().get(0);
                 ItemStack copy = ItemBuilder.start(material)
                         .name(BukkitUtil.replaceVariables(player,null,itemStack.getItemMeta().getDisplayName())
-                                .replaceAll("%cage_name%", CageLoad.getMaterialName(material)))
+                                .replaceAll("%cage_name%", CageLoad.getNameByMaterial(material)))
                         .lore(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariables(player,null,itemStack.getItemMeta().getLore()), "%cage_status%", (player.hasPermission("skywars.material." + material.name()) == true ? "Desbloqueado" : "Bloqueado"))).build();
                 inventory.addItem(copy);
                 entrys.put(counter, material.name());

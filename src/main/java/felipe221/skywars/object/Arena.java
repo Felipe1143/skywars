@@ -74,6 +74,7 @@ public class Arena {
 	private Location center;
 	private Location waitSpawn;
 	private List<Chests> chests;
+	private Chests chestController;
 
 	private int max;
 	private int min;
@@ -164,6 +165,7 @@ public class Arena {
 		WorldBorder border = this.world.getWorldBorder();
 		border.setCenter(this.center);
 		ArenaController.resetMap(this);
+		this.chestController = new Chests(this);
 
 		listArenas.add(this);
 
@@ -236,6 +238,14 @@ public class Arena {
 
 	public List<Player> getPlayersAlive() {
 		return alive;
+	}
+
+	public Chests getChestController() {
+		return chestController;
+	}
+
+	public void setChestController(Chests chestController) {
+		this.chestController = chestController;
 	}
 
 	public void setPlayers(List<Player> usersInArena) {
