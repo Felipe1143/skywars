@@ -32,6 +32,7 @@ public class ArenaLoad implements Listener {
 	private static HashMap<Player, Arena> editing = new HashMap<>();
 	//CREATE, TEAMS, SIZE, NAME
 	private static HashMap<Player, Object> creating = new HashMap<>();
+	private static int idMax = 0;
 
 	//from config load worlds and arenas
 	public static void load() {
@@ -41,6 +42,10 @@ public class ArenaLoad implements Listener {
 		System.out.println("[SkyWars] Arenas cargadas: ");
 		for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
 			 String id = entry.getKey();
+
+			 if (Integer.valueOf(id) > idMax){
+				 idMax = Integer.valueOf(id);
+			 }
 
 			 try {
 				 Arena arena = new Arena(Integer.parseInt(id));
@@ -280,17 +285,27 @@ public class ArenaLoad implements Listener {
 			return;
 		}
 
+		if (e.getItem() == null) {
+			return;
+		}
+
+		if (!e.getItem().hasItemMeta()){
+			return;
+		}
+
+		e.setCancelled(true);
+
 		Arena arena = editing.get(player);
 
 		if (e.getItem().getType() == Material.BARRIER) {
 			if (BukkitUtil.stripcolor(e.getItem().getItemMeta().getDisplayName()).equals("Salir (Click derecho)")) {
 				player.sendMessage(ChatColor.GREEN + "¡Configuración de los spawns actualizada!");
-				player.getInventory().clear();
 				creating.remove(player);
 
 				new BukkitRunnable() {
 					@Override
 					public void run() {
+						player.getInventory().clear();
 						getArenaFromConfig(player, arena);
 					}
 				}.runTaskLater(Main.getInstance(), 2);
@@ -543,8 +558,8 @@ public class ArenaLoad implements Listener {
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							createArenaConfig(e.getMessage(), Arena.getListArenas().size());
-							Arena arena = new Arena(Arena.getListArenas().size());
+							createArenaConfig(e.getMessage(), idMax + 1);
+							Arena arena = new Arena(idMax + 1);
 
 							editing.put(player, arena);
 							creating.remove(player);

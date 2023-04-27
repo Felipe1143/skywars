@@ -6,10 +6,24 @@ MYSQL:
   name: "minecraft"
 
 Game-Stats:
-  XP-Kill: 20
-  XP-Win: 150
-  Coins-Kill: 30
-  Coins-Win: 200
+  XP_KILL: 20
+  XP_WIN: 150
+  COINS_KILL: 30
+  COINS_WIN: 200
+
+Levels:
+  Colors:
+    0: "&7"
+    15: "&c"
+    50: "&b"
+  Max-Level: 100
+
+Chat-Format: "%color_level%(%level%) %rank% &f%player%: %msg%"
+
+Tab-Format:
+  Team: "%team_color%%rank% %player%"
+  Solo: "%rank% %player%"
+  Lobby: "%rank% %player%"
 
 Main-Spawn:
   World: '-'
@@ -104,9 +118,10 @@ Scoreboards:
       - "&7"
       - "&fMapa: &a&n%arena_name%"
       - "&fEscenario: &e%arena_scenario%"
+      - "&fRollback: &b%arena_rollback_formatted%"
       - "&7"
-      - "&fJugadores vivos: %arena_alive%"
-      - "&fAsesinatos: %arena_player_kills%"
+      - "&fJugadores vivos: &e%arena_players%"
+      - "&fAsesinatos: &c%arena_player_kills%"
       - "&7"
       - "&emc.felipe221.com"
   LOBBY:

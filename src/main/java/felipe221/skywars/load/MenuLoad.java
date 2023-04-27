@@ -8,7 +8,9 @@ import felipe221.skywars.menus.cage.CageTypeMenu;
 import felipe221.skywars.menus.lobby.*;
 import felipe221.skywars.menus.vote.VoteMenu;
 import felipe221.skywars.object.*;
+import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,10 +18,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MenuLoad {
@@ -31,6 +30,8 @@ public class MenuLoad {
         SOLO("", 0, new HashMap<>(), new HashMap<>()),
         TEAM("", 0, new HashMap<>(), new HashMap<>()),
         ROOMS("", 0, new HashMap<>(), new HashMap<>()),
+        TOPS_SELECTOR("", 0, new HashMap<>(), new HashMap<>()),
+        TOPS_MENU("", 0, new HashMap<>(), new HashMap<>()),
         //STATS
         STATS("", 0, new HashMap<>(), new HashMap<>()),
         //TEMATICAS
@@ -231,6 +232,12 @@ public class MenuLoad {
                             player.playSound(player.getLocation(), sound, 1,1);
                         }
 
+                        if (this == TOPS_MENU){
+                            UUID uuidPlayer = UUID.fromString((String) value);
+                            this.player.closeInventory();
+                            StatsMenu.open(player, uuidPlayer);
+                        }
+
                         if (this == SOLO || this == TEAM || this == ROOMS) {
                             //value data = arena id
                             Arena arena = Arena.getByName((String) value);
@@ -329,6 +336,16 @@ public class MenuLoad {
                             }
                         }
 
+                        if (this == TOPS_SELECTOR) {
+                            for (TopLoad.TypeTop tops : TopLoad.TypeTop.values()) {
+                                if (tops.name().equals(value)) {
+                                    this.player.closeInventory();
+                                    TopMenu.open(player, tops);
+                                    return;
+                                }
+                            }
+                        }
+
                         if (this == CAGE_TYPE) {
                             for (Cage.TypeCage typeCage : Cage.TypeCage.values()) {
                                 if (typeCage.name().equalsIgnoreCase(value)) {
@@ -365,7 +382,7 @@ public class MenuLoad {
                             if (value.equalsIgnoreCase("CAJAS")) {
                                 CageMenu.open(player);
                             }else if (value.equalsIgnoreCase("STATS")) {
-                                StatsMenu.open(player);
+                                StatsMenu.open(player, player.getUniqueId());
                             }else if (value.equalsIgnoreCase("TEMATICA")) {
                                 TematicasMenu.open(player);
                             }else if (value.equalsIgnoreCase("WIN_EFFECT")) {
@@ -374,6 +391,8 @@ public class MenuLoad {
                                 KillEffectMenu.open(player);
                             }else if (value.equalsIgnoreCase("TRAILS")) {
                                 TrailsMenu.open(player);
+                            }else if (value.equalsIgnoreCase("TOPS")){
+                                TopSelectorMenu.open(player);
                             }
 
                             return;

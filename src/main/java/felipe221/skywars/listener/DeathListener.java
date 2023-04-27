@@ -12,14 +12,45 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class DeathListener implements Listener {
+    @EventHandler
+    public void onAttack(EntityDamageByEntityEvent e){
+        if(!(e.getEntity() instanceof Player)) return;
+        if(!(e.getDamager() instanceof Player)) return;
+
+        Player damager = (Player) e.getDamager();
+
+        if (User.getUser(damager).getArena() == null) {
+            e.setCancelled(true);
+
+            return;
+        }
+
+        if (!User.getUser(damager).isAlive()){
+            e.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onDeath(EntityDamageEvent e){
         if(!(e.getEntity() instanceof Player)) return;
 
         Player player = (Player) e.getEntity();
+
+        if (User.getUser(player).getArena() == null){
+            e.setCancelled(true);
+
+            return;
+        }else{
+            if (User.getUser(player).getArena().getStatus() != Arena.Status.INGAME){
+                e.setCancelled(true);
+
+                return;
+            }
+        }
 
         //arrow hit stats
         if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE){
@@ -70,6 +101,7 @@ public class DeathListener implements Listener {
                     Arrow arrow = (Arrow) e.getEntity().getLastDamageCause().getEntity();
                     if (arrow.getShooter() instanceof Player){
                         Player killer = (Player) arrow.getShooter();
+                        arena.addKillsGame(killer, 1);
                         arena.sendMessage(KillsLoad.getRandomMessageByTypeKill(User.getUser(killer).getKillTematica(), Kills.TypeKill.BOW)
                                 .replaceAll("%player%", player.getName())
                                 .replaceAll("killer", killer.getName()));
@@ -78,6 +110,7 @@ public class DeathListener implements Listener {
             }else if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
                 if (player.getLastDamageCause().getEntity() instanceof Player) {
                     Player killer = (Player) e.getEntity().getLastDamageCause();
+                    arena.addKillsGame(killer, 1);
 
                     arena.sendMessage(KillsLoad.getRandomMessageByTypeKill(User.getUser(killer).getKillTematica(), Kills.TypeKill.BOW)
                             .replaceAll("%player%", player.getName())

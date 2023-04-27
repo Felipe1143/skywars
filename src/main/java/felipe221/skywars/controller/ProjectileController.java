@@ -21,7 +21,7 @@ public class ProjectileController implements Listener {
             if (e.getEntity() instanceof Arrow) {
                 Arrow arrow = (Arrow) e.getEntity();
 
-                if (user.getArena() != null) {
+                if (user.getArena() == null) {
                     return;
                 }
 
@@ -39,7 +39,7 @@ public class ProjectileController implements Listener {
                             z,
                             2,
                             false,
-                            true);
+                            false);
 
                     return;
                 }

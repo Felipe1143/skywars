@@ -1,0 +1,13 @@
+Signs:
+  ARENA:
+    - "&e&l%mode%"
+    - "&a&n%arena_name%"
+    - "%color_status%%status%"
+    - "&b%players%/%max_players%"
+  TOP:
+    - "&e&l%top_type%"
+    - "&a#%position%"
+    - "&d%player_name%"
+    - "&b%stat%"
+
+DATA:

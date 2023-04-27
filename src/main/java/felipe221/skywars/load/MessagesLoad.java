@@ -38,6 +38,7 @@ public class MessagesLoad {
         TRAIL_EFFECT_LOCKED(""),
         JOIN_TEAM(""),
         JOIN_TEAM_FULL(""),
+        PLAYER_STAT_DISCONNECT(""),
         KIT_SELECTED("");
 
         private String message;

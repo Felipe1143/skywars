@@ -84,8 +84,8 @@ Menus:
     Title: "Menú principal:"
     Rows: 6
     Items:
-      CAJAS:
-        Name: "&a&nCajas"
+      CAJAS: ###NO CAMBIAR ESTOS NOMBRES DE LOS ITEMS AQUÍ
+        Name: "&a&nCajas" ###ESTOS SI SE PUEDEN
         Slot: 15
         ID: 'YELLOW_STAINED_GLASS'
         Lore:
@@ -225,6 +225,70 @@ Menus:
           - "&7Estado: &e%trail_status%"
           - "&7"
           - "&7¡Haz click para seleccionar!"
+  TOPS_SELECTOR:
+    Title: "Tops: "
+    Rows: 3
+    Items:
+      KILLS_SOLO:
+        Slot: 10
+        ID: 'DIAMOND_SWORD'
+        Name: "&cAsesinatos en solitario"
+        Lore:
+          - "&7"
+          - "&7¡Haz click para ver a los jugadores"
+          - "&7con mayores asesinatos del servidor!"
+          - "&7"
+          - "&7Actualizado hace &a%last_update%"
+      WINS_SOLO:
+        Slot: 11
+        ID: 'GOLDEN_APPLE'
+        Name: "&aVictorias en solitario"
+        Lore:
+          - "&7"
+          - "&7¡Haz click para ver a los jugadores"
+          - "&7con mayores victorias del servidor!"
+          - "&7"
+          - "&7Actualizado hace &a%last_update%"
+      KILLS_TEAM:
+        Slot: 15
+        ID: 'GOLDEN_SWORD'
+        Name: "&cAsesinatos en solitario"
+        Lore:
+          - "&7"
+          - "&7¡Haz click para ver a los jugadores"
+          - "&7con mayores asesinatos del servidor!"
+          - "&7"
+          - "&7Actualizado hace &a%last_update%"
+      WINS_TEAM:
+        Slot: 16
+        ID: 'APPLE'
+        Name: "&aVictorias en solitario"
+        Lore:
+          - "&7"
+          - "&7¡Haz click para ver a los jugadores"
+          - "&7con mayores victorias del servidor!"
+          - "&7"
+          - "&7Actualizado hace &a%last_update%"
+      LEVEL:
+        Slot: 13
+        ID: 'EXPERIENCE_BOTTLE'
+        Name: "&eNivel"
+        Lore:
+          - "&7"
+          - "&7¡Haz click para ver a los jugadores"
+          - "&7con mayor nivel del servidor!"
+          - "&7"
+          - "&7Actualizado hace &a%last_update%"
+  TOPS_MENU:
+    ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE TOPS SE GENERA SOLA
+    Title: "Tops 10:"
+    Rows: 3
+    Items:
+      TRAIL:
+        Name: "&a&n%player_name%"
+        Lore:
+          - "&f"
+          - "&7%type_stat%: &e%stat%"
   STATS:
     Title: "Estadisticas:"
     Rows: 3
@@ -540,6 +604,7 @@ Menus:
           - "&7"
           - "&fJugadores: &b%arena_players%/%arena_max%"
           - "&fEscenario: &e%arena_scenario%"
+          - "&fEstado:%arena_status_color% %arena_status%"
           - "&7"
           - "&7¡Haz click para ingresar!"
   TEAM:

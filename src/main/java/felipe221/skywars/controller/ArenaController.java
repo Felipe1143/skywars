@@ -5,17 +5,11 @@ import felipe221.skywars.Main;
 import felipe221.skywars.events.PlayerJoinGameEvent;
 import felipe221.skywars.events.PlayerLeaveGameEvent;
 import felipe221.skywars.listener.JoinListener;
-import felipe221.skywars.load.ChestLoad;
-import felipe221.skywars.load.ItemsLoad;
-import felipe221.skywars.load.MessagesLoad;
-import felipe221.skywars.load.WorldLoad;
+import felipe221.skywars.load.*;
 import felipe221.skywars.object.*;
 import felipe221.skywars.object.Arena.Status;
 import felipe221.skywars.util.BukkitUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -70,8 +64,7 @@ public class ArenaController{
 		}else{
 			player.teleport(arena.getWaitSpawn());
 
-			//TODO
-			//add team selector
+			player.getInventory().setItem(ItemsLoad.Items.TEAM_SELECTOR.getSlot(), ItemsLoad.Items.TEAM_SELECTOR.getItemStack());
 		}
 
 		if (ItemsLoad.Items.KITS.isEnable()){
@@ -85,6 +78,7 @@ public class ArenaController{
 		}
 
 		checkStart(arena);
+		SignLoad.Signs.ARENA.update();
 
 		PlayerJoinGameEvent event = new PlayerJoinGameEvent(arena,player);
 		Bukkit.getServer().getPluginManager().callEvent(event);
@@ -120,7 +114,7 @@ public class ArenaController{
 			}
 		}else{
 			if (arena.getStatus() == Status.INGAME) {
-				user.addLosses(1);
+			//	user.addLosses(1);
 
 				if (arena.isSoloGame()) {
 					Player winner = ArenaController.checkWinSolo(arena);
@@ -148,6 +142,8 @@ public class ArenaController{
 
 			JoinListener.giveItems(player);
 		}
+
+		SignLoad.Signs.ARENA.update();
 	}
 
 	public static void checkStart(Arena arena) {
@@ -212,8 +208,11 @@ public class ArenaController{
 			User winnerUser = User.getUser(winners);
 
 			winnerUser.addWins(1);
-			//add xp
+			winnerUser.addXP(VariblesLoad.Variables.XP_WIN.getValue());
+			winners.sendTitle(ChatColor.GREEN  + "¡ERES EL GANADOR!", "",1,1,1);
 		}
+
+		SignLoad.Signs.ARENA.update();
 
 		new BukkitRunnable(){
 			@Override
@@ -247,6 +246,7 @@ public class ArenaController{
 
 	public static void startCount(Arena arena) {
 		arena.setStatus(Status.STARTING);
+		SignLoad.Signs.ARENA.update();
 
 		if (!arena.isSoloGame()) {
 			for (Teams teams : arena.getTeams()) {
@@ -265,50 +265,45 @@ public class ArenaController{
 
 			@Override
 			public void run() {
-				if (arena.getStatus() == Status.STARTING && arena.isSoloGame()) {
+				if (arena.getStatus() == Status.ENDING){
+					cancel();
+				}
+
+				/*if (arena.getStatus() == Status.STARTING && arena.isSoloGame()) {
 					if (arena.getPlayersAlive().size() < arena.getMin()) {
 						arena.sendMessage(MessagesLoad.MessagesLine.PLAYER_OUT_MIN.setArena(arena).getMessage());
 						arena.setStatus(Status.WAITING);
 
 						cancel();
 					}
-				}
+				}*/
 
-				if (seconds == 60){
-					arena.getChestController().rollback();
+				if (seconds == 120){
+					BukkitUtil.runSync(() -> arena.getChestController().rollback());
 				}
 
 				if (seconds == 0) {
-					BukkitUtil.runSync(new Runnable() {
-						@Override
-						public void run() {
-							start(arena);
-							fillChests(arena);
+					BukkitUtil.runSync(() -> {
+						for (Vote votes : arena.getVotes()){
+							votes.closeVotes();
 						}
+
+						//load votes
+						BukkitUtil.runSync(() -> VoteController.load(arena));
+
+						List<String> VOTES_CLOSE = MessagesLoad.MessagesList.VOTES_CLOSE.setArena(arena).getMessage();
+
+						for (String lines : VOTES_CLOSE) {
+							arena.sendMessage(lines);
+						}
+
+						start(arena);
+						fillChests(arena);
 					});
 				}
 
-				if (seconds == (arena.getTime() / 2)) {
-					//close all votes
-					for (Vote votes : arena.getVotes()){
-						votes.closeVotes();
-					}
-
-					//load votes
-					BukkitUtil.runSync(new Runnable() {
-						@Override
-						public void run() {
-							VoteController.load(arena);
-						}
-					});
-
-					List<String> VOTES_CLOSE = MessagesLoad.MessagesList.VOTES_CLOSE.setArena(arena).getMessage();
-
-					for (String lines : VOTES_CLOSE) {
-						arena.sendMessage(lines);
-					}
-
-					arena.sendMessage(MessagesLoad.MessagesLine.START_IN.setArena(arena).getMessage());
+				if (seconds > -6 && seconds <0) {
+					arena.sendMessage(MessagesLoad.MessagesLine.START_IN.setArena(arena).getMessage().replaceAll("%seconds%", "" + (-seconds)));
 				}
 
 				arena.setTime(seconds);
@@ -321,13 +316,20 @@ public class ArenaController{
 	public static void start(Arena arena){
 		arena.setStatus(Status.INGAME);
 		ScenarioController.setScenario(arena);
+		SignLoad.Signs.ARENA.update();
 
-		for (Player players : arena.getPlayersAlive()){
+		for (Player players : arena.getAllPlayers()) {
 			User user = User.getUser(players);
+			arena.addKillsGame(players, 0);
 
 			user.getCage().remove();
 			user.setAlive(true);
 			user.addGame(1);
+
+			players.getInventory().clear();
+			if (user.getKit() != null) {
+				user.getKit().give(players);
+			}
 		}
 	}
 
@@ -337,11 +339,11 @@ public class ArenaController{
 			//to spawn fix
 			WorldLoad.kickPlayers(arena.getWorld());
 
-				WorldLoad.unload(arena.getWorld());
-				WorldLoad.delete(arena.getWorld());
-				WorldLoad.copyMapWorld(arena.getWorld().getName());
-				WorldLoad.create(arena.getWorld().getName());
-				arena.setWorld(Bukkit.getWorld(arena.getWorld().getName()));
+			WorldLoad.unload(arena.getWorld());
+			WorldLoad.delete(arena.getWorld());
+			WorldLoad.copyMapWorld(arena.getWorld().getName());
+			WorldLoad.create(arena.getWorld().getName());
+			arena.setWorld(Bukkit.getWorld(arena.getWorld().getName()));
 		});
 	}
 
@@ -351,10 +353,7 @@ public class ArenaController{
 				if (b instanceof Chest) {
 					Chest chest = (Chest) b;
 					Inventory inventory = chest.getBlockInventory();
-
-					if (!inventory.isEmpty()) {
-						inventory.clear();
-					}
+					inventory.clear();
 
 					//70% items
 					List<ItemStack> items_70 = ChestLoad.getRandomItems(arena.getChest(), 70);
@@ -370,66 +369,66 @@ public class ArenaController{
 					int counter = 0;
 
 					//cantidad de items que habra en total del 70%
-					for(int i = 0; i < 7; i++) {
-						boolean check = false;
-						int slot;
+					if (items_70.size() != 0) {
+						for (int i = 0; i < 7; i++) {
+							boolean check = false;
+							int slot;
 
-						do {
-							slot = random.nextInt(chest.getBlockInventory().getSize());
-						} while(chosen[slot]);
+							do {
+								slot = random.nextInt(chest.getBlockInventory().getSize());
+							} while (chosen[slot]);
 
-                        ItemStack addItem = items_70.get(random.nextInt(items_70.size()));
-                        while (whitelist.contains(addItem)){
-                            addItem = items_70.get(random.nextInt(items_70.size()));
-                        }
+							ItemStack addItem = items_70.get(random.nextInt(items_70.size()));
 
-						chosen[slot] = true;
-						chest.getBlockInventory().setItem(slot, addItem);
-                        whitelist.add(addItem);
+							while (whitelist.contains(addItem)) {
+								addItem = items_70.get(random.nextInt(items_70.size()));
+							}
+
+							chosen[slot] = true;
+							chest.getBlockInventory().setItem(slot, addItem);
+							whitelist.add(addItem);
+						}
 					}
 
 					//cantidad de items que habra en total del 20%
-					for(int i = 0; i < 2; i++) {
-						boolean check = false;
-						int slot;
+					if (items_20.size() != 0) {
+						for(int i = 0; i < 2; i++) {
+							boolean check = false;
+							int slot;
 
-                        do {
-                            slot = random.nextInt(chest.getBlockInventory().getSize());
-                        } while(chosen[slot]);
+							do {
+								slot = random.nextInt(chest.getBlockInventory().getSize());
+							} while (chosen[slot]);
 
-                        ItemStack addItem = items_20.get(random.nextInt(items_20.size()));
-                        while (whitelist.contains(addItem)){
-                            addItem = items_20.get(random.nextInt(items_20.size()));
-                        }
+							ItemStack addItem = items_20.get(random.nextInt(items_20.size()));
 
-                        chosen[slot] = true;
-                        chest.getBlockInventory().setItem(slot, addItem);
-                        whitelist.add(addItem);
+							chosen[slot] = true;
+							chest.getBlockInventory().setItem(slot, addItem);
+							whitelist.add(addItem);
+						}
 					}
 
 					//cantidad de items que habra en total del 10%
-					for(int i = 0; i < 1; i++) {
-						boolean check = false;
-						int slot;
+					if (items_10.size() != 0) {
+						for (int i = 0; i < 1; i++) {
+							boolean check = false;
+							int slot;
 
-                        do {
-                            slot = random.nextInt(chest.getBlockInventory().getSize());
-                        } while(chosen[slot]);
+							do {
+								slot = random.nextInt(chest.getBlockInventory().getSize());
+							} while (chosen[slot]);
 
-                        ItemStack addItem = items_10.get(random.nextInt(items_10.size()));
-                        while (whitelist.contains(addItem)){
-                            addItem = items_10.get(random.nextInt(items_10.size()));
-                        }
+							ItemStack addItem = items_10.get(random.nextInt(items_10.size()));
 
-                        chosen[slot] = true;
-                        chest.getBlockInventory().setItem(slot, addItem);
-                        whitelist.add(addItem);
+							chosen[slot] = true;
+							chest.getBlockInventory().setItem(slot, addItem);
+							whitelist.add(addItem);
+						}
 					}
-
-					chest.update();
-					System.out.println("[Debug - SkyWars] Los cofres de la arena " + arena.getName() + " se llenaron correctamente");
 				}
 			}
 		}
+
+		System.out.println("[Debug - SkyWars] Los cofres de la arena " + arena.getName() + " se llenaron correctamente");
 	}
 }

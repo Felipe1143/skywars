@@ -25,6 +25,7 @@ public class DatabaseLoad {
 				"  `uuid` VARCHAR(40) NOT NULL," +
 				"  `trail` VARCHAR(45) NOT NULL DEFAULT 'NONE'," +
 				"  `coins` INT NOT NULL DEFAULT 0," +
+				"  `xp` INT NOT NULL DEFAULT 0," +
 				"  `win_effect` VARCHAR(45) NOT NULL DEFAULT 'NONE'," +
 				"  `tematica` VARCHAR(45) NOT NULL DEFAULT 'NONE'," +
 				"  `kill_effect` VARCHAR(45) NOT NULL DEFAULT 'NONE'," +

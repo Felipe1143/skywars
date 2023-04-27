@@ -1,5 +1,7 @@
 package felipe221.skywars.object;
 
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -109,5 +111,30 @@ public class Kit {
 
 	public void setItemMenu(ItemStack item_menu) {
 		this.item_menu = item_menu;
+	}
+
+	public void give(Player player) {
+		if (!items.isEmpty()) {
+			for (ItemStack items : this.items) {
+				player.getInventory().addItem(items);
+			}
+		}
+
+		if (!armor.isEmpty()) {
+			int counter = 0;
+			for (ItemStack items : this.armor) {
+				switch (counter){
+				 	case 0:
+						 player.getInventory().setItem(EquipmentSlot.HEAD,items);
+					case 1:
+						player.getInventory().setItem(EquipmentSlot.CHEST, items);
+					case 2:
+						player.getInventory().setItem(EquipmentSlot.LEGS, items);
+					case 3:
+						player.getInventory().setItem(EquipmentSlot.FEET, items);
+				}
+				counter++;
+			}
+		}
 	}
 }

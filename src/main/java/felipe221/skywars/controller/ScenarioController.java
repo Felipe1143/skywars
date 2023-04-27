@@ -43,6 +43,8 @@ public class ScenarioController implements Listener {
 
         if (underBlock.getType() == Material.AIR){
             underBlock.setType(Material.ACACIA_WOOD);
+            underBlock.getState().update();
+            player.sendMessage("lower");
         }
     }
 
@@ -78,43 +80,47 @@ public class ScenarioController implements Listener {
             WorldBorder border = arena.getWorld().getWorldBorder();
 
             new BukkitRunnable() {
+                double counter = 0.0;
                 @Override
                 public void run() {
                     if (arena.getStatus() != Arena.Status.INGAME){
                         cancel();
                     }
 
+                    if (arena.getTime() > 340){
+                        cancel();
+                    }
+
+                    border.setSize(300.0D - counter);
+
+
                     if (arena.getTime() == 60){
-                        border.setSize(200.0D);
                         arena.sendMessage(MessagesLoad.MessagesLine.BORDER_MOVE.setArena(arena).getMessage().replaceAll("%radius%", "" + 200));
                     }
 
                     if (arena.getTime() == 120){
-                        border.setSize(150.0D);
                         arena.sendMessage(MessagesLoad.MessagesLine.BORDER_MOVE.setArena(arena).getMessage().replaceAll("%radius%", "" + 150));
                     }
 
                     if (arena.getTime() == 180){
-                        border.setSize(100.0D);
                         arena.sendMessage(MessagesLoad.MessagesLine.BORDER_MOVE.setArena(arena).getMessage().replaceAll("%radius%", "" + 100));
                     }
 
                     if (arena.getTime() == 220){
-                        border.setSize(50.0D);
                         arena.sendMessage(MessagesLoad.MessagesLine.BORDER_MOVE.setArena(arena).getMessage().replaceAll("%radius%", "" + 50));
                     }
 
                     if (arena.getTime() == 280){
-                        border.setSize(25.0D);
                         arena.sendMessage(MessagesLoad.MessagesLine.BORDER_MOVE.setArena(arena).getMessage().replaceAll("%radius%", "" + 25));
                     }
 
                     if (arena.getTime() == 340){
-                        border.setSize(15.0D);
                         arena.sendMessage(MessagesLoad.MessagesLine.BORDER_MOVE.setArena(arena).getMessage().replaceAll("%radius%", "" + 15));
                     }
+
+                    counter = counter + 1.0D;
                 }
-            }.runTaskTimer(Main.getInstance(), 0,15L);
+            }.runTaskTimer(Main.getInstance(), 0,25L);
 
         }
     }

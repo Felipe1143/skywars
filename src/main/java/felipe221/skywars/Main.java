@@ -31,11 +31,14 @@ public class Main extends JavaPlugin{
 		Bukkit.getPluginManager().registerEvents(new PlaceListener(), this);
 		Bukkit.getPluginManager().registerEvents(new MoveInventoryListener(), this);
 		Bukkit.getPluginManager().registerEvents(new DropItemListener(), this);
+		Bukkit.getPluginManager().registerEvents(new MessageListener(), this);
 
+		Bukkit.getPluginManager().registerEvents(new SignController(), this);
 		Bukkit.getPluginManager().registerEvents(new ConfigMenuController(), this);
 		Bukkit.getPluginManager().registerEvents(new ChestController(), this);
 		Bukkit.getPluginManager().registerEvents(new KitController(), this);
 		Bukkit.getPluginManager().registerEvents(new ProjectileController(), this);
+		Bukkit.getPluginManager().registerEvents(new ScenarioController(), this);
 
 		Bukkit.getPluginManager().registerEvents(new MenuGUI(), this);
 		Bukkit.getPluginManager().registerEvents(new ArenaLoad(), this);
@@ -44,7 +47,7 @@ public class Main extends JavaPlugin{
 		this.getCommand("sw").setExecutor(new SkyWarsCommand());
 
 		configManager = new ConfigController(this);
-		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml", "items.yml", "kits.yml");
+		configManager.loadConfigFiles("messages.yml", "config.yml", "arenas.yml", "chest.yml", "menus.yml", "items.yml", "kits.yml", "signs.yml");
 		
 		String host = configManager.getConfig("config.yml").getString("MYSQL.host");
 		int port = configManager.getConfig("config.yml").getInt("MYSQL.port");
@@ -72,6 +75,9 @@ public class Main extends JavaPlugin{
 		KillsLoad.load();
 		CageLoad.load();
 		EffectLoad.load();
+		VariblesLoad.load();
+		TopLoad.load();
+		SignLoad.load();
 
 		LevelController.load();
 	}

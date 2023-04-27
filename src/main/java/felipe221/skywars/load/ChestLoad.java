@@ -29,13 +29,14 @@ public class ChestLoad {
 		for (Map.Entry<String, Object> entry : chest.getValues(false).entrySet()) {
 			//TYPE OF CHEST
 			TypeChest type = TypeChest.valueOf(entry.getKey());
-			
+			HashMap<Integer, ArrayList<ItemStack>> iList = new HashMap<>();
+
+
 			//SI HAY ITEMS EN 70%
 			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".70").equals("-")){
 				//CREA LISTAS
 				ArrayList<ItemStack> itemStacks = new ArrayList<>();
-				HashMap<Integer, ArrayList<ItemStack>> iList = new HashMap<>();
-				
+
 				//SUMA ITEMS AL ARRAYLIST
 				for (Object setenta : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".70")) {
 					if (!(setenta instanceof ItemStack)) {
@@ -54,7 +55,6 @@ public class ChestLoad {
 			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".20").equals("-")){
 				//CREA LISTAS
 				ArrayList<ItemStack> itemStacks = new ArrayList<>();
-				HashMap<Integer, ArrayList<ItemStack>> iList = new HashMap<>();
 
 				//SUMA ITEMS AL ARRAYLIST
 				for (Object veinte : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".20")) {
@@ -74,7 +74,6 @@ public class ChestLoad {
 			if (!Main.getConfigManager().getConfig("chest.yml").get("Chest." + type.toString().toUpperCase() + ".10").equals("-")){
 				//CREA LISTAS
 				ArrayList<ItemStack> itemStacks = new ArrayList<>();
-				HashMap<Integer, ArrayList<ItemStack>> iList = new HashMap<>();
 
 				//SUMA ITEMS AL ARRAYLIST
 				for (Object diez : Main.getConfigManager().getConfig("chest.yml").getList("Chest." + type.toString().toUpperCase() + ".10")) {
@@ -136,9 +135,14 @@ public class ChestLoad {
 			}
 		}
 
-		Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".70", itemList_70);
-		Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".20", itemList_20);
-		Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".10", itemList_10);
+		try {
+			Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".70", itemList_70);
+			Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".20", itemList_20);
+			Main.getConfigManager().getConfig("chest.yml").set("Chest." + type.toString().toUpperCase() + ".10", itemList_10);
+		} catch (NullPointerException e){
+			System.out.println("[Debug - SkyWars - Error] Hubo un problema al cargar los cofres... (" + type.toString().toUpperCase()+")");
+			e.printStackTrace();
+		}
 
 		Main.getConfigManager().save("chest.yml");
 

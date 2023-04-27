@@ -1,8 +1,8 @@
 Messages:
   ARENA_MAX: "[]"
-  SUCCESSFULL_JOIN: "S"
-  COUNT_JOIN: "C"
-  START_IN: "S"
+  SUCCESSFULL_JOIN: "&a¡Ingresaste correctamente!"
+  COUNT_JOIN: "&e-> %player% &fingresó a la partida &a(%arena_players%/%arena_max%)"
+  START_IN: "&e-> &f¡La arena comenzará en &a%seconds% segundos&f!"
   PLAYER_OUT_MIN: "P"
   HAVE_TEAM: "&c¡Ya pereteneces a un equipo!"
   BORDER_MOVE: "&a¡El borde del mapa se está moviendo! Ahora se encuentra a &a&n%radius% &abloques"
@@ -28,18 +28,20 @@ Messages:
   TRAIL_EFFECT_LOCKED: "&c¡No tienes este efecto desbloqueado!"
   JOIN_TEAM: "&f¡Ingresaste correctamente al equipo %team_color%%team_name%&f!"
   JOIN_TEAM_FULL: "&c¡Este equipo ya está lleno!"
+  PLAYER_STAT_DISCONNECT: "&c¡El jugador &n%player%&c no está conectado para ver sus estadisticas!"
 
 
 Messages-List:
   VOTES_CLOSE:
   - "&e&m+------------------------------------+"
+  - "             &e&lSKYWARS"
   - ""
   - "&fVotaciones:"
   - "&a- &fCofres: &a%arena_chest%"
-  - "&b- &fProyectiles: &b%arena_projectile%"
-  - "&d- fEscenario: &d%arena_scenario"
-  - "&6- &fTiempo: &6%arena_time%"
-  - "&c- &fCorazones: &c%arena_hearts%"
+  - "&b- &fProyectiles: &b%arena_vote_projectile%"
+  - "&d- &fEscenario: &d%arena_vote_scenario%"
+  - "&6- &fTiempo: &6%arena_vote_time%"
+  - "&c- &fCorazones: &c%arena_vote_hearts%"
   - "&e&m+------------------------------------+"
 
 # Agregar 0, 1, 2, 3, 4... en orden

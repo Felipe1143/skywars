@@ -71,6 +71,7 @@ public class Arena {
 	private List<Player> spectators;
 	private HashMap<Integer, Location> spawns;
 	private HashMap<Location, Player> spawnsUse;
+	private HashMap<Player, Integer> kills;
 	private Location center;
 	private Location waitSpawn;
 	private List<Chests> chests;
@@ -86,6 +87,7 @@ public class Arena {
 		this.alive = new ArrayList<Player>();
 		this.chests = new ArrayList<>();
 		this.votes = new ArrayList<>();
+		this.kills = new HashMap<>();
 
 		//votes
 		this.chest = TypeChest.NORMAL;
@@ -164,7 +166,7 @@ public class Arena {
 
 		WorldBorder border = this.world.getWorldBorder();
 		border.setCenter(this.center);
-		ArenaController.resetMap(this);
+		//ArenaController.resetMap(this);
 		this.chestController = new Chests(this);
 
 		listArenas.add(this);
@@ -272,6 +274,18 @@ public class Arena {
 		this.spectators.remove(player);
 	}
 
+	public HashMap<Player, Integer> getKills() {
+		return kills;
+	}
+
+	public int getKillsGame(Player player) {
+		return this.kills.getOrDefault(player, 0);
+	}
+
+	public void addKillsGame(Player player, int kills) {
+		this.kills.put(player, getKillsGame(player) + kills);
+	}
+
 	public List<Player> getAllPlayers(){
 		List<Player> newList = new ArrayList<>();
 
@@ -338,6 +352,10 @@ public class Arena {
 
 	public int getTime() {
 		return time;
+	}
+
+	public String getTimeFormatted(){
+		return seconds2time(this.time);
 	}
 
 	public void setTime(int time) {
@@ -512,5 +530,29 @@ public class Arena {
 		}
 
 		return null;
+	}
+
+	public String seconds2time(int seconds) {
+		double hours   = Math.floor(seconds / 3600);
+		double minutes = Math.floor((seconds - (hours * 3600)) / 60);
+		double secondsa = seconds - (hours * 3600) - (minutes * 60);
+		var time = "";
+
+		if (hours != 0) {
+			time = hours+":";
+		}
+
+		if (minutes != 0 || time != "") {
+			String minutesString = (minutes < 10 && time != "") ? "0"+ String.valueOf(minutes) : String.valueOf(minutes);
+			time += minutesString+":";
+		}
+
+		if (time == "") {
+			time = seconds+"s";
+		}else {
+			time += ((seconds < 10) ? "0"+String.valueOf(secondsa) : String.valueOf(secondsa));
+		}
+
+		return time;
 	}
 }

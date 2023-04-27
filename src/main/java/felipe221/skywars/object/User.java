@@ -107,6 +107,7 @@ public class User {
 				this.winEffect = Effect.WinEffect.valueOf(stb.getString("win_effect"));
 				this.killEffect = Effect.KillEffect.valueOf(stb.getString("kill_effect"));
 				this.killTematica = stb.getString("tematica");
+				this.xp = stb.getInt("xp");
 				Material material = Material.valueOf(stb.getString("cage_material"));
 				Cage.TypeCage type = Cage.TypeCage.valueOf(stb.getString("cage_type"));
 
@@ -154,6 +155,7 @@ public class User {
 		Main.getDatabaseManager().query("UPDATE `minecraft`.`players_stats` SET " +
 				"`trail`='" + this.trail.name() + "', " +
 				"`coins`='" + this.coins + "', " +
+				"`xp`='" + this.xp + "', " +
 				"`win_effect`='" + this.winEffect.name() + "', " +
 				"`tematica`='" + this.getKillTematica() + "', " +
 				"`kill_effect`='" + this.killEffect.name() + "', " +
@@ -474,6 +476,7 @@ public class User {
 			Location SPAWN = BukkitUtil.parseLocation(Bukkit.getWorld(WORLD_NAME), Main.getConfigManager().getConfig("config.yml").getString("Main-Spawn.Location"));
 			player.teleport(SPAWN);
 		}else{
+			player.teleport(Bukkit.getWorld("world").getSpawnLocation());
 			System.out.println("[Debug - SkyWars] No se encontró una localización de spawn seteada");
 		}
 	}

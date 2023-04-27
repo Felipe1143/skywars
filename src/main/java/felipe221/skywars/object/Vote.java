@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class Vote {
     public enum TypeVote{
@@ -82,12 +83,11 @@ public class Vote {
             }
         }
 
-        //if not votes
-        if (maxVotes == 0){
-            this.winner = votes.keySet().toArray()[0].toString();
+        if (maxVotes != 0) {
+            this.winner = actualWinner;
+        }else{
+            this.winner = null;
         }
-
-        this.winner = actualWinner;
     }
 
     public String getWinner(){

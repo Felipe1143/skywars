@@ -13,10 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -83,6 +80,17 @@ public class BukkitUtil {
         return newList;
     }
 
+    public static List<String> replaceMuchVariableInList(List<String> array, String[] replace, String[] to){
+        List<String> newList = new ArrayList<>();
+
+        for (int a=0;a<replace.length;a++){
+            String newLine = array.get(a).replaceAll(replace[a], to[a]);
+            newList.add(newLine);
+        }
+
+        return newList;
+    }
+
     public static String replaceVariables(Player player, Arena arena, String msg){
         if (msg == null){
             return "";
@@ -94,8 +102,9 @@ public class BukkitUtil {
             msg = msg.replaceAll("%player%", player.getName())
                     .replaceAll("%stats_level%", "" + user.getLevel())
                     .replaceAll("%stats_xp%", "" + user.getXP())
-                    .replaceAll("%stats_next_level_xp%", "" + LevelController.levels.get(user.getLevel() + 1))
-                    .replaceAll("%stats_next_level%", "" + user.getLevel() + 1)
+                    .replaceAll("%color_level%", LevelController.getColorByLevel(user.getLevel()))
+                    .replaceAll("%stats_next_level_xp%", "" + LevelController.getLevels().get(user.getLevel() + 1))
+                    .replaceAll("%stats_next_level%", "" + (user.getLevel() + 1 > LevelController.getMaxLevel() ? "-" : user.getLevel() + 1))
                     .replaceAll("%stats_coins%", "" + user.getCoins())
                     .replaceAll("%stats_kit_active%", (user.getKit() == null ? "Ninguno" : user.getKit().getName()))
                     .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
@@ -123,6 +132,8 @@ public class BukkitUtil {
         if (arena != null){
             msg=msg.replaceAll("%arena_name%", arena.getName())
                     .replaceAll("%arena_world%", arena.getWorld().getName())
+                    .replaceAll("%arena_time_formatted%", arena.getTimeFormatted())
+                    .replaceAll("%arena_rollback_formatted%", arena.getChestController().getTimeToRollback())
                     .replaceAll("%arena_mode%", arena.getMode().getName())
                     .replaceAll("%arena_players%", "" + arena.getPlayersAlive().size())
                     .replaceAll("%arena_spectators%", "" + arena.getSpectators().size())
@@ -135,8 +146,14 @@ public class BukkitUtil {
                     .replaceAll("%arena_vote_scenario%", "" + arena.getScenario().getName())
                     .replaceAll("%arena_vote_hearts%", "" + arena.getHearts().getName())
                     .replaceAll("%arena_scenario%", "" + arena.getScenario().getName())
+                    .replaceAll("%arena_status_color%", "" + arena.getStatus().getColor())
                     .replaceAll("%arena_status%", "" + arena.getStatus().getName());
         }
+
+        if (arena != null && player != null){
+            msg=msg.replaceAll("%arena_player_kills%", "" + arena.getKillsGame(player));
+        }
+
         String pattern = "dd/MM/yy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date());
@@ -160,8 +177,9 @@ public class BukkitUtil {
                 line = line.replaceAll("%player%", player.getName())
                         .replaceAll("%stats_level%", "" + user.getLevel())
                         .replaceAll("%stats_xp%", "" + user.getXP())
-                        .replaceAll("%stats_next_level_xp%", "" + LevelController.levels.get(user.getLevel() + 1))
-                        .replaceAll("%stats_next_level%", "" + user.getLevel() + 1)
+                        .replaceAll("%color_level%", LevelController.getColorByLevel(user.getLevel()))
+                        .replaceAll("%stats_next_level_xp%", "" + LevelController.getLevels().get(user.getLevel() + 1))
+                        .replaceAll("%stats_next_level%", "" + (user.getLevel() + 1 > LevelController.getMaxLevel() ? "-" : user.getLevel() + 1))
                         .replaceAll("%stats_coins%", "" + user.getCoins())
                         .replaceAll("%stats_kit_active%", (user.getKit() == null ? "Ninguno" : user.getKit().getName()))
                         .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
@@ -184,12 +202,13 @@ public class BukkitUtil {
                         .replaceAll("%stats_cage_material%", CageLoad.getNameByMaterial(user.getCage().getMaterialCage()))
                         .replaceAll("%stats_cage_type%", user.getCage().getType().getName())
                         .replaceAll("%stats_win_effect%", "" + user.getWinEffect().getName());
-
             }
 
             if (arena != null) {
                 line=line.replaceAll("%arena_name%", arena.getName())
                         .replaceAll("%arena_world%", arena.getWorld().getName())
+                        .replaceAll("%arena_time_formatted%", arena.getTimeFormatted())
+                        .replaceAll("%arena_rollback_formatted%", arena.getChestController().getTimeToRollback())
                         .replaceAll("%arena_mode%", arena.getMode().getName())
                         .replaceAll("%arena_players%", "" + arena.getPlayersAlive().size())
                         .replaceAll("%arena_spectators%", "" + arena.getSpectators().size())
@@ -202,8 +221,14 @@ public class BukkitUtil {
                         .replaceAll("%arena_vote_scenario%", "" + arena.getScenario().getName())
                         .replaceAll("%arena_vote_hearts%", "" + arena.getHearts().getName())
                         .replaceAll("%arena_scenario%", "" + arena.getScenario().getName())
+                        .replaceAll("%arena_status_color%", "" + arena.getStatus().getColor())
                         .replaceAll("%arena_status%", "" + arena.getStatus().getName());
             }
+
+            if (arena != null && player != null){
+                line=line.replaceAll("%arena_player_kills%", "" + arena.getKillsGame(player));
+            }
+
             String pattern = "dd/MM/yy";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             String date = simpleDateFormat.format(new Date());
@@ -234,6 +259,36 @@ public class BukkitUtil {
             return loc;
         }
         return null;
+    }
+
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public static UUID makeUuid(String uuidString) {
+        String[] parts = {
+                uuidString.substring(0, 7),
+                uuidString.substring(9, 12),
+                uuidString.substring(14, 17),
+                uuidString.substring(19, 22),
+                uuidString.substring(24, 35)
+        };
+        long m1 = Long.parseLong(parts[0], 16);
+        long m2 = Long.parseLong(parts[1], 16);
+        long m3 = Long.parseLong(parts[2], 16);
+        long lsb1 = Long.parseLong(parts[3], 16);
+        long lsb2 = Long.parseLong(parts[4], 16);
+        long msb = (m1 << 32) | (m2 << 16) | m3;
+        long lsb = (lsb1 << 48) | lsb2;
+        return new UUID(msb, lsb);
     }
 
     public static void runAsync(Runnable runnable) {

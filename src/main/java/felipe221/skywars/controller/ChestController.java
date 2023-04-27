@@ -1,5 +1,6 @@
 package felipe221.skywars.controller;
 
+import felipe221.skywars.Main;
 import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.menus.ConfigMenu;
 import felipe221.skywars.object.Chests;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 
@@ -69,8 +71,15 @@ public class ChestController implements Listener {
         if (e.getItem().getType() == Material.BARRIER){
             if (BukkitUtil.stripcolor(e.getItem().getItemMeta().getDisplayName()).equals("Salir (Click derecho)")) {
                 player.sendMessage(ChatColor.GREEN + "¡Configuración terminada exitosamente!");
-                player.getInventory().clear();
-                ConfigMenu.openConfigMenu(player);
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.getInventory().clear();
+                        editing.remove(player);
+                        ConfigMenu.openConfigMenu(player);
+                    }
+                }.runTaskLater(Main.getInstance(), 2);
             }
         }
 
@@ -83,12 +92,6 @@ public class ChestController implements Listener {
         }
 
         if (e.getItem().getItemMeta().getDisplayName().contains("básico")){
-            if (!editing.isEmpty()){
-                player.sendMessage(ChatColor.RED + "Un usuario ya se encuentra editando los cofres ¡Espera que termine y podrás!");
-
-                return;
-            }
-
             player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.BASICO));
             addEdit(player, Chests.TypeChest.BASICO);
 
@@ -96,12 +99,6 @@ public class ChestController implements Listener {
         }
 
         if (e.getItem().getItemMeta().getDisplayName().contains("normal")){
-            if (!editing.isEmpty()){
-                player.sendMessage(ChatColor.RED + "Un usuario ya se encuentra editando los cofres ¡Espera que termine y podrás!");
-
-                return;
-            }
-
             player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.NORMAL));
             addEdit(player, Chests.TypeChest.NORMAL);
 
@@ -109,12 +106,6 @@ public class ChestController implements Listener {
         }
 
         if (e.getItem().getItemMeta().getDisplayName().contains("OP")){
-            if (!editing.isEmpty()){
-                player.sendMessage(ChatColor.RED + "Un usuario ya se encuentra editando los cofres ¡Espera que termine y podrás!");
-
-                return;
-            }
-
             player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.OP));
             addEdit(player, Chests.TypeChest.OP);
 
@@ -169,7 +160,7 @@ public class ChestController implements Listener {
         if (player.getUniqueId() == edit.getUniqueId()){
             ChestLoad.sendToConfig(chest, e.getInventory());
 
-            removeEdit(player);
+            editing.put(player, null);
             ChestLoad.load();
 
             player.sendMessage(ChatColor.GREEN + "¡Configuración cargada correctamente!");
@@ -185,10 +176,6 @@ public class ChestController implements Listener {
     }
 
     public static boolean isEditing(Player player){
-        if (editing.isEmpty()){
-            return false;
-        }
-
         if (editing.containsKey(player)){
             return true;
         }
