@@ -108,7 +108,7 @@ Items:
     Enable: true
     Name: "&eEquipos &7(Click derecho)"
     Slot: 3
-    ID: 'CHEST'
+    ID: 'WHITE_WOOL'
     Command-Execute: "-"
     Lore:
       - ""

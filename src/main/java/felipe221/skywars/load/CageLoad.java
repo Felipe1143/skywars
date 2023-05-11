@@ -1,18 +1,20 @@
 package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
+import felipe221.skywars.object.cosmetics.Cage;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import java.util.*;
 
 public class CageLoad {
-    public static HashMap<Material, String> cagesMaterial = new HashMap<Material, String>();
-    public static HashMap<Material, Integer> cagesPrices = new HashMap<Material, Integer>();
+    public static HashMap<Material, String> cagesMaterial = new HashMap<>();
+    public static HashMap<Material, Integer> cagesMaterialPrices = new HashMap<>();
 
     public static void load() {
-        ConfigurationSection configurationSection = Main.getConfigManager().getConfig("config.yml").getConfigurationSection("Cages-Materials");
+        ConfigurationSection materials = Main.getConfigManager().getConfig("config.yml").getConfigurationSection("Cages-Materials");
 
-        for (Map.Entry<String, Object> entry : configurationSection.getValues(false).entrySet()) {
+        //materials and price load
+        for (Map.Entry<String, Object> entry : materials.getValues(false).entrySet()) {
             Material material = Material.getMaterial(entry.getKey());
             String name = Main.getConfigManager().getConfig("config.yml").getString("Cages-Materials." + entry.getKey() + ".Name");
             int price = Main.getConfigManager().getConfig("config.yml").getInt("Cages-Materials." + entry.getKey() + ".Price");
@@ -23,7 +25,16 @@ public class CageLoad {
             }
 
             cagesMaterial.put(material, name);
-            cagesPrices.put(material, price);
+            cagesMaterialPrices.put(material, price);
+        }
+
+        ConfigurationSection cagesPrices = Main.getConfigManager().getConfig("config.yml").getConfigurationSection("Cages-Type-Prices");
+
+        //type cage price load
+        for (Map.Entry<String, Object> entry : cagesPrices.getValues(false).entrySet()) {
+            int price = Main.getConfigManager().getConfig("config.yml").getInt("Cages-Type-Prices." + entry.getKey());
+
+            Cage.TypeCage.valueOf(entry.getKey()).setPrice(price);
         }
     }
 
@@ -36,7 +47,7 @@ public class CageLoad {
     }
 
     public static int getPriceByMaterial(Material material){
-        return cagesPrices.get(material);
+        return cagesMaterialPrices.get(material);
     }
 
     public static String getNameByMaterial(Material material){

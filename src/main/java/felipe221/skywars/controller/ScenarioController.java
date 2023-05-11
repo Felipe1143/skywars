@@ -1,27 +1,35 @@
 package felipe221.skywars.controller;
 
 import felipe221.skywars.Main;
+import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.load.MessagesLoad;
 import felipe221.skywars.object.Arena;
-import felipe221.skywars.object.Scenario;
+import felipe221.skywars.object.cosmetics.Scenario;
 import felipe221.skywars.object.User;
-import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class ScenarioController implements Listener {
     //SCAFFOLD
@@ -44,7 +52,111 @@ public class ScenarioController implements Listener {
         if (underBlock.getType() == Material.AIR){
             underBlock.setType(Material.ACACIA_WOOD);
             underBlock.getState().update();
-            player.sendMessage("lower");
+        }
+    }
+
+    //LUCKY
+    @EventHandler
+    public void onBreak(BlockPlaceEvent e){
+        Player player = e.getPlayer();
+        User user = User.getUser(player);
+
+        if (user.getArena() == null){
+            return;
+        }
+
+        Arena arena = user.getArena();
+
+        if (arena.getScenario() != Scenario.TypeScenario.LUCKY){
+            return;
+        }
+
+        if (e.getBlock().getType() == Material.YELLOW_WOOL){
+            e.setCancelled(true);
+        }
+    }
+
+    //LUCKY
+    @EventHandler
+    public void onBreak(BlockBreakEvent e){
+        Player player = e.getPlayer();
+        User user = User.getUser(player);
+
+        if (user.getArena() == null){
+            return;
+        }
+
+        Arena arena = user.getArena();
+
+        if (arena.getScenario() != Scenario.TypeScenario.LUCKY){
+            return;
+        }
+
+        e.setDropItems(false);
+        final Random randomSpawn = new Random();
+        int spawnInt = randomSpawn.nextInt(6);
+
+        if (spawnInt < 2) {   //normal break
+            List<ItemStack> items_70 = ChestLoad.getRandomItems(arena.getChest(), 70);
+            List<ItemStack> items_20 = ChestLoad.getRandomItems(arena.getChest(), 20);
+            List<ItemStack> items_10 = ChestLoad.getRandomItems(arena.getChest(), 10);
+
+            ArrayList<ItemStack> whitelist = new ArrayList<>();
+            final Random random = new Random();
+
+            if (items_70.size() != 0) {
+                for (int i = 0; i < 6; i++) {
+                    ItemStack addItem = items_70.get(random.nextInt(items_70.size()));
+
+                    while (whitelist.contains(addItem)) {
+                        addItem = items_70.get(random.nextInt(items_70.size()));
+                    }
+
+                    e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), addItem);
+                    whitelist.add(addItem);
+                }
+            }
+
+            if (items_20.size() != 0) {
+                for (int i = 0; i < 2; i++) {
+                    ItemStack addItem = items_20.get(random.nextInt(items_20.size()));
+
+                    while (whitelist.contains(addItem)) {
+                        addItem = items_20.get(random.nextInt(items_20.size()));
+                    }
+
+                    e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), addItem);
+                    whitelist.add(addItem);
+                }
+            }
+
+            if (items_10.size() != 0) {
+                for (int i = 0; i < 1; i++) {
+                    ItemStack addItem = items_10.get(random.nextInt(items_10.size()));
+
+                    while (whitelist.contains(addItem)) {
+                        addItem = items_10.get(random.nextInt(items_10.size()));
+                    }
+
+                    e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), addItem);
+                    whitelist.add(addItem);
+                }
+            }
+        }else if (spawnInt == 3){ // explosion
+            e.getBlock().getWorld().createExplosion(
+                    e.getBlock().getX(),
+                    e.getBlock().getY(),
+                    e.getBlock().getZ(),
+                    1,
+                    false,
+                    true);
+        }else if (spawnInt == 4){ //strike light
+            e.getBlock().getWorld().strikeLightning(player.getLocation());
+        }else if (spawnInt == 5){ //spiders spawn
+            Creature entity = (Creature) e.getBlock().getWorld().spawnEntity(e.getBlock().getLocation(), EntityType.SPIDER);
+            entity.setTarget(player);
+        }else if (spawnInt == 6){
+            // nothing
         }
     }
 

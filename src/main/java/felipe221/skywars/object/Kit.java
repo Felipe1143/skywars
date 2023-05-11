@@ -15,16 +15,14 @@ public class Kit {
 	private int price;
 	private ItemStack item_menu;
 	private ArrayList<String> lore;
-	private String permission;
 
-	public Kit(String config_name, String name, List<ItemStack> items, List<ItemStack> armor, int price, ArrayList<String> lore, String permission, ItemStack item_menu) {
+	public Kit(String config_name, String name, List<ItemStack> items, List<ItemStack> armor, int price, ArrayList<String> lore, ItemStack item_menu) {
 		this.config_name = config_name;
 		this.name = name;
 		this.items = items;
 		this.armor = armor;
 		this.price = price;
 		this.lore = lore;
-		this.permission = permission;
 		this.item_menu = item_menu;
 
 		//conflict with armor
@@ -95,14 +93,6 @@ public class Kit {
 
 	public void setLore(ArrayList<String> lore) {
 		this.lore = lore;
-	}
-
-	public String getPermission() {
-		return permission;
-	}
-	
-	public void setPermission(String permission) {
-		this.permission = permission;
 	}
 
 	public ItemStack getItemMenu() {

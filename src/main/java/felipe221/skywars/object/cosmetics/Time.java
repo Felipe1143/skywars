@@ -1,4 +1,4 @@
-package felipe221.skywars.object;
+package felipe221.skywars.object.cosmetics;
 
 public class Time {
     public enum TypeTime{

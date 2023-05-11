@@ -4,6 +4,7 @@ import felipe221.skywars.gui.MenuGUI;
 import felipe221.skywars.load.CageLoad;
 import felipe221.skywars.load.KitLoad;
 import felipe221.skywars.load.MenuLoad;
+import felipe221.skywars.load.VariblesLoad;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.ChatColor;
@@ -29,7 +30,7 @@ public class CageMaterialMenu {
                 ItemStack copy = ItemBuilder.start(material)
                         .name(BukkitUtil.replaceVariables(player,null,itemStack.getItemMeta().getDisplayName())
                                 .replaceAll("%cage_name%", CageLoad.getNameByMaterial(material)))
-                        .lore(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariables(player,null,itemStack.getItemMeta().getLore()), "%cage_status%", (player.hasPermission("skywars.material." + material.name()) == true ? "Desbloqueado" : "Bloqueado"))).build();
+                        .lore(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariables(player,null, VariblesLoad.VariablesList.SHOP_MENU_LORE.groupWith(itemStack.getItemMeta().getLore())), "%cage_status%", (player.hasPermission("skywars.material." + material.name()) == true ? "Desbloqueado" : "Bloqueado"))).build();
                 inventory.addItem(copy);
                 entrys.put(counter, material.name());
                 counter++;

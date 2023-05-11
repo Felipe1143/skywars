@@ -1,4 +1,4 @@
-package felipe221.skywars.object;
+package felipe221.skywars.object.cosmetics;
 
 import java.util.ArrayList;
 import java.util.List;

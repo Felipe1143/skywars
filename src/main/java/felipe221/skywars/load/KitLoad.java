@@ -37,9 +37,6 @@ public class KitLoad {
             //add item menu
             ItemStack item = new ItemStack(Material.getMaterial(Main.getConfigManager().getConfig("kits.yml").getString("Kits." + kitName + ".Item-Menu")));
 
-            //add permission
-            String permission = Main.getConfigManager().getConfig("kits.yml").getString("Kits." + kitName + ".Permission");
-
             //add price
             int price = Main.getConfigManager().getConfig("kits.yml").getInt("Kits." + kitName + ".Price");
 
@@ -68,7 +65,7 @@ public class KitLoad {
                 }
             }
 
-            kits_global.add(new Kit(kitName, name, inventoryItems, armorItems, price, lore, permission, item));
+            kits_global.add(new Kit(kitName, name, inventoryItems, armorItems, price, lore, item));
         }
     }
 
@@ -114,7 +111,6 @@ public class KitLoad {
 
         ItemStack delete = ItemBuilder.start(Material.BARRIER).name("&c&lELIMINAR KIT").build();
         ItemStack price = ItemBuilder.start(Material.DIAMOND).name("&aCambiar precio").lore("&7Precio actual: &a"+ kit.getPrice()).build();
-        ItemStack permission = ItemBuilder.start(Material.ACACIA_SIGN).name("&aCambiar permiso").lore("&7Permiso actual: &a" + kit.getPermission()).build();
         ItemStack lore = ItemBuilder.start(Material.PAPER).name("&aCambiar descripción").lore("&7" +
                 "¡Debes cambiarlos desde el kits.yml!").build();
         ItemStack name = ItemBuilder.start(Material.NAME_TAG).name("&aCambiar nombre").lore("&7" +
@@ -123,10 +119,9 @@ public class KitLoad {
         ItemStack backMenu = ItemBuilder.start(Material.SLIME_BALL).name("&aVolver al menú de kits").build();
 
         inventory.setItem(29, backMenu);
-        inventory.setItem(30, item_menu);
-        inventory.setItem(31, name);
-        inventory.setItem(32, lore);
-        inventory.setItem(33, permission);
+        inventory.setItem(31, item_menu);
+        inventory.setItem(32, name);
+        inventory.setItem(33, lore);
         inventory.setItem(34, price);
         inventory.setItem(35, delete);
 
@@ -303,7 +298,7 @@ public class KitLoad {
         for (Map.Entry<Integer, ItemStack> entry : Items.entrySet()) {
             int slot = entry.getKey();
 
-            if (slot == 30){
+            if (slot == 31){
                 if (entry.getValue() == null) {
                     Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Item-Menu", Material.WOODEN_AXE);
 
@@ -340,7 +335,6 @@ public class KitLoad {
         Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Armor", armor);
         Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Price", kit.getPrice());
         Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Lore", kit.getLore());
-        Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Permission", kit.getPermission());
         Main.getConfigManager().getConfig("kits.yml").set("Kits." + kit.getConfigName() + ".Name", kit.getName());
 
         Main.getConfigManager().save("kits.yml");

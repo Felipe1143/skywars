@@ -6,13 +6,20 @@ import felipe221.skywars.controller.*;
 import felipe221.skywars.gui.MenuGUI;
 import felipe221.skywars.listener.*;
 import felipe221.skywars.load.*;
+import felipe221.skywars.object.iTop;
+import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Calendar;
 
 public class Main extends JavaPlugin{
 	private static ConfigController configManager;
 	private static DatabaseController db;
 	private static Main plugin;
+	private static WorldsLoad worldsLoad;
 	
 	public static Main getInstance() {
 		return plugin;
@@ -64,6 +71,8 @@ public class Main extends JavaPlugin{
 			e.printStackTrace();
 		}
 
+		worldsLoad = new WorldsLoad();
+
 		DatabaseLoad.load();
 		ArenaLoad.load();
 		ChestLoad.load();
@@ -76,9 +85,8 @@ public class Main extends JavaPlugin{
 		CageLoad.load();
 		EffectLoad.load();
 		VariblesLoad.load();
-		TopLoad.load();
+		iTop.getInstance().load();
 		SignLoad.load();
-
 		LevelController.load();
 	}
 	
@@ -92,5 +100,38 @@ public class Main extends JavaPlugin{
 	
 	public static DatabaseController getDatabaseManager() {
 		return db;
+	}
+
+	public static WorldsLoad getWorldsLoad() {
+		return worldsLoad;
+	}
+
+	public static void setWorldsLoad(WorldsLoad worldsLoad) {
+		Main.worldsLoad = worldsLoad;
+	}
+
+	public static void closeForResets() {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				Calendar c = Calendar.getInstance();
+				int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+				int hour = c.get(Calendar.HOUR_OF_DAY);
+				int minute = c.get(Calendar.MINUTE);
+
+				if (dayOfWeek == 6 && hour == 1){
+					if (minute == 29 || minute == 30) {
+						for (Player player : Bukkit.getOnlinePlayers()) {
+							BukkitUtil.runSync(new BukkitRunnable() {
+								@Override
+								public void run() {
+									player.kickPlayer("REINICIO SEMANAL");
+								}
+							});
+						}
+					}
+				}
+			}
+		}.runTaskTimerAsynchronously(Main.getInstance(), 0, 20);
 	}
 }

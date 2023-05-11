@@ -34,8 +34,11 @@ public class TeamMenu {
                         .lore(BukkitUtil.replaceVariableInList(
                                 BukkitUtil.replaceVariableInList(
                                         BukkitUtil.replaceVariableInList(
-                                BukkitUtil.replaceVariables(player, null, teamItem.getItemMeta().getLore()), "%team_color%", "" + team.getColor().getColor()), "%team_players", "" + team.getPlayers().size()), "%team_size%", "" + team.getSize()))
-                                .name(teamItem.getItemMeta().getDisplayName().replaceAll("%team_name%", team.getColor().getName())).build();
+                                BukkitUtil.replaceVariables(player, null, teamItem.getItemMeta().getLore()), "%team_color%", "" + team.getColor().getColor()), "%team_players", "" + team.getPlayers().size()), "%team_max%", "" + team.getSize()))
+                                .name(BukkitUtil.replaceVariables(player, null, teamItem.getItemMeta().getDisplayName())
+                                        .replaceAll("%team_color%", "" + team.getColor().getColor())
+                                        .replaceAll("%team_players", "" + team.getPlayers().size())
+                                        .replaceAll("%team_size%", "" + team.getSize())).build();
                 inventory.addItem(copy);
                 entrys.put(counter, "" + team.getID());
                 counter++;

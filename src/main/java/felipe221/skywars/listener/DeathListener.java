@@ -1,12 +1,11 @@
 package felipe221.skywars.listener;
 
+import felipe221.skywars.Main;
 import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.load.ItemsLoad;
 import felipe221.skywars.load.KillsLoad;
-import felipe221.skywars.object.Arena;
-import felipe221.skywars.object.Kills;
-import felipe221.skywars.object.Teams;
-import felipe221.skywars.object.User;
+import felipe221.skywars.object.*;
+import felipe221.skywars.object.cosmetics.Kills;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -14,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class DeathListener implements Listener {
     @EventHandler
@@ -32,6 +33,11 @@ public class DeathListener implements Listener {
         if (!User.getUser(damager).isAlive()){
             e.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onDeathListener(PlayerDeathEvent e){
+        e.setDeathMessage(null);
     }
 
     @EventHandler
@@ -59,7 +65,8 @@ public class DeathListener implements Listener {
                 if (arrow.getShooter() instanceof Player) {
                     Player killer = (Player) arrow.getShooter();
 
-                    User.getUser(killer).addArrowHits(1);
+                    iStats.TypeStats typeStats = (User.getUser(killer).getArena().isSoloGame() == true ? iStats.TypeStats.SOLO : iStats.TypeStats.TEAM);
+                    User.getUser(killer).getStats().addStatValue(typeStats, iStats.Stats.ARROWS, 1);
                 }
             }
         }
@@ -70,13 +77,17 @@ public class DeathListener implements Listener {
                 return;
             }
 
+            e.setCancelled(true);
+
             Arena arena = User.getUser(player).getArena();
 
             arena.removeAlivePlayer(player);
             arena.addSpectator(player);
 
             User.getUser(player).setAlive(false);
-            User.getUser(player).addLosses(1);
+
+            iStats.TypeStats typeStats = (arena.isSoloGame() == true ? iStats.TypeStats.SOLO : iStats.TypeStats.TEAM);
+            User.getUser(player).getStats().addStatValue(typeStats, iStats.Stats.LOSSES, 1);
 
             player.getInventory().clear();
             player.setGameMode(GameMode.CREATIVE);
@@ -98,10 +109,13 @@ public class DeathListener implements Listener {
                         .replaceAll("%player%", player.getName()));
             }else if (e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE){
                 if (player.getLastDamageCause().getEntity() instanceof Arrow){
-                    Arrow arrow = (Arrow) e.getEntity().getLastDamageCause().getEntity();
+                    Arrow arrow = (Arrow) player.getLastDamageCause().getEntity();
                     if (arrow.getShooter() instanceof Player){
                         Player killer = (Player) arrow.getShooter();
                         arena.addKillsGame(killer, 1);
+
+                        User.getUser(killer).getStats().addStatValue(typeStats, iStats.Stats.KILLS, 1);
+
                         arena.sendMessage(KillsLoad.getRandomMessageByTypeKill(User.getUser(killer).getKillTematica(), Kills.TypeKill.BOW)
                                 .replaceAll("%player%", player.getName())
                                 .replaceAll("killer", killer.getName()));
@@ -109,8 +123,9 @@ public class DeathListener implements Listener {
                 }
             }else if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
                 if (player.getLastDamageCause().getEntity() instanceof Player) {
-                    Player killer = (Player) e.getEntity().getLastDamageCause();
+                    Player killer = (Player) player.getLastDamageCause().getEntity();
                     arena.addKillsGame(killer, 1);
+                    User.getUser(killer).getStats().addStatValue(typeStats, iStats.Stats.KILLS, 1);
 
                     arena.sendMessage(KillsLoad.getRandomMessageByTypeKill(User.getUser(killer).getKillTematica(), Kills.TypeKill.BOW)
                             .replaceAll("%player%", player.getName())
@@ -132,7 +147,12 @@ public class DeathListener implements Listener {
                 }
             }
 
-            player.teleport(arena.getCenter());
+            new BukkitRunnable(){
+                @Override
+                public void run() {
+                    player.teleport(arena.getCenter());
+                }
+            }.runTaskLater(Main.getInstance(), 2L);
         }
     }
 }

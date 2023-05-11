@@ -106,16 +106,6 @@ public class KitController implements Listener {
             return;
         }
 
-        if (e.getCurrentItem().getType() == Material.ACACIA_SIGN && BukkitUtil.stripcolor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Cambiar permiso")){
-            e.setCancelled(true);
-
-            setTypeCreating(player, "PERMISSION");
-            edit.sendMessage(ChatColor.GREEN + "Escribe en el chat el permiso del kit: ");
-            player.closeInventory();
-
-            return;
-        }
-
         if (e.getCurrentItem().getType() == Material.SLIME_BALL && BukkitUtil.stripcolor(e.getCurrentItem().getItemMeta().getDisplayName()).equals("Volver al menú de kits")){
             e.setCancelled(true);
             player.closeInventory();
@@ -147,7 +137,7 @@ public class KitController implements Listener {
             //if check is exist
             Inventory inventory = Bukkit.createInventory(player, 9*5, "Kit");
 
-            Kit newKit =  new Kit(msg, msg, new ArrayList<>(), new ArrayList<>(), 0, new ArrayList<>(), "skywars.kit." + msg, new ItemStack(Material.WOODEN_AXE));
+            Kit newKit =  new Kit(msg, msg, new ArrayList<>(), new ArrayList<>(), 0, new ArrayList<>(), new ItemStack(Material.WOODEN_AXE));
             KitLoad.sendToConfig(player, inventory, newKit);
 
             editing.put(player, newKit);
@@ -166,22 +156,6 @@ public class KitController implements Listener {
             return;
         }
 
-        if (getTypeCreating(player).equals("PERMISSION")) {
-            Kit kit = editing.get(player);
-            kit.setPermission(msg);
-            creating.remove(player);
-
-            if (editing.containsKey(player)) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        KitLoad.fromConfig(player, kit);
-                    }
-                }.runTaskLater(Main.getInstance(), 2);
-            }
-
-            player.sendMessage(ChatColor.GREEN + "¡Configuración cambiada correctamente!");
-        }
         if (getTypeCreating(player).equals("PRICE")){
             if (isNumeric(msg)){
                 int price = Integer.parseInt(msg);

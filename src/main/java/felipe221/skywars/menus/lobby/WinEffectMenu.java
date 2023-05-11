@@ -2,7 +2,8 @@ package felipe221.skywars.menus.lobby;
 
 import felipe221.skywars.gui.MenuGUI;
 import felipe221.skywars.load.MenuLoad;
-import felipe221.skywars.object.Effect;
+import felipe221.skywars.load.VariblesLoad;
+import felipe221.skywars.object.cosmetics.Effect;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ public class WinEffectMenu {
             ItemStack copy = ItemBuilder.start(effect.getMaterial())
                     .name(BukkitUtil.replaceVariables(player, null, itemStack.getItemMeta().getDisplayName())
                             .replaceAll("%effect_name%", effect.getName()).replaceAll("%effect_price", "" +effect.getPrice()))
-                    .lore(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariables(player, null, itemStack.getItemMeta().getLore()), "%effect_status%", (player.hasPermission("skywars.win." + effect.name()) == true ? "Desbloqueado" : "Bloqueado")), "%effect_price%", "" + effect.getPrice())).build();
+                    .lore(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariables(player, null, VariblesLoad.VariablesList.SHOP_MENU_LORE.groupWith(itemStack.getItemMeta().getLore())), "%effect_status%", (player.hasPermission("skywars.win." + effect.name()) == true ? "Desbloqueado" : "Bloqueado")), "%effect_price%", "" + effect.getPrice())).build();
             inventory.addItem(copy);
             entrys.put(counter, effect.name());
             counter++;

@@ -20,8 +20,7 @@ public class ConfigMenu {
                         "&7y tambien podrás eliminar o crear una",
                         "&7",
                         "&7Arenas SOLO: &b" + ArenaLoad.getArenasPerMode(Mode.TypeMode.SOLO).size(),
-                        "&7Arenas TEAM: &c" + ArenaLoad.getArenasPerMode(Mode.TypeMode.TEAM).size(),
-                        "&7Arenas ROOMS: &c" + ArenaLoad.getArenasPerMode(Mode.TypeMode.ROOMS).size()).build();
+                        "&7Arenas TEAM: &c" + ArenaLoad.getArenasPerMode(Mode.TypeMode.TEAM).size()).build();
 
         ItemStack kits = ItemBuilder.start(Material.BOW).name("&eKits")
                 .lore("&7Al entrar aquí podrás configurar cualquier kit",

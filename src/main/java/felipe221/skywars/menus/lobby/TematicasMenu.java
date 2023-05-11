@@ -4,6 +4,7 @@ import felipe221.skywars.gui.MenuGUI;
 import felipe221.skywars.load.CageLoad;
 import felipe221.skywars.load.KillsLoad;
 import felipe221.skywars.load.MenuLoad;
+import felipe221.skywars.load.VariblesLoad;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.ChatColor;
@@ -29,7 +30,7 @@ public class TematicasMenu {
                 ItemStack copy = ItemBuilder.start(KillsLoad.getMaterialForTematica(killTematicas))
                         .name(BukkitUtil.replaceVariables(player,null,itemStack.getItemMeta().getDisplayName())
                                 .replaceAll("%tematica_name%", (killTematicas.equals("NONE") ? "Ninguna" : killTematicas)).replaceAll("%tematica_price", "" + KillsLoad.getPriceForTematica(killTematicas)))
-                        .lore(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariables(player,null,itemStack.getItemMeta().getLore()), "%tematica_status%", (player.hasPermission("skywars.tematica." + killTematicas) == true ? "Desbloqueado" : "Bloqueado")), "%tematica_price%", "" + KillsLoad.getPriceForTematica(killTematicas))).build();
+                        .lore(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariableInList(BukkitUtil.replaceVariables(player,null, VariblesLoad.VariablesList.SHOP_MENU_LORE.groupWith(itemStack.getItemMeta().getLore())), "%tematica_status%", (player.hasPermission("skywars.tematica." + killTematicas) == true ? "Desbloqueado" : "Bloqueado")), "%tematica_price%", "" + KillsLoad.getPriceForTematica(killTematicas))).build();
                 inventory.addItem(copy);
                 entrys.put(counter, killTematicas);
                 counter++;

@@ -3,8 +3,7 @@ package felipe221.skywars.object;
 public class Mode {
 	public enum TypeMode{
 		SOLO("Solo"),
-		TEAM("Team"),
-		ROOMS("Rooms");
+		TEAM("Team");
 
 		private String name;
 

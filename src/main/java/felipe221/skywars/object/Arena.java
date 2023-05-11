@@ -1,14 +1,16 @@
 package felipe221.skywars.object;
 
-import felipe221.skywars.controller.ArenaController;
+import com.grinderwolf.swm.api.SlimePlugin;
+import felipe221.skywars.object.cosmetics.Hearts;
+import felipe221.skywars.object.cosmetics.Projectiles;
+import felipe221.skywars.object.cosmetics.Scenario;
+import felipe221.skywars.object.cosmetics.Time;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.Main;
-import felipe221.skywars.load.WorldLoad;
-import felipe221.skywars.object.Chests.TypeChest;
+import felipe221.skywars.object.iChest.TypeChest;
 import felipe221.skywars.object.Mode.TypeMode;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 import java.util.*;
 
@@ -23,7 +25,7 @@ public class Arena {
 		ENDING("Terminando", Material.PURPLE_STAINED_GLASS, ChatColor.DARK_PURPLE),
 		RESTARTING("Reiniciando", Material.BLACK_STAINED_GLASS, ChatColor.BLACK);
 
-		private final Material material;
+		private Material material;
 		private final ChatColor color;
 		private final String name;
 
@@ -44,6 +46,10 @@ public class Arena {
 		public Material getMaterial() {
 			return material;
 		}
+
+		public void setMaterial(Material material){
+			this.material = material;
+		}
 	}
 
 	private Status status;
@@ -51,7 +57,7 @@ public class Arena {
 	private String name;
 	private String world_name;
 	private World world;
-	private ArrayList<Player> winner;
+	private ArrayList<String> winner;
 
 	//votes
 	private List<Vote> votes;
@@ -71,11 +77,11 @@ public class Arena {
 	private List<Player> spectators;
 	private HashMap<Integer, Location> spawns;
 	private HashMap<Location, Player> spawnsUse;
-	private HashMap<Player, Integer> kills;
+	private HashMap<String, Integer> kills;
 	private Location center;
 	private Location waitSpawn;
-	private List<Chests> chests;
-	private Chests chestController;
+	private List<iChest> chests;
+	private iChest chestController;
 
 	private int max;
 	private int min;
@@ -87,7 +93,13 @@ public class Arena {
 		this.alive = new ArrayList<Player>();
 		this.chests = new ArrayList<>();
 		this.votes = new ArrayList<>();
+
 		this.kills = new HashMap<>();
+		this.kills.put("a", 0);
+		this.kills.put("b", 0);
+		this.kills.put("c", 0);
+
+		this.teams = new ArrayList<>();
 
 		//votes
 		this.chest = TypeChest.NORMAL;
@@ -120,32 +132,16 @@ public class Arena {
 		if (Main.getConfigManager().getConfig("arenas.yml").contains("Arenas." + id + "Teams.Team-Size")){
 			this.teamSize = Main.getConfigManager().getConfig("arenas.yml").getInt("Arenas." + id + "Teams.Team-Size");
 		}else{
-			this.teamSize = 0;
+			this.teamSize = 1;
 		}
+
+		this.world = Bukkit.getWorld(this.world_name);
+		this.center = BukkitUtil.parseLocation(this.world, Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Center"));
 
 		if (Main.getConfigManager().getConfig("arenas.yml").contains("Arenas." + id + "Teams.Wait-Lobby")){
 			this.waitSpawn = BukkitUtil.parseLocation(this.world, Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + "Teams.Wait-Lobby"));
 		}else{
 			this.waitSpawn = this.center;
-		}
-
-		//load map
-		this.world = WorldLoad.create(this.world_name);
-		this.center = BukkitUtil.parseLocation(this.world, Main.getConfigManager().getConfig("arenas.yml").getString("Arenas." + id + ".Center"));
-
-		//team create
-		if (this.mode == TypeMode.TEAM){
-			int teamsCount = this.max / teamSize;
-
-			for (int i=0;i<teamsCount;i++){
-				Teams.Colors colorTeam = null;
-				for (Teams.Colors colors : Teams.Colors.values()){
-					if (i == colors.getId()) {
-						colorTeam = colors;
-					}
-				}
-				this.teams.add(new Teams(teamSize, colorTeam, i, this, this.spawns.get(i)));
-			}
 		}
 
 		//load spawns
@@ -164,18 +160,36 @@ public class Arena {
 			}
 		}
 
+		//team create
+		if (this.mode == TypeMode.TEAM){
+			int teamsCount = this.max / teamSize;
+
+			if (teamsCount > 12){
+				System.out.println("[SkyWars - ERROR] Porfavor elimina equipos de la arena [" + this.id + "]. No pueden superar los 12");
+			}else {
+				for (int i = 0; i < teamsCount; i++) {
+					Teams.Colors colorTeam = null;
+					for (Teams.Colors colors : Teams.Colors.values()) {
+						if (i == colors.getId()) {
+							colorTeam = colors;
+						}
+					}
+					this.teams.add(new Teams(teamSize, colorTeam, i, this, this.spawns.get(i)));
+				}
+			}
+		}
+
 		WorldBorder border = this.world.getWorldBorder();
 		border.setCenter(this.center);
-		//ArenaController.resetMap(this);
-		this.chestController = new Chests(this);
 
+		this.chestController = new iChest(this);
 		listArenas.add(this);
 
-		System.out.println("[" + (this.id + 1) + "] " + this.name);
+		System.out.println("[" + (this.id) + "] " + this.name);
 	}
 
 	public boolean isSoloGame(){
-		if (mode == TypeMode.SOLO || mode == TypeMode.ROOMS){
+		if (mode == TypeMode.SOLO){
 			return true;
 		}else{
 			return false;
@@ -242,11 +256,11 @@ public class Arena {
 		return alive;
 	}
 
-	public Chests getChestController() {
+	public iChest getChestController() {
 		return chestController;
 	}
 
-	public void setChestController(Chests chestController) {
+	public void setChestController(iChest chestController) {
 		this.chestController = chestController;
 	}
 
@@ -274,7 +288,7 @@ public class Arena {
 		this.spectators.remove(player);
 	}
 
-	public HashMap<Player, Integer> getKills() {
+	public HashMap<String, Integer> getKills() {
 		return kills;
 	}
 
@@ -283,7 +297,31 @@ public class Arena {
 	}
 
 	public void addKillsGame(Player player, int kills) {
-		this.kills.put(player, getKillsGame(player) + kills);
+		this.kills.put(player.getName(), getKillsGame(player) + kills);
+	}
+
+	public String getTopKill(int position){
+		if (this.kills.isEmpty()) {
+			return "";
+		}
+
+		if (this.kills.size() <= position) {
+			Map<String, Integer> ordenateKills = BukkitUtil.sortByComparator(this.kills);
+
+			Set<String> keySet = ordenateKills.keySet();
+
+			List<String> listKeys = new ArrayList<>(keySet);
+
+			String topPlayer = listKeys.get(position - 1);
+
+			if (topPlayer.equalsIgnoreCase("a") || topPlayer.equalsIgnoreCase("b") || topPlayer.equalsIgnoreCase("c")){
+				return "";
+			}
+
+			return topPlayer;
+		}
+
+		return "";
 	}
 
 	public List<Player> getAllPlayers(){
@@ -301,13 +339,14 @@ public class Arena {
 		}
 	}
 
+	public void sendTitle(String title, String subTitle) {
+		for (Player all : getAllPlayers()) {
+			all.sendTitle(ChatColor.translateAlternateColorCodes('&', title), ChatColor.translateAlternateColorCodes('&', subTitle), 10, 40, 20);
+		}
+	}
+
 	public void saveWorld(){
-		//first kick player editing
-		BukkitUtil.runSync(() -> {
-			BukkitUtil.runAsync(() -> {
-				WorldLoad.copyWorldMap(this.world);
-			});
-		});
+		Main.getWorldsLoad().saveWorldFile(this.world_name);
 	}
 
 	public Location getRandomSpawn(Player player){
@@ -326,11 +365,11 @@ public class Arena {
 		return null;
 	}
 
-	public List<Chests> getChests() {
+	public List<iChest> getChests() {
 		return chests;
 	}
 
-	public void setChests(List<Chests> chests) {
+	public void setChests(List<iChest> chests) {
 		this.chests = chests;
 	}
 
@@ -355,7 +394,7 @@ public class Arena {
 	}
 
 	public String getTimeFormatted(){
-		return seconds2time(this.time);
+		return timeString(this.time);
 	}
 
 	public void setTime(int time) {
@@ -366,11 +405,11 @@ public class Arena {
 		return status;
 	}
 
-	public ArrayList<Player> getWinner() {
+	public ArrayList<String> getWinner() {
 		return winner;
 	}
 
-	public void setWinner(ArrayList<Player> winner) {
+	public void setWinner(ArrayList<String> winner) {
 		this.winner = winner;
 	}
 
@@ -532,27 +571,15 @@ public class Arena {
 		return null;
 	}
 
-	public String seconds2time(int seconds) {
-		double hours   = Math.floor(seconds / 3600);
-		double minutes = Math.floor((seconds - (hours * 3600)) / 60);
-		double secondsa = seconds - (hours * 3600) - (minutes * 60);
-		var time = "";
+	public static String timeString(long time) {
+		long hours = time / 3600L;
+		long minutes = (time - hours * 3600L) / 60L;
+		long seconds = time - hours * 3600L - minutes * 60L;
 
-		if (hours != 0) {
-			time = hours+":";
-		}
-
-		if (minutes != 0 || time != "") {
-			String minutesString = (minutes < 10 && time != "") ? "0"+ String.valueOf(minutes) : String.valueOf(minutes);
-			time += minutesString+":";
-		}
-
-		if (time == "") {
-			time = seconds+"s";
+		if (hours == 1) {
+			return String.format("%02d" + ":" + "%02d" + ":" + "%02d", hours, minutes, seconds).replace("-", "");
 		}else {
-			time += ((seconds < 10) ? "0"+String.valueOf(secondsa) : String.valueOf(secondsa));
+			return String.format("%02d" + ":" + "%02d", minutes, seconds).replace("-", "");
 		}
-
-		return time;
 	}
 }

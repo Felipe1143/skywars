@@ -1,4 +1,4 @@
-package felipe221.skywars.object;
+package felipe221.skywars.object.cosmetics;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -7,15 +7,17 @@ import org.bukkit.block.Block;
 import java.lang.reflect.Type;
 
 public class Cage {
-    public enum TypeCage{
-        COMUN ("Común"),
-        ESFERA ("Esfera"),
-        PIRAMIDE("Piramide"),
-        DOMO ("Domo");
+    public enum TypeCage {
+        COMUN("Común", 0),
+        ESFERA("Esfera", 0),
+        PIRAMIDE("Piramide", 0),
+        DOMO("Domo", 0);
 
         private String name;
+        private int price;
 
-        TypeCage(String name) {
+        TypeCage(String name, int price) {
+            this.price = price;
             this.name = name;
         }
 
@@ -25,6 +27,14 @@ public class Cage {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public void setPrice(int price) {
+            this.price = price;
         }
     }
 

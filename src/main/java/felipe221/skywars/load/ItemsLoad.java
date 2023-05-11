@@ -133,12 +133,12 @@ public class ItemsLoad {
                         KitsMenu.open(this.player);
                     }
                     if (this == HIDE_PLAYERS) {
-                        ShowListener.showPlayers(this.player);
+                        ShowListener.hidePlayers(this.player);
                         this.player.getInventory().setItemInHand(SHOW_PLAYERS.getItemStack());
                         this.player.updateInventory();
                     }
                     if (this == SHOW_PLAYERS) {
-                        ShowListener.hidePlayers(this.player);
+                        ShowListener.showPlayers(this.player);
                         this.player.getInventory().setItemInHand(HIDE_PLAYERS.getItemStack());
                         this.player.updateInventory();
                     }

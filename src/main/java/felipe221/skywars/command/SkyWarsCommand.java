@@ -4,11 +4,11 @@ import felipe221.skywars.Main;
 import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.menus.ConfigMenu;
 import felipe221.skywars.menus.lobby.SoundListMenu;
-import felipe221.skywars.object.Effect;
 import felipe221.skywars.object.User;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,6 +27,7 @@ public class SkyWarsCommand implements CommandExecutor {
                     player.sendMessage("§f");
                     player.sendMessage("§fComandos disponibles:");
                     player.sendMessage("§e- §f/sw setup §e(Configurar arenas)");
+                    player.sendMessage("§e- §f/sw coins <jugador> <coins> §e(Agregar coins)");
                     player.sendMessage("§e- §f/sw setspawn §e(Cambiar spawn principal)");
                     player.sendMessage("§f");
                     player.sendMessage("§fVersión: §a§n0.1.2§e [Felipe221]");
@@ -38,6 +39,8 @@ public class SkyWarsCommand implements CommandExecutor {
                         SoundListMenu.open(player);
                     }else if (args[0].contains("start")) {
                         ArenaController.startCount(User.getUser(player).getArena());
+                    }else if (args[0].contains("coins")) {
+                        //TODO
                     }else if (args[0].equalsIgnoreCase("setspawn")){
                         Location locPlayer = player.getLocation();
 
@@ -51,11 +54,6 @@ public class SkyWarsCommand implements CommandExecutor {
                         Main.getConfigManager().save("config.yml");
 
                         player.sendMessage(ChatColor.GREEN + "¡Spawn cambiado a tu ubicación actual correctamente!");
-                    }else if (args[0].equalsIgnoreCase("test")){
-                        Effect.KillEffect effect = Effect.KillEffect.valueOf(args[1].toUpperCase());
-
-                        effect = effect.setLocation(player.getLocation());
-                        effect.play();
                     }
                 }
             }else{

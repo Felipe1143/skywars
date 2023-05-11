@@ -1,4 +1,29 @@
+Shop-Menu-Lore:
+  - ""
+  - "&7¡Haz &aclick derecho &7para seleccionar!"
+  - "&7¡Haz &bclick izquierdo &7para comprar!"
+
 Menus:
+  SHOP: ##NO AGREGAR MÁS NADA AQUI
+    Title: "Tienda:"
+    Rows: 3
+    Items:
+      ACEPTAR:
+        ID: 'GREEN_STAINED_GLASS'
+        Slot: 11
+        Name: "&aComprar"
+        Lore:
+          - "&f"
+          - "&7¡Haz click para comprar este articulo!"
+      CANCELAR:
+        ID: 'RED_STAINED_GLASS'
+        Slot: 15
+        Name: "&cCancelar"
+        Lore:
+          - "&f"
+          - "&7¡Haz click para cancelar!"
+      ITEM: ##SE REEMPLAZA POR EL ITEM A COMPRAR AUTOMATICAMENTE
+        Slot: 13
   ##################################### CAJAS #####################################
   CAGE_MAIN:
     Title: "Cajas:"
@@ -143,19 +168,6 @@ Menus:
           - "&7Nivel actual: &b%stats_level% (%stats_xp%xp)"
           - ""
           - "&7¡Haz click para ver!"
-      SHOP:
-        Name: "&a&eTienda"
-        Slot: 40
-        ID: 'CHEST'
-        Lore:
-          - "&7"
-          - "&7¡Compra todo lo que quieras"
-          - "&7en la tienda! Deberás ganar puntos"
-          - "&7y luego canjearlos aqui"
-          - ""
-          - "&7Puntos: &6%stats_coins%"
-          - "&7"
-          - "&7¡Haz click para hacer compras!"
       TEMATICA:
         Name: "&a&nTematicas"
         Slot: 39
@@ -225,60 +237,114 @@ Menus:
           - "&7Estado: &e%trail_status%"
           - "&7"
           - "&7¡Haz click para seleccionar!"
-  TOPS_SELECTOR:
-    Title: "Tops: "
+  ###############################################################################################################
+  TOPS_TIME_SELECTOR:
+    Title: "Tops disponibles: "
     Rows: 3
     Items:
-      KILLS_SOLO:
-        Slot: 10
-        ID: 'DIAMOND_SWORD'
-        Name: "&cAsesinatos en solitario"
-        Lore:
-          - "&7"
-          - "&7¡Haz click para ver a los jugadores"
-          - "&7con mayores asesinatos del servidor!"
-          - "&7"
-          - "&7Actualizado hace &a%last_update%"
-      WINS_SOLO:
+      WEEK:
         Slot: 11
-        ID: 'GOLDEN_APPLE'
-        Name: "&aVictorias en solitario"
+        ID: 'APPLE'
+        Name: "&aSemanal"
         Lore:
           - "&7"
-          - "&7¡Haz click para ver a los jugadores"
-          - "&7con mayores victorias del servidor!"
+          - "&7¡Haz click para ver a los mejores jugadores"
+          - "&7de la semana!"
           - "&7"
           - "&7Actualizado hace &a%last_update%"
-      KILLS_TEAM:
+      GLOBAL:
+        Slot: 13
+        ID: 'DIAMOND'
+        Name: "&aGlobal"
+        Lore:
+          - "&7"
+          - "&7¡Haz click para ver a los mejores jugadores"
+          - "&7de todos los tiempos!"
+          - "&7"
+          - "&7Actualizado hace &a%last_update%"
+      MONTH:
         Slot: 15
         ID: 'GOLDEN_SWORD'
-        Name: "&cAsesinatos en solitario"
+        Name: "&aMensual"
         Lore:
           - "&7"
-          - "&7¡Haz click para ver a los jugadores"
-          - "&7con mayores asesinatos del servidor!"
+          - "&7¡Haz click para ver a los mejores jugadores"
+          - "&7del mes!"
           - "&7"
           - "&7Actualizado hace &a%last_update%"
-      WINS_TEAM:
-        Slot: 16
+  TOPS_TYPE_SELECTOR:
+    Title: "Formato: "
+    Rows: 3
+    Items:
+      SOLO:
+        Slot: 12
+        ID: 'DIAMOND_SWORD'
+        Name: "&aSolitario"
+        Lore:
+          - "&7"
+          - "&7¡Haz click para ver a los mejores jugadores"
+          - "&7en solitario!"
+      TEAM:
+        Slot: 14
         ID: 'APPLE'
-        Name: "&aVictorias en solitario"
+        Name: "&aEn equipo"
         Lore:
           - "&7"
-          - "&7¡Haz click para ver a los jugadores"
-          - "&7con mayores victorias del servidor!"
+          - "&7¡Haz click para ver a los mejores jugadores"
+          - "&7en equipo!"
+  TOPS_STATS_SELECTOR:
+    Title: "Tipo de estadistica: "
+    Rows: 3
+    Items:
+      GAMES:
+        Slot: 10
+        ID: 'CHEST'
+        Name: "&ePartidas jugadas"
+        Lore:
           - "&7"
-          - "&7Actualizado hace &a%last_update%"
-      LEVEL:
+          - "&7&n¡Haz click para ver!"
+      WINS:
+        Slot: 11
+        ID: 'GOLDEN_APPLE'
+        Name: "&aPartidas ganadas"
+        Lore:
+          - "&7"
+          - "&7&n¡Haz click para ver!"
+      LOSSES:
+        Slot: 12
+        ID: 'REDSTONE'
+        Name: "&cPartidas perdidas"
+        Lore:
+          - "&7"
+          - "&7&n¡Haz click para ver!"
+      KILLS:
         Slot: 13
-        ID: 'EXPERIENCE_BOTTLE'
-        Name: "&eNivel"
+        ID: 'DIAMOND_SWORD'
+        Name: "&6Asesinatos"
         Lore:
           - "&7"
-          - "&7¡Haz click para ver a los jugadores"
-          - "&7con mayor nivel del servidor!"
+          - "&7&n¡Haz click para ver!"
+      ARROWS:
+        Slot: 14
+        ID: 'ARROW'
+        Name: "&dFlechas acertadas"
+        Lore:
           - "&7"
-          - "&7Actualizado hace &a%last_update%"
+          - "&7&n¡Haz click para ver!"
+      BLOCK_PLACED:
+        Slot: 15
+        ID: 'OAK_PLANKS'
+        Name: "&aBloques colocados"
+        Lore:
+          - "&7"
+          - "&7&n¡Haz click para ver!"
+      BLOCK_BROKEN:
+        Slot: 16
+        ID: 'GOLDEN_PICKAXE'
+        Name: "&cBloques rotos"
+        Lore:
+          - "&7"
+          - "&7&n¡Haz click para ver!"
   TOPS_MENU:
     ##NO AGREGAR MÁS NADA AQUI, LA LISTA DE TOPS SE GENERA SOLA
     Title: "Tops 10:"
@@ -289,6 +355,7 @@ Menus:
         Lore:
           - "&f"
           - "&7%type_stat%: &e%stat%"
+  ###############################################################################################################
   STATS:
     Title: "Estadisticas:"
     Rows: 3
@@ -407,9 +474,6 @@ Menus:
         Lore:
           - "&7"
           - "&7Votos actuales: &e&n%votes%"
-  FINALS:
-    Title: "Finales:"
-    Rows: 3
   CHESTS:
     Title: "Cofres:"
     Rows: 3
@@ -520,18 +584,8 @@ Menus:
           - "&7tendrás en la partida"
           - "&7"
           - "&7¡Haz click para ver las opciones!"
-      FINALS:
-        Slot: 15
-        ID: 'TNT'
-        Name: "&c&nFinales"
-        Lore:
-          - "&7"
-          - "&7Vota por el final que tendrá"
-          - "&7la partida si no termina rapidamente"
-          - "&7"
-          - "&7¡Haz click para ver las opciones!"
       PROJECTILES:
-        Slot: 14
+        Slot: 13
         ID: 'ARROW'
         Name: "&e&nProyectiles"
         Lore:
@@ -561,7 +615,7 @@ Menus:
           - "&7"
           - "&7¡Haz click para ver las opciones!"
       SCENARIOS:
-        Slot: 16
+        Slot: 14
         ID: 'BONE_MEAL'
         Name: "&b&nEscenarios"
         Lore:

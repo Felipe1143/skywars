@@ -1,17 +1,1 @@
 Arenas:
- 0:
-  Name: "Desierto"
-  World-Name: "Desert"
-  Mode: SOLO
-  Max-Players: 10
-  Min-Players: 5
-  Time-To-Start: 10 #SECONDS
-  Scenario: "NORMAL"
-  Center: "0, 1, 0"
-  Spawns:
-  - "0, 1, 0"
-  - "0, 1, 1"
-  - "0, 1, 2"
-  Teams:
-   Team-Size: 0
-   Wait-Lobby: "0, 1, 0"

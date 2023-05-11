@@ -1,4 +1,5 @@
 Messages:
+  ###################################################################### ARENA MSG
   ARENA_MAX: "[]"
   SUCCESSFULL_JOIN: "&a¡Ingresaste correctamente!"
   COUNT_JOIN: "&e-> %player% &fingresó a la partida &a(%arena_players%/%arena_max%)"
@@ -7,17 +8,30 @@ Messages:
   HAVE_TEAM: "&c¡Ya pereteneces a un equipo!"
   BORDER_MOVE: "&a¡El borde del mapa se está moviendo! Ahora se encuentra a &a&n%radius% &abloques"
   NOT_ARENA: "&c¡No estás en ninguna arena!"
+  IN_ARENA: "&c¡Ya estás en una partida!"
+  VOTES_IS_CLOSED: "&c¡Las votaciones ya están cerradas!"
+  ALREADY_VOTE: "&c¡Ya votaste aquí!"
+  SUCCESSFULL_VOTE: "&a¡Voto agregado correctamente!"
+  ARENA_STARTED: "&c¡La arena ya está en juego!"
+  JOIN_TEAM: "&f¡Ingresaste correctamente al equipo %team_color%%team_name%&f!"
+  JOIN_TEAM_FULL: "&c¡Este equipo ya está lleno!"
+  ####################################################################### SHOP MSG
+  ALREADY_HAVE_KIT: "&c¡Ya tienes el kit &n%kit_name%&c comprado!"
+  ALREADY_HAVE_CAGE: "&c¡Ya tienes la caja &n%cage_name%&c comprada!"
+  ALREADY_HAVE_MATERIAL: "&c¡Ya tienes el material &n%material_name%&c comprado!"
+  ALREADY_HAVE_TEMATICA: "&c¡Ya tienes la tematica &n%tematica_name%&c comprada!"
+  ALREADY_HAVE_KILL_EFFECT: "&c¡Ya tienes el efecto &n%effect_name%&c comprado!"
+  ALREADY_HAVE_WIN_EFFECT: "&c¡Ya tienes el efecto &n%effect_name%&c comprado!"
+  ALREADY_HAVE_TRAIL_EFFECT: "&c¡Ya tienes el efecto &n%effect_name%&c comprado!"
+  NOT_HAVE_MONEY: "&c¡No tienes suficientes monedas para hacer esto!"
+  PURCHASE_SUCCESSFULL: "&a¡Compra realizada correctamente!"
+  ####################################################################### SELECT ITEMS
   KIT_SELECTED: "&a¡Kit &n%kit_name%&a seleccionado correctamente!"
   KIT_LOCKED: "&c¡No tienes este kit comprado!"
   CAGE_MATERIAL_SELECTED: "&a¡Material de caja cambiado a &n%stats_cage_material%&a correctamente!"
   CAGE_MATERIAL_LOCKED: "&c¡No tienes este material desbloqueado!"
   CAGE_TYPE_SELECTED: "&a¡Tipo de caja cambiado a &n%stats_cage_type%&a correctamente!"
   CAGE_TYPE_LOCKED: "&c¡No tienes esta caja desbloqueada!"
-  ARENA_STARTED: "&c¡La arena ya está en juego!"
-  VOTES_IS_CLOSED: "&c¡Las votaciones ya están cerradas!"
-  ALREADY_VOTE: "&c¡Ya votaste aquí!"
-  SUCCESSFULL_VOTE: "&a¡Voto agregado correctamente!"
-  NOT_PERMISSION: "&c¡No tienes permiso para hacer esto!"
   TEMATICA_SELECTED: "&a¡La temática &n%tematica_name%&a fue colocada correctamente!"
   TEMATICA_LOCKED: "&c¡No tienes esta tematica desbloqueada!"
   KILL_EFFECT_SELECTED: "&a¡El efecto de asesinato &n%effect_name%&a fue colocado correctamente!"
@@ -26,13 +40,13 @@ Messages:
   WIN_EFFECT_LOCKED: "&c¡No tienes este efecto desbloqueado!"
   TRAIL_EFFECT_SELECTED: "&a¡El rastro de flecha &n%trail_name%&a fue colocado correctamente!"
   TRAIL_EFFECT_LOCKED: "&c¡No tienes este efecto desbloqueado!"
-  JOIN_TEAM: "&f¡Ingresaste correctamente al equipo %team_color%%team_name%&f!"
-  JOIN_TEAM_FULL: "&c¡Este equipo ya está lleno!"
+  ####################################################################### OTROS
+  NOT_PERMISSION: "&c¡No tienes permiso para hacer esto!"
   PLAYER_STAT_DISCONNECT: "&c¡El jugador &n%player%&c no está conectado para ver sus estadisticas!"
 
 
 Messages-List:
-  VOTES_CLOSE:
+  START_GAME:
   - "&e&m+------------------------------------+"
   - "             &e&lSKYWARS"
   - ""
@@ -43,7 +57,42 @@ Messages-List:
   - "&6- &fTiempo: &6%arena_vote_time%"
   - "&c- &fCorazones: &c%arena_vote_hearts%"
   - "&e&m+------------------------------------+"
+  END_GAME:
+  - "&e&m+------------------------------------+"
+  - "             &e&lSKYWARS"
+  - ""
+  - "&fGanador: &e%arena_winner%"
+  - ""
+  - "&fTOP ASESINATOS:"
+  - "&c#1 &f%arena_top_1%"
+  - "&c#2 &f%arena_top_2%"
+  - "&c#3 &f%arena_top_3%"
+  - "&e&m+------------------------------------+"
+  LEVEL_UP:
+  - "&e&m+------------------------------------+"
+  - "            &e&l¡NUEVO NIVEL!"
+  - ""
+  - "&f¡Subiste de nivel gracias a tu esfuerzo!"
+  - ""
+  - "&fPróxima meta: &e%player_next_level%"
+  - "&e&m+------------------------------------+"
 
+Titles:
+  START_IN:
+    Title: ""
+    SubTitle: "&aComenzando en &n%seconds%"
+  START_ARENA:
+    Title: "&e&l¡JUEGO COMENZADO!"
+    SubTitle: ""
+  JOIN_ARENA:
+    Title: ""
+    SubTitle: ""
+  KIT_SELECTED:
+    Title: ""
+    SubTitle: "&a%kit_name%"
+  WIN_GAME:
+    Title: "&e&l¡ERES EL GANADOR!"
+    SubTitle: ""
 # Agregar 0, 1, 2, 3, 4... en orden
 Kill-Messages:
   ################################################################################

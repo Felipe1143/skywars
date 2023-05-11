@@ -13,6 +13,7 @@ public class MessagesLoad {
         ARENA_MAX(""),
         COUNT_JOIN(""),
         START_IN(""),
+        IN_ARENA(""),
         PLAYER_OUT_MIN(""),
         SUCCESSFULL_JOIN(""),
         HAVE_TEAM(""),
@@ -39,6 +40,15 @@ public class MessagesLoad {
         JOIN_TEAM(""),
         JOIN_TEAM_FULL(""),
         PLAYER_STAT_DISCONNECT(""),
+        ALREADY_HAVE_KIT(""),
+        ALREADY_HAVE_CAGE(""),
+        ALREADY_HAVE_MATERIAL(""),
+        ALREADY_HAVE_TEMATICA(""),
+        ALREADY_HAVE_KILL_EFFECT(""),
+        ALREADY_HAVE_WIN_EFFECT(""),
+        ALREADY_HAVE_TRAIL_EFFECT(""),
+        PURCHASE_SUCCESSFULL(""),
+        NOT_HAVE_MONEY(""),
         KIT_SELECTED("");
 
         private String message;
@@ -79,8 +89,9 @@ public class MessagesLoad {
     }
 
     public enum MessagesList{
-        VOTES_CLOSE(new ArrayList<>());
-
+        START_GAME(new ArrayList<>()),
+        END_GAME(new ArrayList<>()),
+        LEVEL_UP(new ArrayList<>());
 
         private List<String> message;
         private Arena arena;
@@ -119,6 +130,60 @@ public class MessagesLoad {
         }
     }
 
+    public enum TitleLine{
+        START_IN("", ""),
+        START_ARENA("", ""),
+        KIT_SELECTED("", ""),
+        WIN_GAME("", ""),
+        JOIN_ARENA("", "");
+
+        private String title;
+        private String subTitle;
+        private Arena arena;
+        private Player player;
+
+        TitleLine(String title, String subTitle){
+            this.title = title;
+            this.subTitle = subTitle;
+            this.player = null;
+            this.arena = null;
+        }
+
+        public String getTitle() {
+            return BukkitUtil.replaceVariables(player, arena,title);
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getSubTitle() {
+            return BukkitUtil.replaceVariables(player, arena,subTitle);
+        }
+
+        public void setSubTitle(String subTitle) {
+            this.subTitle = subTitle;
+        }
+
+        public Arena getArena() {
+            return arena;
+        }
+
+        public TitleLine setArena(Arena arena) {
+            this.arena = arena;
+            return this;
+        }
+
+        public Player getPlayer() {
+            return player;
+        }
+
+        public TitleLine setPlayer(Player player) {
+            this.player = player;
+            return this;
+        }
+    }
+
     public static void load(){
         for (MessagesLine line : MessagesLine.values()){
             String msg = line.name().toUpperCase();
@@ -130,6 +195,13 @@ public class MessagesLoad {
             String msg = lines.name().toUpperCase();
 
             lines.setMessage(Main.getConfigManager().getConfig("messages.yml").getStringList("Messages-List." + msg));
+        }
+
+        for (TitleLine lines : TitleLine.values()){
+            String msg = lines.name().toUpperCase();
+
+            lines.setTitle(Main.getConfigManager().getConfig("messages.yml").getString("Titles." + msg + ".Title"));
+            lines.setSubTitle(Main.getConfigManager().getConfig("messages.yml").getString("Titles." + msg + ".SubTitle"));
         }
     }
 }

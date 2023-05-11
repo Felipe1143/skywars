@@ -1,13 +1,14 @@
 Signs:
+  Attached-Blocks:
+    WAITING: "GREEN_STAINED_GLASS"
+    STARTING: "YELLOW_STAINED_GLASS"
+    INGAME: "RED_STAINED_GLASS"
+    ENDING: "PURPLE_STAINED_GLASS"
+    RESTARTING: "BLACK_STAINED_GLASS"
   ARENA:
-    - "&e&l%mode%"
+    - "&e&l%arena_mode%"
     - "&a&n%arena_name%"
-    - "%color_status%%status%"
-    - "&b%players%/%max_players%"
-  TOP:
-    - "&e&l%top_type%"
-    - "&a#%position%"
-    - "&d%player_name%"
-    - "&b%stat%"
+    - "%arena_status_color%%arena_status%"
+    - "&b%arena_players%/%arena_max%"
 
 DATA:

@@ -1,7 +1,7 @@
 package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
-import felipe221.skywars.object.Effect;
+import felipe221.skywars.object.cosmetics.Effect;
 import org.bukkit.Material;
 
 public class EffectLoad {

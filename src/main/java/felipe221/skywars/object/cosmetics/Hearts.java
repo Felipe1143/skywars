@@ -1,5 +1,6 @@
-package felipe221.skywars.object;
+package felipe221.skywars.object.cosmetics;
 
+import felipe221.skywars.object.Arena;
 import org.bukkit.entity.Player;
 
 public class Hearts {

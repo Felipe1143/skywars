@@ -2,6 +2,7 @@ package felipe221.skywars.listener;
 
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.User;
+import felipe221.skywars.object.iStats;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +24,8 @@ public class PlaceListener implements Listener {
             if (arena.getStatus() != Arena.Status.INGAME){
                 e.setCancelled(true);
             }else{
-                User.getUser(player).addBlockPlaced(1);
+                iStats.TypeStats typeStats = (arena.isSoloGame() == true ? iStats.TypeStats.SOLO : iStats.TypeStats.TEAM);
+                User.getUser(player).getStats().addStatValue(typeStats, iStats.Stats.BLOCK_PLACED, 1);
             }
         }
     }

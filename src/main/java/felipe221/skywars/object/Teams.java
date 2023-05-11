@@ -93,36 +93,6 @@ public class Teams {
         this.team.removeEntry(player.getName());
     }
 
-    //5, 4, 5, 5
-    public boolean isBalanced(ArrayList<Integer> integers, int valueJoin){
-        int maxValue=-1;
-        int minValue=1000;
-
-        for (int a : integers){
-            if (a>maxValue){
-                maxValue=a;
-            }
-
-            if (a<minValue){
-                minValue=a;
-            }
-        }
-
-        if (minValue == valueJoin){
-            return true;
-        }
-
-        //5 4 5 5
-        //minValue 4
-        //valueJoin 6
-        //5 < 6
-        if (minValue + 1 < valueJoin){
-            return false;
-        }else{
-            return true;
-        }
-    }
-
     public void addPlayer(Player player){
         Teams team_selected = null;
         boolean isInTeam = false;
@@ -140,7 +110,7 @@ public class Teams {
             return;
         }
 
-        if (this.size < this.players.size()){
+        if (this.players.size() < this.size){
             this.players.add(player);
             this.team.addEntry(player.getName());
 
@@ -159,21 +129,19 @@ public class Teams {
     }
 
     public enum Colors{
-        NEGRO(ChatColor.BLACK, "Negro", 0),
-        AZUL(ChatColor.BLUE, "Azul", 1),
-        VERDE(ChatColor.DARK_GREEN, "Verde", 2),
-        AZUL_OSCURO(ChatColor.DARK_BLUE, "Azul oscuro", 3),
-        ROJO(ChatColor.DARK_RED, "Rojo", 4),
-        VIOLETA(ChatColor.DARK_PURPLE, "Violeta", 5),
-        DORADO(ChatColor.GOLD, "Dorado", 6),
-        GRIS(ChatColor.DARK_GRAY, "Gris", 7),
-        GRIS_CLARO(ChatColor.GRAY, "Gris claro", 8),
-        VERDE_CLARO(ChatColor.GREEN, "Verde claro", 9),
-        CELESTE(ChatColor.AQUA, "Celeste", 10),
-        ROJO_CLARO(ChatColor.RED, "Rojo claro", 11),
-        ROSA(ChatColor.LIGHT_PURPLE, "Rosa", 12),
-        CIAN(ChatColor.DARK_AQUA, "Cian", 13),
-        AMARILLO(ChatColor.YELLOW, "Amarillo", 14);
+        BLACK(ChatColor.GRAY, "Negro", 0),
+        BLUE(ChatColor.BLUE, "Azul", 1),
+        GREEN(ChatColor.DARK_GREEN, "Verde", 2),
+        RED(ChatColor.DARK_RED, "Rojo", 3),
+        PURPLE(ChatColor.DARK_PURPLE, "Violeta", 4),
+        ORANGE(ChatColor.GOLD, "Dorado", 5),
+        GRAY(ChatColor.DARK_GRAY, "Gris", 6),
+        LIGHT_GRAY(ChatColor.GRAY, "Gris claro", 7),
+        LIME(ChatColor.GREEN, "Verde claro", 8),
+        LIGHT_BLUE(ChatColor.AQUA, "Celeste", 9),
+        PINK(ChatColor.LIGHT_PURPLE, "Rosa", 10),
+        CYAN(ChatColor.DARK_AQUA, "Cian", 11),
+        YELLOW(ChatColor.YELLOW, "Amarillo", 12);
 
         private ChatColor color;
         private String name;

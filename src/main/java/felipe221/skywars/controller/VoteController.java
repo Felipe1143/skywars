@@ -1,8 +1,11 @@
 package felipe221.skywars.controller;
 
 import felipe221.skywars.object.*;
+import felipe221.skywars.object.cosmetics.Hearts;
+import felipe221.skywars.object.cosmetics.Projectiles;
+import felipe221.skywars.object.cosmetics.Scenario;
+import felipe221.skywars.object.cosmetics.Time;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
 public class VoteController {
     public static void load(Arena arena){
@@ -21,7 +24,7 @@ public class VoteController {
                 }
 
                 if (vote.getTypeVote() == Vote.TypeVote.CHESTS) {
-                    arena.setChest(Chests.TypeChest.valueOf(vote.getWinner()));
+                    arena.setChest(iChest.TypeChest.valueOf(vote.getWinner()));
                     continue;
                 }
 

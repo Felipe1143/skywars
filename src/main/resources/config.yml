@@ -11,14 +11,25 @@ Game-Stats:
   COINS_KILL: 30
   COINS_WIN: 200
 
-Levels:
-  Colors:
-    0: "&7"
-    15: "&c"
-    50: "&b"
+Levels: ##DEBE ESTAR ORDENADO POR NIVEL
+  Rewards:
+    0:
+      Color: "&7"
+      Commands:
+        - ""
+    15:
+      Color: "&c"
+      Commands:
+        - ""
+    50:
+      Color: "&b"
+      Commands:
+        - ""
   Max-Level: 100
 
 Chat-Format: "%color_level%(%level%) %rank% &f%player%: %msg%"
+
+Command-Shop-Permission: "aqua set %player% permission %permission%"
 
 Tab-Format:
   Team: "%team_color%%rank% %player%"
@@ -88,8 +99,44 @@ Trails:
     Name: "Ninguno"
     Price: 0
     ID: "PAPER"
+  CRIT:
+    Name: "Critico"
+    Price: 0
+    ID: "DIAMOND_SWORD"
+  FLAME:
+    Name: "Flamas"
+    Price: 0
+    ID: "HORN_CORAL_FAN"
+  LAVA:
+    Name: "Lava"
+    Price: 0
+    ID: "LAVA_BUCKET"
+  NOTE:
+    Name: "Notas"
+    Price: 0
+    ID: "NOTE_BLOCK"
+  REDSTONE:
+    Name: "Redstone"
+    Price: 0
+    ID: "REDSTONE"
+  SLIME:
+    Name: "Slime"
+    Price: 0
+    ID: "SLIME_BLOCK"
+  WATER_BUBBLE:
+    Name: "Burbujas"
+    Price: 0
+    ID: "GHAST_TEAR"
+  HEART:
+    Name: "Corazones"
+    Price: 0
+    ID: "FERMENTED_SPIDER_EYE"
 
 
+Cages-Type-Prices:
+  ESFERA: 1000
+  PIRAMIDE: 1000
+  DOMO: 1000
 
 Cages-Materials:
   ####################################
@@ -115,6 +162,8 @@ Scoreboards:
     Title: "&e&lSKYWARS"
     Lines:
       - "&7%arena_mode% (%date%)"
+      - "&7"
+      - "&fTiempo: &d%arena_time_formatted%"
       - "&7"
       - "&fMapa: &a&n%arena_name%"
       - "&fEscenario: &e%arena_scenario%"

@@ -1,10 +1,9 @@
 package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
-import felipe221.skywars.object.Kills;
+import felipe221.skywars.object.cosmetics.Kills;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;

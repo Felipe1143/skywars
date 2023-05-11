@@ -21,10 +21,6 @@ public class InteractListener implements Listener {
             return;
         }
 
-        if (player.getOpenInventory().getType() == InventoryType.CHEST){
-            return;
-        }
-
         for (ItemsLoad.Items items : ItemsLoad.Items.values()) {
             if (items.getItemStack().getType() == e.getItem().getType()) {
                 if (BukkitUtil.stripcolor(e.getItem().getItemMeta().getDisplayName()).equalsIgnoreCase(BukkitUtil.stripcolor(items.getItemStack().getItemMeta().getDisplayName()))) {

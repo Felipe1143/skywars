@@ -5,6 +5,7 @@ import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.controller.ChestController;
 import felipe221.skywars.controller.KitController;
 import felipe221.skywars.load.ArenaLoad;
+import felipe221.skywars.load.StatsLoad;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.User;
 import org.bukkit.entity.Player;
@@ -26,9 +27,10 @@ public class LeaveListener implements Listener {
             ArenaController.leave(player, arena, true);
         }
 
+        StatsLoad.send(player);
+
         User.getUser(player).setArena(null);
-        User.getUser(player).send();
-        System.out.println(User.getUser(player).toString());
+        User.getUser(player).getStats().send();
         User.getUser(player).remove();
 
         if (board != null) {

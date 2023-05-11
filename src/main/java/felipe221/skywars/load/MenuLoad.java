@@ -2,20 +2,25 @@ package felipe221.skywars.load;
 
 import felipe221.skywars.Main;
 import felipe221.skywars.controller.ArenaController;
+import felipe221.skywars.controller.ShopController;
 import felipe221.skywars.menus.cage.CageMaterialMenu;
 import felipe221.skywars.menus.cage.CageMenu;
 import felipe221.skywars.menus.cage.CageTypeMenu;
 import felipe221.skywars.menus.lobby.*;
+import felipe221.skywars.menus.tops.TopMenu;
+import felipe221.skywars.menus.tops.TopStatsSelectorMenu;
+import felipe221.skywars.menus.tops.TopTimeSelectorMenu;
+import felipe221.skywars.menus.tops.TopTypeSelectorMenu;
 import felipe221.skywars.menus.vote.VoteMenu;
 import felipe221.skywars.object.*;
-import felipe221.skywars.util.BukkitUtil;
+import felipe221.skywars.object.cosmetics.*;
 import felipe221.skywars.util.ItemBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -30,8 +35,13 @@ public class MenuLoad {
         SOLO("", 0, new HashMap<>(), new HashMap<>()),
         TEAM("", 0, new HashMap<>(), new HashMap<>()),
         ROOMS("", 0, new HashMap<>(), new HashMap<>()),
-        TOPS_SELECTOR("", 0, new HashMap<>(), new HashMap<>()),
+        //TOPS
+        TOPS_TYPE_SELECTOR("", 0, new HashMap<>(), new HashMap<>()),
+        TOPS_TIME_SELECTOR("", 0, new HashMap<>(), new HashMap<>()),
+        TOPS_STATS_SELECTOR("", 0, new HashMap<>(), new HashMap<>()),
         TOPS_MENU("", 0, new HashMap<>(), new HashMap<>()),
+        //SHOP
+        SHOP("", 0, new HashMap<>(), new HashMap<>()),
         //STATS
         STATS("", 0, new HashMap<>(), new HashMap<>()),
         //TEMATICAS
@@ -53,7 +63,6 @@ public class MenuLoad {
         SCENARIOS("", 0, new HashMap<>(), new HashMap<>()),
         CHESTS("", 0, new HashMap<>(), new HashMap<>()),
         HEARTS("", 0, new HashMap<>(), new HashMap<>()),
-        FINALS("", 0, new HashMap<>(), new HashMap<>()),
         TIME("", 0, new HashMap<>(), new HashMap<>()),
         PROJECTILES("", 0, new HashMap<>(), new HashMap<>());
 
@@ -129,7 +138,7 @@ public class MenuLoad {
             this.items = items;
         }
 
-        public void action(int slot){
+        public void action(ItemStack itemStack, int slot, ClickType type){
             //is a paged menu, with many items within config
             if (this.data != null){
                 for (Map.Entry<Integer, Object> entry : this.data.entrySet()) {
@@ -142,10 +151,25 @@ public class MenuLoad {
                             //value data = kit config name
                             Kit kitSelected = KitLoad.getKitPerNameConfig((String) value);
 
-                            User.getUser(player).setKit(kitSelected);
-                            player.sendMessage(MessagesLoad.MessagesLine.KIT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%kit_name%", kitSelected.getName()));
+                            if (type == ClickType.LEFT) {
+                                if (player.hasPermission("skywars.kit." + value)) {
+                                    User.getUser(player).setKit(kitSelected);
+                                    player.sendTitle(ChatColor.translateAlternateColorCodes('&', MessagesLoad.TitleLine.KIT_SELECTED.setPlayer(player).getTitle().replaceAll("%kit_name%", kitSelected.getName())),ChatColor.translateAlternateColorCodes('&', MessagesLoad.TitleLine.KIT_SELECTED.setPlayer(player).getSubTitle().replaceAll("%kit_name%", kitSelected.getName())), 10, 50, 10);
+                                    player.sendMessage(MessagesLoad.MessagesLine.KIT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%kit_name%", kitSelected.getName()));
 
-                            this.player.closeInventory();
+                                    this.player.closeInventory();
+                                }else{
+                                    player.sendMessage(MessagesLoad.MessagesLine.KIT_LOCKED.setPlayer(this.player).getMessage().replaceAll("%kit_name%", kitSelected.getName()));
+                                }
+                            }else {
+                                if (player.hasPermission("skywars.kit." + value)) {
+                                    player.sendMessage(MessagesLoad.MessagesLine.ALREADY_HAVE_KIT.setPlayer(this.player).getMessage().replaceAll("%kit_name%", kitSelected.getName()));
+                                } else{
+                                    this.player.closeInventory();
+
+                                    ShopMenu.open(ShopController.TypeShop.KIT, (String) value, kitSelected.getPrice(), itemStack, this.player);
+                                }
+                            }
                         }
 
                         if (this == TEAMS) {
@@ -160,13 +184,24 @@ public class MenuLoad {
                         if (this == TEMATICAS) {
                             //value data = tematica name
                             String tematica = (String) value;
-                            if (player.hasPermission("skywars.tematica." + tematica)) {
-                                User.getUser(player).setKillTematica(tematica);
-                                player.sendMessage(MessagesLoad.MessagesLine.TEMATICA_SELECTED.setPlayer(this.player).getMessage().replaceAll("%tematica_name%", (tematica.equals("NONE") ? "Ninguna" : tematica)));
 
-                                this.player.closeInventory();
+                            if (type == ClickType.LEFT) {
+                                if (player.hasPermission("skywars.tematica." + tematica)) {
+                                    User.getUser(player).setKillTematica(tematica);
+                                    player.sendMessage(MessagesLoad.MessagesLine.TEMATICA_SELECTED.setPlayer(this.player).getMessage().replaceAll("%tematica_name%", (tematica.equals("NONE") ? "Ninguna" : tematica)));
+
+                                    this.player.closeInventory();
+                                } else {
+                                    player.sendMessage(MessagesLoad.MessagesLine.TEMATICA_LOCKED.setPlayer(this.player).getMessage().replaceAll("%tematica_name%", tematica));
+                                }
                             }else{
-                                player.sendMessage(MessagesLoad.MessagesLine.TEMATICA_LOCKED.setPlayer(this.player).getMessage().replaceAll("%tematica_name%", tematica));
+                                if (player.hasPermission("skywars.tematica." + tematica)) {
+                                    player.sendMessage(MessagesLoad.MessagesLine.ALREADY_HAVE_TEMATICA.setPlayer(this.player).getMessage().replaceAll("%tematica_name%", (tematica.equals("NONE") ? "Ninguna" : tematica)));
+                                } else{
+                                    this.player.closeInventory();
+
+                                    ShopMenu.open(ShopController.TypeShop.TEMATICA, (String) value,  KillsLoad.getPriceForTematica(tematica), itemStack, this.player);
+                                }
                             }
                         }
 
@@ -174,13 +209,24 @@ public class MenuLoad {
                             //value data = effect name
                             String effect = (String) value;
                             Effect.KillEffect killEffect = Effect.KillEffect.valueOf(effect);
-                            if (player.hasPermission("skywars.kill." + effect)) {
-                                User.getUser(player).setKillEffect(killEffect);
-                                player.sendMessage(MessagesLoad.MessagesLine.KILL_EFFECT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%effect_name%", killEffect.getName()));
 
-                                this.player.closeInventory();
+                            if (type == ClickType.LEFT) {
+                                if (player.hasPermission("skywars.kill." + effect)) {
+                                    User.getUser(player).setKillEffect(killEffect);
+                                    player.sendMessage(MessagesLoad.MessagesLine.KILL_EFFECT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%effect_name%", killEffect.getName()));
+
+                                    this.player.closeInventory();
+                                } else {
+                                    player.sendMessage(MessagesLoad.MessagesLine.KILL_EFFECT_LOCKED.setPlayer(this.player).getMessage().replaceAll("%effect_name%", killEffect.getName()));
+                                }
                             }else{
-                                player.sendMessage(MessagesLoad.MessagesLine.KILL_EFFECT_LOCKED.setPlayer(this.player).getMessage().replaceAll("%effect_name%", killEffect.getName()));
+                                if (player.hasPermission("skywars.kill." + effect)) {
+                                    player.sendMessage(MessagesLoad.MessagesLine.ALREADY_HAVE_KILL_EFFECT.setPlayer(this.player).getMessage().replaceAll("%effect_name%", killEffect.getName()));
+                                } else{
+                                    this.player.closeInventory();
+
+                                    ShopMenu.open(ShopController.TypeShop.KILL_EFFECT, (String) value, killEffect.getPrice(), itemStack, this.player);
+                                }
                             }
                         }
 
@@ -188,13 +234,24 @@ public class MenuLoad {
                             //value data = effect name
                             String effect = (String) value;
                             Effect.WinEffect winEffect = Effect.WinEffect.valueOf(effect);
-                            if (player.hasPermission("skywars.win." + effect)) {
-                                User.getUser(player).setWinEffect(winEffect);
-                                player.sendMessage(MessagesLoad.MessagesLine.WIN_EFFECT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%effect_name%", winEffect.getName()));
 
-                                this.player.closeInventory();
+                            if (type == ClickType.LEFT) {
+                                if (player.hasPermission("skywars.win." + effect)) {
+                                    User.getUser(player).setWinEffect(winEffect);
+                                    player.sendMessage(MessagesLoad.MessagesLine.WIN_EFFECT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%effect_name%", winEffect.getName()));
+
+                                    this.player.closeInventory();
+                                } else {
+                                    player.sendMessage(MessagesLoad.MessagesLine.WIN_EFFECT_LOCKED.setPlayer(this.player).getMessage().replaceAll("%effect_name%", winEffect.getName()));
+                                }
                             }else{
-                                player.sendMessage(MessagesLoad.MessagesLine.WIN_EFFECT_LOCKED.setPlayer(this.player).getMessage().replaceAll("%effect_name%", winEffect.getName()));
+                                if (player.hasPermission("skywars.win." + effect)) {
+                                    player.sendMessage(MessagesLoad.MessagesLine.ALREADY_HAVE_WIN_EFFECT.setPlayer(this.player).getMessage().replaceAll("%effect_name%", winEffect.getName()));
+                                } else{
+                                    this.player.closeInventory();
+
+                                    ShopMenu.open(ShopController.TypeShop.WIN_EFFECT, (String) value, winEffect.getPrice(), itemStack, this.player);
+                                }
                             }
                         }
 
@@ -202,13 +259,23 @@ public class MenuLoad {
                             //value data = effect name
                             String effect = (String) value;
                             Effect.Trail trailEffect = Effect.Trail.valueOf(effect);
-                            if (player.hasPermission("skywars.trail." + effect)) {
-                                User.getUser(player).setTrail(trailEffect);
-                                player.sendMessage(MessagesLoad.MessagesLine.TRAIL_EFFECT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%trail_name%", trailEffect.getName()));
+                            if (type == ClickType.LEFT) {
+                                if (player.hasPermission("skywars.trail." + effect)) {
+                                    User.getUser(player).setTrail(trailEffect);
+                                    player.sendMessage(MessagesLoad.MessagesLine.TRAIL_EFFECT_SELECTED.setPlayer(this.player).getMessage().replaceAll("%trail_name%", trailEffect.getName()));
 
-                                this.player.closeInventory();
+                                    this.player.closeInventory();
+                                } else {
+                                    player.sendMessage(MessagesLoad.MessagesLine.TRAIL_EFFECT_LOCKED.setPlayer(this.player).getMessage().replaceAll("%trail_name%", trailEffect.getName()));
+                                }
                             }else{
-                                player.sendMessage(MessagesLoad.MessagesLine.TRAIL_EFFECT_LOCKED.setPlayer(this.player).getMessage().replaceAll("%trail_name%", trailEffect.getName()));
+                                if (player.hasPermission("skywars.trail." + effect)) {
+                                    player.sendMessage(MessagesLoad.MessagesLine.ALREADY_HAVE_TRAIL_EFFECT.setPlayer(this.player).getMessage().replaceAll("%effect_name%", trailEffect.getName()));
+                                } else{
+                                    this.player.closeInventory();
+
+                                    ShopMenu.open(ShopController.TypeShop.TRAIL, (String) value, trailEffect.getPrice(), itemStack, this.player);
+                                }
                             }
                         }
 
@@ -217,13 +284,23 @@ public class MenuLoad {
                             //value data = material id
                             Material material = Material.getMaterial((String) value);
 
-                            if (player.hasPermission("skywars.material." + material.name())){
-                                User.getUser(player).getCage().setMaterialCage(material);
-                                player.sendMessage(MessagesLoad.MessagesLine.CAGE_MATERIAL_SELECTED.setPlayer(this.player).getMessage());
+                            if (type == ClickType.LEFT) {
+                                if (player.hasPermission("skywars.material." + material.name())) {
+                                    User.getUser(player).getCage().setMaterialCage(material);
+                                    player.sendMessage(MessagesLoad.MessagesLine.CAGE_MATERIAL_SELECTED.setPlayer(this.player).getMessage());
 
-                                this.player.closeInventory();
+                                    this.player.closeInventory();
+                                } else {
+                                    player.sendMessage(MessagesLoad.MessagesLine.CAGE_MATERIAL_LOCKED.setPlayer(this.player).getMessage());
+                                }
                             }else{
-                                player.sendMessage(MessagesLoad.MessagesLine.CAGE_MATERIAL_LOCKED.setPlayer(this.player).getMessage());
+                                if (player.hasPermission("skywars.material." + material.name())) {
+                                    player.sendMessage(MessagesLoad.MessagesLine.ALREADY_HAVE_MATERIAL.setPlayer(this.player).getMessage().replaceAll("%material_name%", material.name()));
+                                } else{
+                                    this.player.closeInventory();
+
+                                    ShopMenu.open(ShopController.TypeShop.CAGE_MATERIAL,  material.name(), CageLoad.getPriceByMaterial(material), itemStack, this.player);
+                                }
                             }
                         }
 
@@ -290,7 +367,7 @@ public class MenuLoad {
                         }
 
                         if (this == CHESTS) {
-                            for (Chests.TypeChest votes : Chests.TypeChest.values()) {
+                            for (iChest.TypeChest votes : iChest.TypeChest.values()) {
                                 if (votes.name().equals(value)) {
                                     this.player.closeInventory();
                                     User.getUser(player).getArena().getVoteByEnum(Vote.TypeVote.CHESTS).addVote(player, votes.name());
@@ -298,10 +375,6 @@ public class MenuLoad {
                                     return;
                                 }
                             }
-                        }
-
-                        if (this == FINALS) {
-                            //TODO
                         }
 
                         if (this == PROJECTILES) {
@@ -336,11 +409,46 @@ public class MenuLoad {
                             }
                         }
 
-                        if (this == TOPS_SELECTOR) {
-                            for (TopLoad.TypeTop tops : TopLoad.TypeTop.values()) {
+                        if (this == TOPS_TYPE_SELECTOR) {
+                            for (iStats.TypeStats tops : iStats.TypeStats.values()) {
                                 if (tops.name().equals(value)) {
                                     this.player.closeInventory();
-                                    TopMenu.open(player, tops);
+                                    User.getUser(this.player).setData("TOP_TYPE", tops.name());
+
+                                    TopTimeSelectorMenu.open(player);
+
+                                    return;
+                                }
+                            }
+                        }
+
+                        if (this == TOPS_TIME_SELECTOR) {
+                            for (iStats.TimeStats tops : iStats.TimeStats.values()) {
+                                if (tops.name().equals(value)) {
+                                    this.player.closeInventory();
+                                    User.getUser(this.player).setData("TOP_TIME", tops.name());
+
+                                    TopStatsSelectorMenu.open(player);
+
+                                    return;
+                                }
+                            }
+                        }
+
+                        if (this == TOPS_STATS_SELECTOR) {
+                            for (iStats.Stats tops : iStats.Stats.values()) {
+                                if (tops.name().equals(value)) {
+                                    this.player.closeInventory();
+                                    User.getUser(this.player).setData("TOP_STATS", tops.name());
+
+                                    iStats.TypeStats typeStats = iStats.TypeStats.valueOf((String) User.getUser(player).getData("TOP_TYPE"));
+                                    iStats.TimeStats timeStats = iStats.TimeStats.valueOf((String) User.getUser(player).getData("TOP_TIME"));
+                                    iStats.Stats stats = iStats.Stats.valueOf((String) User.getUser(player).getData("TOP_STATS"));
+
+                                    iTop.StatTop statTop = iTop.getInstance().getStatTop(stats, typeStats, timeStats);
+
+                                    TopMenu.open(this.player, statTop);
+
                                     return;
                                 }
                             }
@@ -349,17 +457,26 @@ public class MenuLoad {
                         if (this == CAGE_TYPE) {
                             for (Cage.TypeCage typeCage : Cage.TypeCage.values()) {
                                 if (typeCage.name().equalsIgnoreCase(value)) {
-                                    if (player.hasPermission("skywars.type." + typeCage.name())){
-                                        this.player.closeInventory();
-                                        User.getUser(player).getCage().setType(typeCage);
-                                        player.sendMessage(MessagesLoad.MessagesLine.CAGE_TYPE_SELECTED.setPlayer(this.player).getMessage());
+                                    if (type == ClickType.LEFT) {
+                                        if (player.hasPermission("skywars.type." + typeCage.name())) {
+                                            this.player.closeInventory();
+                                            User.getUser(player).getCage().setType(typeCage);
+                                            player.sendMessage(MessagesLoad.MessagesLine.CAGE_TYPE_SELECTED.setPlayer(this.player).getMessage());
 
+                                        } else {
+                                            player.sendMessage(MessagesLoad.MessagesLine.CAGE_TYPE_LOCKED.setPlayer(this.player).getMessage());
+                                        }
+
+                                        return;
                                     }else{
-                                        player.sendMessage(MessagesLoad.MessagesLine.CAGE_TYPE_LOCKED.setPlayer(this.player).getMessage());
+                                        if (player.hasPermission("skywars.type." + typeCage.name())) {
+                                            player.sendMessage(MessagesLoad.MessagesLine.ALREADY_HAVE_CAGE.setPlayer(this.player).getMessage().replaceAll("%cage_name%", typeCage.getName()));
+                                        } else{
+                                            this.player.closeInventory();
 
-                                   }
-
-                                    return;
+                                            ShopMenu.open(ShopController.TypeShop.CAGE_TYPE,  typeCage.name(), typeCage.getPrice(), itemStack, this.player);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -376,6 +493,15 @@ public class MenuLoad {
                             return;
                         }
 
+                        if (this == SHOP) {
+                            if (value.equalsIgnoreCase("ACEPTAR")) {
+                                ShopController.getShop(player).shopItem();
+                            }else if (value.equalsIgnoreCase("CANCELAR")){
+                                this.player.closeInventory();
+                            }
+
+                            return;
+                        }
                         if (this == COSMETICS) {
                             this.player.closeInventory();
 
@@ -392,7 +518,7 @@ public class MenuLoad {
                             }else if (value.equalsIgnoreCase("TRAILS")) {
                                 TrailsMenu.open(player);
                             }else if (value.equalsIgnoreCase("TOPS")){
-                                TopSelectorMenu.open(player);
+                                TopTypeSelectorMenu.open(player);
                             }
 
                             return;

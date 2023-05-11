@@ -1,4 +1,4 @@
-package felipe221.skywars.object;
+package felipe221.skywars.object.cosmetics;
 
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.VortexEffect;
@@ -6,7 +6,11 @@ import de.slikey.effectlib.util.ParticleEffect;
 import felipe221.skywars.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.Arrow;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 public class Effect {
     public enum WinEffect{
@@ -47,17 +51,36 @@ public class Effect {
         }
     }
 
-    public enum Trail{
-        NONE("Ninguno", 0, Material.AIR);
+    public enum Trail {
+        NONE("Ninguno", 0, Material.AIR),
+        CRIT("Critico", 0, Material.AIR),
+        FLAME("Flamas", 0, Material.AIR),
+        LAVA("Lava", 0, Material.AIR),
+        NOTE("Notas", 0, Material.AIR),
+        REDSTONE("Redstone", 0, Material.AIR),
+        SLIME("Slime", 0, Material.AIR),
+        WATER_BUBBLE("Burbujas", 0, Material.AIR),
+        HEART("Corazones", 0, Material.AIR);
 
         private String name;
         private int price;
         private Material material;
+        private Arrow arrow;
+        private Vector lastVelocity;
 
         Trail(String name, int price, Material material) {
             this.name = name;
             this.price = price;
             this.material = material;
+        }
+
+        public Arrow getArrow() {
+            return arrow;
+        }
+
+        public Trail setArrow(Arrow arrow) {
+            this.arrow = arrow;
+            return this;
         }
 
         public String getName() {
@@ -82,6 +105,33 @@ public class Effect {
 
         public void setPrice(int price) {
             this.price = price;
+        }
+
+        public void play(){
+            if (this != NONE) {
+                Trail trail = this;
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (arrow.isDead() || (lastVelocity != null && lastVelocity.equals(arrow.getVelocity()))) {
+                            this.cancel();
+                        } else {
+                            for (int offset = 0; offset < 4; ++offset) {
+                                Location location = arrow.getLocation().clone();
+                                location.setX(location.getX() + arrow.getVelocity().getX() * (double) offset / 4.0D);
+                                location.setY(location.getY() + arrow.getVelocity().getY() * (double) offset / 4.0D);
+                                location.setZ(location.getZ() + arrow.getVelocity().getZ() * (double) offset / 4.0D);
+
+                                arrow.getWorld().spawnParticle(Particle.valueOf(trail.name()), location, 1,
+                                        0, 0, 0, 0);
+                            }
+
+                            lastVelocity = arrow.getVelocity();
+                        }
+                    }
+                }.runTaskTimer(Main.getInstance(), 0, 1L);
+            }
         }
     }
 

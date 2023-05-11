@@ -1,15 +1,16 @@
 package felipe221.skywars.load;
 
+import com.grinderwolf.swm.plugin.config.ConfigManager;
+import com.grinderwolf.swm.plugin.config.WorldData;
+import com.grinderwolf.swm.plugin.config.WorldsConfig;
 import felipe221.skywars.Main;
-import felipe221.skywars.controller.ChestController;
 import felipe221.skywars.gui.MenuGUI;
-import felipe221.skywars.menus.ConfigMenu;
 import felipe221.skywars.object.*;
+import felipe221.skywars.object.cosmetics.Scenario;
 import felipe221.skywars.util.BukkitUtil;
 import felipe221.skywars.util.ItemBuilder;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,26 +33,38 @@ public class ArenaLoad implements Listener {
 	private static HashMap<Player, Arena> editing = new HashMap<>();
 	//CREATE, TEAMS, SIZE, NAME
 	private static HashMap<Player, Object> creating = new HashMap<>();
-	private static int idMax = 0;
+	private static int idMax = -1;
 
 	//from config load worlds and arenas
 	public static void load() {
+		for (Arena.Status status : Arena.Status.values()){
+			status.setMaterial(Material.getMaterial(Main.getConfigManager().getConfig("signs.yml").getString("Signs.Attached-Blocks." + status.name())));
+		}
 		//get id 
 		ConfigurationSection config = Main.getConfigManager().getConfig("arenas.yml").getConfigurationSection("Arenas");
 
 		System.out.println("[SkyWars] Arenas cargadas: ");
-		for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
-			 String id = entry.getKey();
+		if (config != null && !config.getValues(false).isEmpty()) {
+			for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
+				String id = entry.getKey();
 
-			 if (Integer.valueOf(id) > idMax){
-				 idMax = Integer.valueOf(id);
-			 }
+				if (Integer.valueOf(id) > idMax) {
+					idMax = Integer.valueOf(id);
+				}
 
-			 try {
-				 Arena arena = new Arena(Integer.parseInt(id));
-			 } catch (NullPointerException e){
-				 System.out.println("[Debug - SkyWars - ERROR] Hubo un problema al cargar el mapa con el id [" + (Integer.parseInt(id) + 1) + "]. Porfavor revisa 'arenas.yml'");
-				 e.printStackTrace();
+				Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+					try {
+						Arena arena = new Arena(Integer.parseInt(id));
+						boolean load = Main.getWorldsLoad().loadWorldConfig(arena.getWorld().getName());
+
+						if (!load){
+							System.out.println("[Debug - SkyWars - ERROR] Hubo un problema al cargar el mapa con el id [" + (Integer.parseInt(id)) + "]. Removiendo arena...");
+							arena.remove();
+						}
+					} catch (NullPointerException e) {
+						System.out.println("[Debug - SkyWars - ERROR] Hubo un problema al cargar el mapa con el id [" + (Integer.parseInt(id)) + "]. Porfavor revisa 'arenas.yml'");
+					}
+				}, 20);
 			}
 		}
 	}
@@ -60,26 +73,25 @@ public class ArenaLoad implements Listener {
 		MenuGUI inventory = new MenuGUI("Mapas para editar: ", 4);
 		inventory.initConfigMaps();
 
-		//add kit list
-		for (Arena arena : Arena.getListArenas()) {
-			ItemBuilder build = ItemBuilder.start(Material.GRASS);
+		if (!Arena.getListArenas().isEmpty()) {
+			for (Arena arena : Arena.getListArenas()) {
+				ItemBuilder build = ItemBuilder.start(Material.GRASS);
 
-			if (arena.getMode() == Mode.TypeMode.SOLO){
-				build.material(Material.IRON_CHESTPLATE);
-			}else if (arena.getMode() == Mode.TypeMode.ROOMS){
-				build.material(Material.DRAGON_EGG);
-			}else if (arena.getMode() == Mode.TypeMode.TEAM){
-				build.material(Material.WHITE_WOOL);
+				if (arena.getMode() == Mode.TypeMode.SOLO) {
+					build.material(Material.IRON_CHESTPLATE);
+				} else if (arena.getMode() == Mode.TypeMode.TEAM) {
+					build.material(Material.WHITE_WOOL);
+				}
+
+				build.lore("&7",
+								"&7Modo: &b" + arena.getMode().name().toUpperCase().replace("_", " "),
+								"&7Jugadores minimos: &e" + arena.getMin(),
+								"&7Capacidad máxima: &c" + arena.getMax(),
+								"&7ID: &6[" + arena.getID() + "]")
+						.name("&a&n" + arena.getName());
+
+				inventory.addItem(build.build());
 			}
-
-			build.lore("&7",
-							"&7Modo: &b" + arena.getMode().name().toUpperCase().replace("_", " "),
-							"&7Jugadores minimos: &e" + arena.getMin(),
-							"&7Capacidad máxima: &c" + arena.getMax(),
-							"&7ID: &6[" + arena.getID() +"]")
-					.name("&a&n" + arena.getName());
-
-			inventory.addItem(build.build());
 		}
 
 		player.openInventory(inventory.getInventory());
@@ -260,7 +272,7 @@ public class ArenaLoad implements Listener {
 		List<Teams> teams = new ArrayList<>();
 
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Name", name);
-		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".World-Name", name + "-Map");
+		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".World-Name", name);
 
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Scenario", "NORMAL");
 		Main.getConfigManager().getConfig("arenas.yml").set("Arenas." + id + ".Mode", "SOLO");
@@ -517,55 +529,19 @@ public class ArenaLoad implements Listener {
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							arena.setWorld(WorldLoad.create(msg));
+							WorldsConfig config = ConfigManager.getWorldConfig();
+							WorldData worldData = config.getWorlds().get(msg);
+
+							//world not exist
+							if (worldData == null) {
+								arena.setWorld(Main.getWorldsLoad().createEmptyWorld(msg, World.Environment.NORMAL));
+							}else{
+								arena.setWorld(Bukkit.getWorld(msg));
+							}
 
 							creating.remove(player);
-
 							player.sendMessage(ChatColor.GREEN + "¡Mundo cambiado correctamente!");
 							player.sendMessage(ChatColor.GREEN + "Teletransportandote al centro...");
-
-							new BukkitRunnable() {
-								@Override
-								public void run() {
-									player.teleport(arena.getWorld().getSpawnLocation());
-
-									if (arena.getWorld().getBlockAt(player.getLocation().add(0,-2,0)).getType() == Material.AIR
-											||arena.getWorld().getBlockAt(player.getLocation().add(0,-2,0)) == null){
-										arena.getWorld().getBlockAt(player.getLocation().add(0,-2,0)).setType(Material.GLASS);
-									}
-
-									arena.saveWorld();
-
-									getArenaFromConfig(player, arena);
-								}
-							}.runTaskLater(Main.getInstance(), 2);
-						}
-					}.runTaskLater(Main.getInstance(), 5);
-				}
-			}
-			return;
-		}
-
-
-
-		//TODO all anothers configs, max, min, teams, etc
-		if (getTypeCreating(player).equals("CREATE")){
-			if (isNumeric(msg)){
-				player.sendMessage(ChatColor.RED + "El nombre de la arena no puede ser un número");
-				player.sendMessage(ChatColor.RED + "Porfavor, vuelva a escribir el nombre de la arena");
-			}else{
-				if (!isNameTaken((msg))) {
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							createArenaConfig(e.getMessage(), idMax + 1);
-							Arena arena = new Arena(idMax + 1);
-
-							editing.put(player, arena);
-							creating.remove(player);
-
-							player.sendMessage(ChatColor.GREEN + "¡Arena " + msg + " creada correctamente!");
-
 							new BukkitRunnable() {
 								@Override
 								public void run() {
@@ -577,10 +553,97 @@ public class ArenaLoad implements Listener {
 									}
 
 									arena.saveWorld();
+									Main.getWorldsLoad().saveWorldFile(msg);
 
 									getArenaFromConfig(player, arena);
+
 								}
 							}.runTaskLater(Main.getInstance(), 2);
+						}
+					}.runTaskLater(Main.getInstance(), 5);
+				}
+			}
+			return;
+		}
+
+		if (getTypeCreating(player).equals("CREATE")){
+			if (isNumeric(msg)){
+				player.sendMessage(ChatColor.RED + "El nombre de la arena no puede ser un número");
+				player.sendMessage(ChatColor.RED + "Porfavor, vuelva a escribir el nombre de la arena");
+			}else{
+				if (!isNameTaken((msg))) {
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							WorldsConfig config = ConfigManager.getWorldConfig();
+							WorldData worldData = config.getWorlds().get(msg);
+
+							//world not exist
+							if (worldData == null) {
+								Main.getWorldsLoad().createEmptyWorld(msg, World.Environment.NORMAL);
+
+								new BukkitRunnable() {
+									@Override
+									public void run() {
+										Main.getWorldsLoad().saveWorldFile(msg);
+
+										createArenaConfig(e.getMessage(), idMax + 1);
+										Arena arena = new Arena(idMax + 1);
+
+										editing.put(player, arena);
+										creating.remove(player);
+
+										player.sendMessage(ChatColor.GREEN + "¡Arena " + msg + " creada correctamente!");
+
+										new BukkitRunnable() {
+											@Override
+											public void run() {
+												player.teleport(arena.getWorld().getSpawnLocation());
+
+												if (arena.getWorld().getBlockAt(player.getLocation().add(0, -2, 0)).getType() == Material.AIR
+														|| arena.getWorld().getBlockAt(player.getLocation().add(0, -2, 0)) == null) {
+													arena.getWorld().getBlockAt(player.getLocation().add(0, -2, 0)).setType(Material.GLASS);
+												}
+
+												getArenaFromConfig(player, arena);
+											}
+										}.runTaskLater(Main.getInstance(), 2);
+									}
+								}.runTaskLater(Main.getInstance(), 10);
+							}else{
+								creating.remove(player);
+
+								new BukkitRunnable() {
+									@Override
+									public void run() {
+										Main.getWorldsLoad().saveWorldFile(msg);
+
+										createArenaConfig(e.getMessage(), idMax + 1);
+										Arena arena = new Arena(idMax + 1);
+
+										editing.put(player, arena);
+										creating.remove(player);
+
+										player.sendMessage(ChatColor.GREEN + "¡Arena " + msg + " creada correctamente!");
+
+										new BukkitRunnable() {
+											@Override
+											public void run() {
+												player.teleport(arena.getWorld().getSpawnLocation());
+
+												if (arena.getWorld().getBlockAt(player.getLocation().add(0, -2, 0)).getType() == Material.AIR
+														|| arena.getWorld().getBlockAt(player.getLocation().add(0, -2, 0)) == null) {
+													arena.getWorld().getBlockAt(player.getLocation().add(0, -2, 0)).setType(Material.GLASS);
+												}
+
+												arena.saveWorld();
+
+												getArenaFromConfig(player, arena);
+											}
+										}.runTaskLater(Main.getInstance(), 2);
+									}
+								}.runTaskLater(Main.getInstance(), 2);
+							}
 						}
 					}.runTaskLater(Main.getInstance(), 5);
 				}else{
@@ -744,8 +807,6 @@ public class ArenaLoad implements Listener {
 		if (e.getView().getTitle().equals("Modo " + arena.getName() + ":")){
 			if (e.getCurrentItem().getType() == Material.IRON_CHESTPLATE){
 				arena.setMode(Mode.TypeMode.SOLO);
-			}else if (e.getCurrentItem().getType() == Material.DRAGON_EGG){
-				arena.setMode(Mode.TypeMode.ROOMS);
 			}else if (e.getCurrentItem().getType() == Material.WHITE_WOOL){
 				arena.setMode(Mode.TypeMode.TEAM);
 

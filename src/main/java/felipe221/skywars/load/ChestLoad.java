@@ -2,19 +2,16 @@ package felipe221.skywars.load;
 
 import java.util.*;
 
-import felipe221.skywars.object.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Utility;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import felipe221.skywars.Main;
-import felipe221.skywars.object.Chests.TypeChest;
+import felipe221.skywars.object.iChest.TypeChest;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class ChestLoad {

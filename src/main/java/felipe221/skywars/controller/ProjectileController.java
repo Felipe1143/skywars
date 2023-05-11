@@ -1,8 +1,7 @@
 package felipe221.skywars.controller;
 
-import felipe221.skywars.object.Projectiles;
+import felipe221.skywars.object.cosmetics.Projectiles;
 import felipe221.skywars.object.User;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Arrow;
@@ -10,8 +9,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 
 public class ProjectileController implements Listener {
+    @EventHandler
+    public void onArrowLaunch(ProjectileLaunchEvent e) {
+        if (!(e.getEntity() instanceof Arrow)){
+            return;
+        }
+
+        if (!(e.getEntity().getShooter() instanceof Player)) {
+            return;
+        }
+
+        Player shooter = (Player) e.getEntity().getShooter();
+        Arrow arrow = (Arrow) e.getEntity();
+
+        User.getUser(shooter).getTrail().setArrow(arrow).play();
+    }
+
     @EventHandler
     public void onShootBow(ProjectileHitEvent e){
         if (e.getEntity().getShooter() instanceof Player){

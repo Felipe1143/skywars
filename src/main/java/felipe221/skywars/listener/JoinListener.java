@@ -3,6 +3,7 @@ package felipe221.skywars.listener;
 import felipe221.skywars.controller.ArenaController;
 import felipe221.skywars.controller.ChestController;
 import felipe221.skywars.load.ItemsLoad;
+import felipe221.skywars.load.StatsLoad;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.Bukkit;
@@ -31,20 +32,17 @@ public class JoinListener implements Listener{
 
 		Player player = e.getPlayer();
 		User user = User.getUser(player);
-
-		user.addInTable();
-		user.load();
-		System.out.println(user.toString());
+		StatsLoad.load(player);
 
 		player.getInventory().clear();
 		player.setHealth(20);
 		player.setMaxHealth(20);
+		player.setFoodLevel(20);
 		player.getActivePotionEffects().clear();
 
 		user.teleportSpawn();
 		giveItems(player);
 		ShowListener.showPlayers(player);
-
 	}
 
 	public static void giveItems(Player player){

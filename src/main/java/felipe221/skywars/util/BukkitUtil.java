@@ -5,6 +5,7 @@ import felipe221.skywars.controller.LevelController;
 import felipe221.skywars.load.CageLoad;
 import felipe221.skywars.object.Arena;
 import felipe221.skywars.object.User;
+import felipe221.skywars.object.iStats;
 import org.apache.commons.lang.Validate;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -14,6 +15,10 @@ import org.bukkit.plugin.Plugin;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 import java.util.regex.Pattern;
 
 
@@ -103,30 +108,35 @@ public class BukkitUtil {
                     .replaceAll("%stats_level%", "" + user.getLevel())
                     .replaceAll("%stats_xp%", "" + user.getXP())
                     .replaceAll("%color_level%", LevelController.getColorByLevel(user.getLevel()))
-                    .replaceAll("%stats_next_level_xp%", "" + LevelController.getLevels().get(user.getLevel() + 1))
+                    .replaceAll("%stats_next_level_xp%", "" + LevelController.getXPByLevel(player.getLevel() + 1))
                     .replaceAll("%stats_next_level%", "" + (user.getLevel() + 1 > LevelController.getMaxLevel() ? "-" : user.getLevel() + 1))
                     .replaceAll("%stats_coins%", "" + user.getCoins())
                     .replaceAll("%stats_kit_active%", (user.getKit() == null ? "Ninguno" : user.getKit().getName()))
-                    .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
-                    .replaceAll("%stats_solo_losses%", "" + user.getSoloLosses())
-                    .replaceAll("%stats_solo_wins%", "" + user.getSoloWins())
-                    .replaceAll("%stats_solo_games%", "" + user.getSoloGames())
-                    .replaceAll("%stats_solo_block_placed%", "" + user.getSoloBlockPlaced())
-                    .replaceAll("%stats_solo_block_broken%", "" + user.getSoloBlockBreak())
-                    .replaceAll("%stats_solo_arrow_hit%", "" + user.getSoloArrowHit())
-                    .replaceAll("%stats_team_losses%", "" + user.getTeamLosses())
-                    .replaceAll("%stats_team_kills%", "" + user.getTeamKills())
-                    .replaceAll("%stats_team_wins%", "" + user.getTeamWins())
-                    .replaceAll("%stats_team_games%", "" + user.getTeamGames())
-                    .replaceAll("%stats_team_block_placed%", "" + user.getTeamBlockPlaced())
-                    .replaceAll("%stats_team_block_broken%", "" + user.getTeamBlockBreak())
-                    .replaceAll("%stats_team_arrow_hit%", "" + user.getTeamArrowHit())
                     .replaceAll("%stats_trail%", "" + user.getTrail().getName())
                     .replaceAll("%stats_kill_effect%", "" + user.getKillEffect().getName())
                     .replaceAll("%stats_kill_tematica%", user.getKillTematicaName())
                     .replaceAll("%stats_cage_material%", CageLoad.getNameByMaterial(user.getCage().getMaterialCage()))
                     .replaceAll("%stats_cage_type%", user.getCage().getType().getName())
                     .replaceAll("%stats_win_effect%", "" + user.getWinEffect().getName());
+
+            for (iStats.TypeStats type : iStats.TypeStats.values()) {
+                for (iStats.TimeStats time : iStats.TimeStats.values()) {
+                    for (iStats.Stats stats : iStats.Stats.values()) {
+                        String stat = "%stats_";
+
+                        stat += type.name().toLowerCase() + "_";
+                        stat += stats.name().toLowerCase();
+
+                        if (time != iStats.TimeStats.GLOBAL){
+                            stat += "_" + time.name().toLowerCase() + "%";
+                        }else{
+                            stat += "%";
+                        }
+
+                        msg = msg.replaceAll(stat, "" + User.getUser(player).getStats().getStatFormat(stats, type, time));
+                    }
+                }
+            }
         }
 
         if (arena != null){
@@ -147,6 +157,10 @@ public class BukkitUtil {
                     .replaceAll("%arena_vote_hearts%", "" + arena.getHearts().getName())
                     .replaceAll("%arena_scenario%", "" + arena.getScenario().getName())
                     .replaceAll("%arena_status_color%", "" + arena.getStatus().getColor())
+                    .replaceAll("%arena_winner%", "" + (arena.getWinner() == null ? "-" : arena.getWinner().toString().replace("[", "").replace("]","")))
+                    .replaceAll("%arena_top_1%", "" + (arena.getTopKill(1) == "" ? "-" : arena.getTopKill(1)))
+                    .replaceAll("%arena_top_2%", "" + (arena.getTopKill(2) == "" ? "-" : arena.getTopKill(2)))
+                    .replaceAll("%arena_top_3%", "" + (arena.getTopKill(3) == "" ? "-" : arena.getTopKill(3)))
                     .replaceAll("%arena_status%", "" + arena.getStatus().getName());
         }
 
@@ -178,30 +192,35 @@ public class BukkitUtil {
                         .replaceAll("%stats_level%", "" + user.getLevel())
                         .replaceAll("%stats_xp%", "" + user.getXP())
                         .replaceAll("%color_level%", LevelController.getColorByLevel(user.getLevel()))
-                        .replaceAll("%stats_next_level_xp%", "" + LevelController.getLevels().get(user.getLevel() + 1))
+                        .replaceAll("%stats_next_level_xp%", "" + LevelController.getXPByLevel(player.getLevel() + 1))
                         .replaceAll("%stats_next_level%", "" + (user.getLevel() + 1 > LevelController.getMaxLevel() ? "-" : user.getLevel() + 1))
                         .replaceAll("%stats_coins%", "" + user.getCoins())
                         .replaceAll("%stats_kit_active%", (user.getKit() == null ? "Ninguno" : user.getKit().getName()))
-                        .replaceAll("%stats_solo_kills%", "" + user.getSoloKills())
-                        .replaceAll("%stats_solo_losses%", "" + user.getSoloLosses())
-                        .replaceAll("%stats_solo_wins%", "" + user.getSoloWins())
-                        .replaceAll("%stats_solo_games%", "" + user.getSoloGames())
-                        .replaceAll("%stats_solo_block_placed%", "" + user.getSoloBlockPlaced())
-                        .replaceAll("%stats_solo_block_broken%", "" + user.getSoloBlockBreak())
-                        .replaceAll("%stats_solo_arrow_hit%", "" + user.getSoloArrowHit())
-                        .replaceAll("%stats_team_losses%", "" + user.getTeamLosses())
-                        .replaceAll("%stats_team_kills%", "" + user.getTeamKills())
-                        .replaceAll("%stats_team_wins%", "" + user.getTeamWins())
-                        .replaceAll("%stats_team_games%", "" + user.getTeamGames())
-                        .replaceAll("%stats_team_block_placed%", "" + user.getTeamBlockPlaced())
-                        .replaceAll("%stats_team_block_broken%", "" + user.getTeamBlockBreak())
-                        .replaceAll("%stats_team_arrow_hit%", "" + user.getTeamArrowHit())
                         .replaceAll("%stats_trail%", "" + user.getTrail().getName())
                         .replaceAll("%stats_kill_effect%", "" + user.getKillEffect().getName())
                         .replaceAll("%stats_kill_tematica%", user.getKillTematicaName())
                         .replaceAll("%stats_cage_material%", CageLoad.getNameByMaterial(user.getCage().getMaterialCage()))
                         .replaceAll("%stats_cage_type%", user.getCage().getType().getName())
                         .replaceAll("%stats_win_effect%", "" + user.getWinEffect().getName());
+
+                for (iStats.TypeStats type : iStats.TypeStats.values()) {
+                    for (iStats.TimeStats time : iStats.TimeStats.values()) {
+                        for (iStats.Stats stats : iStats.Stats.values()) {
+                            String stat = "%stats_";
+
+                            stat += type.name().toLowerCase() + "_";
+                            stat += stats.name().toLowerCase();
+
+                            if (time != iStats.TimeStats.GLOBAL){
+                                stat += "_" + time.name().toLowerCase() + "%";
+                            }else{
+                                stat += "%";
+                            }
+
+                            line = line.replaceAll(stat, "" + User.getUser(player).getStats().getStatFormat(stats, type, time));
+                        }
+                    }
+                }
             }
 
             if (arena != null) {
@@ -222,6 +241,10 @@ public class BukkitUtil {
                         .replaceAll("%arena_vote_hearts%", "" + arena.getHearts().getName())
                         .replaceAll("%arena_scenario%", "" + arena.getScenario().getName())
                         .replaceAll("%arena_status_color%", "" + arena.getStatus().getColor())
+                        .replaceAll("%arena_winner%", "" + (arena.getWinner() == null ? "-" : arena.getWinner().toString().replace("[", "").replace("]","")))
+                        .replaceAll("%arena_top_1%", "" + (arena.getTopKill(1) == "" ? "-" : arena.getTopKill(1)))
+                        .replaceAll("%arena_top_2%", "" + (arena.getTopKill(2) == "" ? "-" : arena.getTopKill(2)))
+                        .replaceAll("%arena_top_3%", "" + (arena.getTopKill(3) == "" ? "-" : arena.getTopKill(3)))
                         .replaceAll("%arena_status%", "" + arena.getStatus().getName());
             }
 
@@ -241,6 +264,26 @@ public class BukkitUtil {
 
         return newList;
     }
+
+    public static Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap){
+        List<Map.Entry<String, Integer>> list = new LinkedList<Map.Entry<String, Integer>>(unsortMap.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>(){
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+
+        // Maintaining insertion order with the help of LinkedList
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
+
 
     public static Location parseLocation(World w, String in) {
         String[] params = in.split(",");

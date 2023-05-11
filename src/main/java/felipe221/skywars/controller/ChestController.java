@@ -3,7 +3,7 @@ package felipe221.skywars.controller;
 import felipe221.skywars.Main;
 import felipe221.skywars.load.ChestLoad;
 import felipe221.skywars.menus.ConfigMenu;
-import felipe221.skywars.object.Chests;
+import felipe221.skywars.object.iChest;
 import felipe221.skywars.util.BukkitUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,7 +21,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 
 public class ChestController implements Listener {
-    private static HashMap<Player, Chests.TypeChest> editing = new HashMap<Player, Chests.TypeChest>();
+    private static HashMap<Player, iChest.TypeChest> editing = new HashMap<Player, iChest.TypeChest>();
 
     //config set in inventory
     public static void set(Player player){
@@ -92,22 +92,22 @@ public class ChestController implements Listener {
         }
 
         if (e.getItem().getItemMeta().getDisplayName().contains("básico")){
-            player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.BASICO));
-            addEdit(player, Chests.TypeChest.BASICO);
+            player.openInventory(ChestLoad.fromConfig(player, iChest.TypeChest.BASICO));
+            addEdit(player, iChest.TypeChest.BASICO);
 
             return;
         }
 
         if (e.getItem().getItemMeta().getDisplayName().contains("normal")){
-            player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.NORMAL));
-            addEdit(player, Chests.TypeChest.NORMAL);
+            player.openInventory(ChestLoad.fromConfig(player, iChest.TypeChest.NORMAL));
+            addEdit(player, iChest.TypeChest.NORMAL);
 
             return;
         }
 
         if (e.getItem().getItemMeta().getDisplayName().contains("OP")){
-            player.openInventory(ChestLoad.fromConfig(player, Chests.TypeChest.OP));
-            addEdit(player, Chests.TypeChest.OP);
+            player.openInventory(ChestLoad.fromConfig(player, iChest.TypeChest.OP));
+            addEdit(player, iChest.TypeChest.OP);
 
             return;
         }
@@ -154,7 +154,7 @@ public class ChestController implements Listener {
             edit = players;
         }
 
-        Chests.TypeChest chest = editing.get(edit);
+        iChest.TypeChest chest = editing.get(edit);
 
         assert edit != null;
         if (player.getUniqueId() == edit.getUniqueId()){
@@ -167,7 +167,7 @@ public class ChestController implements Listener {
         }
     }
 
-    public static void addEdit(Player player, Chests.TypeChest chest){
+    public static void addEdit(Player player, iChest.TypeChest chest){
         editing.put(player, chest);
     }
 

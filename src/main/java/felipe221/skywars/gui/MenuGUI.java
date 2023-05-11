@@ -338,55 +338,59 @@ public class MenuGUI implements InventoryHolder, Listener {
         // Add the main inventory items
         int counter = 0;
         if (beauty) {
-            for(int key = (currentPage * 21); key <= Collections.max(items.keySet()); key++) {
-                if (counter == 0) {
-                    counter = 10;
-                }
+            if (!items.isEmpty()) {
 
-                if (counter == 17) {
-                    counter = 19;
-                }
+                for (int key = (currentPage * 21); key <= Collections.max(items.keySet()); key++) {
+                    if (counter == 0) {
+                        counter = 10;
+                    }
 
-                if (counter == 26) {
-                    counter = 28;
-                }
+                    if (counter == 17) {
+                        counter = 19;
+                    }
 
-                if (counter == 35) {
-                    //out index
-                    counter = 1000;
-                }
+                    if (counter == 26) {
+                        counter = 28;
+                    }
 
-                if (counter >= (rows - 1) * 9) {
-                    break;
-                }
+                    if (counter == 35) {
+                        //out index
+                        counter = 1000;
+                    }
 
-                if (items.containsKey(key)) {
-                    inventory.setItem(counter, items.get(key));
-                    if (listItems){
-                        if (getTypeMenu() != null) {
-                            getTypeMenu().setData(counter, getTypeMenu().getEntrys().get(key));
+                    if (counter >= (rows - 1) * 9) {
+                        break;
+                    }
+
+                    if (items.containsKey(key)) {
+                        inventory.setItem(counter, items.get(key));
+                        if (listItems) {
+                            if (getTypeMenu() != null) {
+                                getTypeMenu().setData(counter, getTypeMenu().getEntrys().get(key));
+                            }
                         }
                     }
+                    counter++;
                 }
-                counter++;
             }
         }else {
-            for(int key = (currentPage * ((rows-1)*9)); key <= Collections.max(items.keySet()); key++) {
-                if (counter >= (rows * 9)) {
-                    break;
-                }
+            if (!items.isEmpty()) {
+                for (int key = (currentPage * ((rows - 1) * 9)); key <= Collections.max(items.keySet()); key++) {
+                    if (counter >= (rows * 9)) {
+                        break;
+                    }
 
-                if (items.containsKey(key)) {
-                    inventory.setItem(counter, items.get(key));
-                    if (listItems){
-                        if (getTypeMenu() != null) {
-                            getTypeMenu().setData(counter, getTypeMenu().getEntrys().get(key));
+                    if (items.containsKey(key)) {
+                        inventory.setItem(counter, items.get(key));
+                        if (listItems) {
+                            if (getTypeMenu() != null) {
+                                getTypeMenu().setData(counter, getTypeMenu().getEntrys().get(key));
+                            }
                         }
                     }
+                    counter++;
                 }
-                counter++;
             }
-
         }
 
         return inventory;
